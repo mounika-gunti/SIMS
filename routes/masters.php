@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\Masters\CustomerTypeController;
 use App\Http\Controllers\Masters\ProductTypeController;
-use Illuminate\Support\Facades\Facade;
+use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Masters\CustomerController;
+use App\Http\Controllers\Masters\EmployeeMasterController;
+
+
 use App\Http\Controllers\UserManagementController;
 
 
@@ -20,7 +23,7 @@ use App\Http\Controllers\UserManagementController;
 */
 
 
-Route::resources('/employee_master',[]);
+Route::resource('/employee_master', EmployeeMasterController::class);
 
 
 

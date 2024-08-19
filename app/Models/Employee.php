@@ -17,37 +17,8 @@ class Employee extends Model
         'last_name',
         'phone_number',
         'whatsapp_number',
-        'address',
-        'designation_id',
-        'branch_id',
-        'aadhar_number',
-        'aadhar_attach_link',
-        'pan_number',
-        'pan_attach_link',
-        'bank_name',
-        'ifsc',
-        'account_no',
-        'emergency_contact_name',
-        'emergency_contact_phone_number',
     ];
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the branch associated with the employee.
-     */
 
 
-    /**
-     * Get the designation associated with the employee.
-     */
-
-
-    public function productType()
-    {
-        return $this->belongsTo(ProductType::class);
-    }
 }

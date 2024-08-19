@@ -1,120 +1,65 @@
 <?php
 
-namespace App\Http\Controllers\Parties;
+namespace App\Http\Controllers\Masters;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeRequest;
 use App\Models\Employee;
-use App\Models\BranchMaster;
-use App\Models\Designation;
+use Illuminate\Http\Request;
 
 class EmployeeMasterController extends Controller
 {
     public function index()
     {
         $employees = Employee::all();
-        return view('parties.employee.index', compact('employees'));
+        return view('masters.employee_master.index', compact('employees'));
     }
 
     public function create()
     {
-
-        return view('parties.employee.create');
+        return view('masters.employee_master.create');
     }
 
 
     public function edit($id)
     {
         $employee = Employee::findOrFail($id);
-
-        return view('parties.employee.edit', compact('employee',));
+        return view('masters.employee_master.edit', compact('employee'));
     }
-
-    public function show($id)
+    public function show()
     {
-
-        $employee = Employee::findOrFail($id);
-
-        return view('parties.employee.show', compact('employee',));
+     //
     }
 
-    public function store(EmployeeRequest $request)
+    public function store(Request $request)
     {
         // dd($request->all());
-        $validated = $request->validated();
+        $request->validate([
+            "first_name" => "required|unique:employees,first_name",
+            "phone_number" => "required|numeric",
+        ]);
 
         $employee = new Employee();
-        $employee->first_name = $validated['first_name'];
-        $employee->phone_number = $validated['phone_number'];
-        $employee->whatsapp_number = $validated['whatsapp_number'];
-        $employee->address = $validated['address'];
-        $employee->designation_id = $validated['designation_id'];
-        $employee->branch_id = $validated['branch_id'];
-        $employee->aadhar_number = $validated['aadhar_number'];
-        if ($request->hasFile('aadhar_attach_link')) {
-            $employee->aadhar_attach_link = $request->file('aadhar_attach_link')->store('aadhar');
-        } else {
-            $employee->aadhar_attach_link = null;
-        }
-        $employee->pan_number = $validated['pan_number'];
-        if ($request->hasFile('pan_attach_link')) {
-            $employee->pan_attach_link = $request->file('pan_attach_link')->store('pan');
-        } else {
-            $employee->pan_attach_link = null;
-        }
-        $employee->bank_name = $validated['bank_name'];
-        $employee->branch_name = $validated['branch_name'];
-        $employee->ifsc = $validated['ifsc'];
-        $employee->account_no = $validated['account_no'];
-        $employee->emergency_contact_name = $validated['emergency_contact_name'];
-        $employee->emergency_contact_phone_number = $validated['emergency_contact_phone_number'];
-        $employee->emergency_contact_relationship = $validated['emergency_contact_relationship'];
+        $employee->first_name = $request->first_name;
+        $employee->phone_number = $request->phone_number;
+        $employee->whatsapp_number = $request->whatsapp_number;
 
         $employee->save();
 
-        return redirect()->route('employee.index')->with('success', 'Employee created successfully.');
+        return redirect()->route('employee_master.index')->with('success', 'Employee Master created successfully.');
     }
 
     public function update(EmployeeRequest $request, $id)
     {
-
         $employee = Employee::findOrFail($id);
-
-
         $validated = $request->validated();
 
         $employee->first_name = $validated['first_name'];
         $employee->phone_number = $validated['phone_number'];
         $employee->whatsapp_number = $validated['whatsapp_number'];
-        $employee->address = $validated['address'];
-        $employee->designation_id = $validated['designation_id'];
-        $employee->branch_id = $validated['branch_id'];
-        $employee->aadhar_number = $validated['aadhar_number'];
-
-        if ($request->hasFile('aadhar_attach_link')) {
-            $employee->aadhar_attach_link = $request->file('aadhar_attach_link')->store('aadhar');
-        } else {
-            $employee->aadhar_attach_link = null;
-        }
-
-        if ($request->hasFile('pan_attach_link')) {
-            $employee->pan_attach_link = $request->file('pan_attach_link')->store('pan');
-        } else {
-            $employee->pan_attach_link = null;
-        }
-        $employee->pan_number = $validated['pan_number'];
-        $employee->bank_name = $validated['bank_name'];
-        $employee->branch_name = $validated['branch_name'];
-        $employee->ifsc = $validated['ifsc'];
-        $employee->account_no = $validated['account_no'];
-        $employee->emergency_contact_name = $validated['emergency_contact_name'];
-        $employee->emergency_contact_phone_number = $validated['emergency_contact_phone_number'];
-        $employee->emergency_contact_relationship = $validated['emergency_contact_relationship'];
-
 
         $employee->save();
 
-
-        return redirect()->route('employee.index')->with('success', 'Employee updated successfully.');
+        return redirect()->route('employee_master.index')->with('success', 'Employee Master updated successfully.');
     }
 }

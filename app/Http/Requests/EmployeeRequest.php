@@ -22,23 +22,13 @@ class EmployeeRequest extends FormRequest
     public function rules(): array
     {
         return [
+           'user_id' => 'required|exists:users,id',
             'first_name' => 'required|string|max:255',
+            'middle_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
             'phone_number' => 'required|string|max:15',
             'whatsapp_number' => 'nullable|string|max:15',
-            'address' => 'required|string',
-            'designation_id' => 'required|integer|exists:designations,id',
-            'branch_id' => 'required|integer|exists:branches,id',
-            'aadhar_number' => 'required|string',
-            'aadhar_attach_link' => 'nullable',
-            'pan_number' => 'required|string|max:10',
-            'pan_attach_link' => 'nullable',
-            'bank_name' => 'required|string|max:255',
-            'branch_name' => 'required|string|max:255',
-            'ifsc' => 'required|string|max:11',
-            'account_no' => 'required|string|max:20',
-            'emergency_contact_name' => 'required|string',
-            'emergency_contact_phone_number' => 'required|string',
-            'emergency_contact_relationship' => 'required|string',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048'
         ];
     }
 }
