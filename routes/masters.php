@@ -20,7 +20,7 @@ use App\Http\Controllers\UserManagementController;
 */
 
 
-Route::resources('/employee_master',[])
+Route::resources('/employee_master',[]);
 
 
 
