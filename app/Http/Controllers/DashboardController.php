@@ -10,4 +10,13 @@ class DashboardController extends Controller
     {
         return view("dashboard");
     }
+    public function index(){
+        return view('dashboard.index');
+    }
+
+    public function gst_tasks(){
+        return view('dashboard.gst_tasks');
+    }
+
+
 }

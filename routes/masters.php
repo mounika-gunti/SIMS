@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\Masters\CustomerTypeController;
 use App\Http\Controllers\Masters\ProductTypeController;
-use App\Http\Controllers\Masters\ServiceController;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Masters\CustomerController;
+use App\Http\Controllers\Masters\EmployeeMasterController;
+
+
 use App\Http\Controllers\UserManagementController;
 
 
@@ -18,6 +21,12 @@ use App\Http\Controllers\UserManagementController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+Route::resource('/employee_master', EmployeeMasterController::class);
+
+
+
 
 
 Route::get('/user_management', [UserManagementController::class, 'index'])->name('user_management.index');
