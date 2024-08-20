@@ -2,7 +2,7 @@
 @extends('layouts.common-scripts')
 <link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
 @section('title')
-Customer
+Services
 @endsection
 @section('content')
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -11,7 +11,7 @@ Customer
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 p-0">
                 <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a></li>
-                <li class="breadcrumb-item active" aria-current="page">Customer Master</li>
+                <li class="breadcrumb-item active" aria-current="page">Service Master</li>
             </ol>
         </nav>
     </div>
@@ -19,18 +19,10 @@ Customer
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0"><b>Customer Master</b></h3>
+            <h3 class="mb-0"><b>Service Master</b></h3>
             <button type="button" class="btn btn-primary btn-add-checklist">
-                Add Customer
+                Add Service
             </button>
-        </div>
-        <div class="search-bar flex-grow-1">
-            <div class="position-relative">
-                <div class="col-lg-5">
-                    <input class="form-control rounded-5 px-5 search-control d-lg-block d-none" type="text"
-                        placeholder="Search by Customer Name, Aadhar Number">
-                </div>
-            </div>
         </div>
         <hr>
         <div class="row gy-3">
@@ -39,11 +31,11 @@ Customer
                     <table class="table table-striped">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col">Customer Name</th>
-                                <th scope="col">Phone Number</th>
-                                <th scope="col">Country</th>
-                                <th scope="col">State</th>
-                                <th scope="col">Address</th>
+                                <th scope="col">Service Name</th>
+                                <th scope="col">Details</th>
+                                <th scope="col">Frequency</th>
+                                <th scope="col">Duration From</th>
+                                <th scope="col">Duration To</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                             </tr>
