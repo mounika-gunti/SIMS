@@ -7,7 +7,6 @@ use App\Http\Controllers\Masters\CustomerController;
 use App\Http\Controllers\Masters\EmployeeMasterController;
 use App\Http\Controllers\UserManagementController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
