@@ -1,13 +1,10 @@
 <?php
 
-use App\Http\Controllers\Masters\CustomerTypeController;
+use App\Http\Controllers\Masters\ServiceController;
 use App\Http\Controllers\Masters\ProductTypeController;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\Masters\CustomerController;
 use App\Http\Controllers\Masters\EmployeeMasterController;
-
-
 use App\Http\Controllers\UserManagementController;
 
 
