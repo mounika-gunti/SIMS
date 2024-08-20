@@ -7,7 +7,7 @@
 @endsection
 @section('content')
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-        <div class="breadcrumb-title pe-3">Parties</div>
+        <div class="breadcrumb-title pe-3">Employee Master</div>
         <div class="ps-3">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0 p-0">
@@ -45,15 +45,19 @@
                                 <input type="text" class="form-control w-3" name="whatsapp_number" id="whatsapp_number"
                                     value="{{ $employee->whatsapp_number }}" placeholder="Enter Whatsapp Number">
                             </div>
+                            <div class="col-lg-6">
+                                <label for="attach" class="form-label">Attach Profile Picture*</label>
+                                <input type="file" class="form-control" name="attach" id="attach">
+                            </div>
 
                             <div class="row gy-3">
                                 <div class="form-row mb-4">
                                     <div class="col-md-12 d-flex justify-content-end">
-                                        <div class="form-group mb-2 mr-3">
+                                        <div class="form-group ">
                                             <button type="submit" class="btn btn-cancel btn-block"
                                                 id="next-basicInfo">Update</button>
                                         </div>
-                                        <div class="form-group mb-2 mr-3">
+                                        <div class="form-group ">
                                             <a href="{{ route('employee_master.index') }}" class="btn btn-cancel btn-block"
                                                 id="cancel-basicInfo">Cancel</button>
                                         </div>

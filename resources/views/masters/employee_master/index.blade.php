@@ -20,56 +20,58 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="mb-0"><b>Employee Master</b></h3>
-                <button type="button" class="btn btn-primary btn-add-checklist"
-                    onclick="window.location.href='{{ route('employee_master.create') }}'">
+                <a class="btn btn-primary btn-add-employee" href='{{ route('employee_master.create') }}'>
                     Add Employee
-                </button>
+                </a>
             </div>
             <hr>
             <div class="row gy-3">
-                <div class="col-md-12">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead class="thead-light">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">Picture</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Phone Number</th>
+                                <th scope="col">WhatsApp Number</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($employees as $employee)
                                 <tr>
-                                    <th scope="col">Picture</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Phone Number</th>
-                                    <th scope="col">WhatsApp Number</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($employees as $employee)
-                                    <tr>
-                                        <td></td>
-                                        <td>{{ $employee->first_name }}</td>
-                                        <td>{{ $employee->phone_number }}</td>
-                                        <td>{{ $employee->whatsapp_number }}</td>
-                                        <td>
-                                            @if ($employee->status == 'active')
-                                                <i class="fas fa-check-circle text-success"></i>
-                                            @else
-                                                <i class="fas fa-times-circle text-danger"></i>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('employee_master.edit', $employee->id) }}"
-                                                    class="btn btn-edit btn-sm me-2 rounded">
-                                                    Edit
-                                                </a>
-                                                <a href="javascript:;" class="btn btn-deactivate btn-sm rounded">
+                                    <td></td>
+                                    <td>{{ $employee->first_name }}</td>
+                                    <td>{{ $employee->phone_number }}</td>
+                                    <td>{{ $employee->whatsapp_number }}</td>
+                                    <td>
+                                        @if ($employee->status == 'active')
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        @else
+                                            <i class="fas fa-times-circle text-danger"></i>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ route('employee_master.edit', $employee->id) }}"
+                                                class="btn btn-edit btn-sm me-2 rounded">
+                                                Edit
+                                            </a>
+                                            <form action="{{ route('employee_master.destroy', $employee->id) }}"
+                                                method="Post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-deactivate btn-sm rounded">
                                                     Deactivate
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

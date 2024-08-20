@@ -21,7 +21,7 @@
     <div class="card">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h3 class="mb-0"><b>Add Employee Master</b></h3>
+                <h3 class="mb-0"><b>Add Employee Details</b></h3>
             </div>
             <form action="{{ route('employee_master.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -46,6 +46,10 @@
                         <label for="whatsapp_number" class="form-label">WhatsApp Number</label>
                         <input type="text" class="form-control" placeholder="Enter WhatsApp Number"
                             name="whatsapp_number" id="whatsapp_number">
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="attach" class="form-label">Attach Profile Picture*</label>
+                        <input type="file" class="form-control" name="attach" id="attach">
                     </div>
 
                     <div class="form-row mb-4">

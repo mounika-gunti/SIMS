@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Masters;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\EmployeeRequest;
+use App\Http\Requests\EmployeeMasterRequest;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class EmployeeMasterController extends Controller
 {
@@ -31,13 +32,9 @@ class EmployeeMasterController extends Controller
      //
     }
 
-    public function store(Request $request)
+    public function store(EmployeeMasterRequest $request)
     {
-        // dd($request->all());
-        $request->validate([
-            "first_name" => "required|unique:employees,first_name",
-            "phone_number" => "required|numeric",
-        ]);
+        $request->validated();
 
         $employee = new Employee();
         $employee->first_name = $request->first_name;
@@ -49,17 +46,30 @@ class EmployeeMasterController extends Controller
         return redirect()->route('employee_master.index')->with('success', 'Employee Master created successfully.');
     }
 
-    public function update(EmployeeRequest $request, $id)
+    public function update(EmployeeMasterRequest $request, $id)
     {
         $employee = Employee::findOrFail($id);
-        $validated = $request->validated();
+        $request->validated();
 
-        $employee->first_name = $validated['first_name'];
-        $employee->phone_number = $validated['phone_number'];
-        $employee->whatsapp_number = $validated['whatsapp_number'];
+        $employee->first_name = $request->first_name;
+        $employee->phone_number = $request->phone_number;
+        $employee->whatsapp_number = $request->whatsapp_number;
 
         $employee->save();
 
         return redirect()->route('employee_master.index')->with('success', 'Employee Master updated successfully.');
     }
+
+
+        public function destroy( $id)
+        {
+            $product = Employee::findOrFail($id);
+            $product->deleted_at = Carbon::now();
+            $product->save();
+
+            return redirect()->route('employee_master.index')->with('status','Employee Master Deleted Successfully');
+        }
+
+
+
 }
