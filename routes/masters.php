@@ -46,7 +46,7 @@ Route::get('/user_management/export_users', [UserManagementController::class, 'e
 Route::resource('/customer', CustomerController::class);
 Route::get('/customer/edit', [CustomerController::class, 'edit'])->name('customer.edit');
 
-Route::resource('/service', ServiceController::class);
+Route::resource('/services', ServiceController::class);
 // Route::get('/service/edit', [ServiceController::class, 'edit'])->name('customer.edit');
 
 
