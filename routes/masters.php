@@ -44,8 +44,10 @@ Route::get('/user_management/export_users', [UserManagementController::class, 'e
 
 
 Route::resource('/customer', CustomerController::class);
-Route::get('/get-states/{country_id}', [CustomerController::class, 'getStates'])->name('get_states');
-Route::get('/get-cities/{state_id}', [CustomerController::class, 'getCities'])->name('get_cities');
+// Route::get('/get-country', [CustomerController::class, 'getStates'])->name('get_countries');
+Route::get('/get_states/{country_id}', [CustomerController::class, 'state'])->name('get_states');
+Route::get('/get_cities/{state_id}', [CustomerController::class, 'city'])->name('get_cities');
+
 
 // Route::get('/customer/edit', [CustomerController::class, 'edit'])->name('customer.edit');
 

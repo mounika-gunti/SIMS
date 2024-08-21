@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
 <link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+
 @section('content')
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
         <div class="breadcrumb-title pe-3">Masters</div>
@@ -26,13 +27,13 @@
                     <div class="row mb-4 mt-3">
                         <div class="form-group col-md-4">
                             <label for="customer_name"><b>Customer Name*</b></label>
-                            <input type="text" class="form-control" name="name" id="customer_name"
-                                placeholder="Enter Customer Name">
+                            <input type="text" class="form-control" name="name" id="name"
+                                placeholder="Enter Customer Name" required>
                         </div>
                         <div class="form-group col-md-4">
                             <label for="email_id"><b>Email Id</b></label>
-                            <input type="email" class="form-control" id="email_id" name="email"
-                                placeholder="Enter Email ID">
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="Enter Email ">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="phone_number"><b>Phone Number</b></label>
@@ -43,13 +44,12 @@
                     <div class="row mb-4">
                         <div class="form-group col-md-4">
                             <label for="payment_terms"><b>Payment Terms</b></label>
-                            <input type="text" class="form-control" id="payment terms" name="payment_terms
-"
+                            <input type="text" class="form-control" id="payment_terms" name="payment_terms"
                                 placeholder="Enter Payment Terms">
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="credit days"><b>Credit Days</b></label>
-                            <input type="text" class="form-control" id="credit days" name="credit_days"
+                            <label for="credit_days"><b>Credit Days</b></label>
+                            <input type="text" class="form-control" id="credit_days" name="credit_days"
                                 placeholder="Enter Credit Days">
                         </div>
                         <div class="form-group col-md-4">
@@ -59,84 +59,74 @@
                     </div>
                     <div class="row mb-3">
                         <div class="form-group col-md-4">
-                            <label for="country"><b>Country*</b></label>
-                            <select class="form-select" name="country" id="country">
+                            <label for="shipping_country_id"><b>Country*</b></label>
+                            <select class="form-select" name="billing_country_id" id="billing_country_id" required>
                                 <option selected disabled>Select Country</option>
                                 @foreach ($countries as $con)
-                                    <option value="{{ $con->id }}"
-                                        {{ old('country_id') == $con->id ? 'selected' : '' }}>{{ $con->name }}
-                                    </option>
+                                    <option value="{{ $con->id }}">{{ $con->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="state"><b>State/Region*</b></label>
-                            <select class="form-select" name="state" id="state">
+                            <label for="shipping_state_id"><b>State/Region*</b></label>
+                            <select class="form-select" name="billing_state_id" id="billing_state_id" required>
                                 <option selected disabled>Select State</option>
-                                @foreach ($states as $state)
-                                    <option value="{{ $state->id }}"
-                                        {{ old('state_id') == $state->id ? 'selected' : '' }}>{{ $state->name }}
-                                    </option>
-                                @endforeach
                             </select>
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="state"><b>City</b></label>
-                            <input type="text" class="form-control" id="city" name="city"
-                                placeholder="Enter City name">
+                            <label for="shipping_city_id"><b>City</b></label>
+                            <select class="form-select" name="billing_city_id" id="billing_city_id">
+                                <option selected disabled>Select City</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="form-group col-md-6">
                             <label for="address"><b>Address</b></label>
-                            <textarea class="form-control" id="address" placeholder="Enter Address" rows="3"></textarea>
+                            <textarea class="form-control" id="billing_address" name="billing_address" placeholder="Enter Address" rows="3"></textarea>
                         </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-md-12 d-flex align-items-center">
                             <h5 class="mb-0 me-2">Shipping Address*</h5>
-                            <input class="form-check-input" type="checkbox" id="shipping_address">
-                            <label class="form-check-label" for="shipping_address"></label>
+                            <input class="form-check-input" type="checkbox" id="same_as_billing" name="same_as_billing">
+                            <label class="form-check-label" for="same_as_billing"></label>
                             <h5>(Same as Billing Address)</h5>
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="form-group col-md-4">
-                            <label for="country"><b>Country*</b></label>
-                            <select class="form-select" name="country" id="country">
+                            <label for="shipping_country_id"><b>Country*</b></label>
+                            <select class="form-select" name="shipping_country_id" id="shipping_country_id" required>
                                 <option selected disabled>Select Country</option>
                                 @foreach ($countries as $con)
-                                    <option value="{{ $con->id }}"
-                                        {{ old('country_id') == $con->id ? 'selected' : '' }}>{{ $con->name }}
-                                    </option>
+                                    <option value="{{ $con->id }}">{{ $con->name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="state"><b>State/Region*</b></label>
-                            <select class="form-select" name="state" id="state">
+                            <label for="shipping_state_id"><b>State/Region*</b></label>
+                            <select class="form-select" name="shipping_state_id" id="shipping_state_id" required>
                                 <option selected disabled>Select State</option>
-                                @foreach ($states as $state)
-                                    <option value="{{ $state->id }}"
-                                        {{ old('state_id') == $state->id ? 'selected' : '' }}>{{ $state->name }}
-                                    </option>
-                                @endforeach
                             </select>
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="city"><b>City</b></label>
-                            <input type="text" class="form-control" id="city" placeholder="Enter City">
+                            <label for="shipping_city_id"><b>City</b></label>
+                            <select class="form-select" name="shipping_city_id" id="shipping_city_id">
+                                <option selected disabled>Select City</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="form-group col-md-6">
-                            <label for="address"><b>Address</b></label>
-                            <textarea class="form-control" id="address" placeholder="Enter Address" rows="3"></textarea>
+                            <label for="shipping_address_detail"><b>Address</b></label>
+                            <textarea class="form-control" id="shipping_address" name="shipping_address" placeholder="Enter Address"
+                                rows="3"></textarea>
                         </div>
                         <div class="form-group col-md-6">
                             <label for="gst_registration_number"><b>GST Registration Number</b></label>
-                            <input type="text" class="form-control" id="gst_registration_number"
+                            <input type="text" class="form-control" id="gst_number" name="gst_number"
                                 placeholder="Enter GST Registration Number">
                         </div>
                     </div>
@@ -144,64 +134,157 @@
                         <div class="form-group col-md-3">
                             <label for="services"><b>Services</b></label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="gst">
-                                <label class="form-check-label" for="gst">
-                                    GST
-                                </label>
+                                <input class="form-check-input" type="checkbox" id="gst" name="services[]"
+                                    value="GST">
+                                <label class="form-check-label" for="gst">GST</label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="form-group col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="pt">
-                                <label class="form-check-label" for="pt">
-                                    PT
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group col-md-6" style="margin-left: 250px; margin-top:-50px;">
-                            <label for=" assigned_to"><b>Assigned To*</b></label>
-                            <select id="assigned_to" class="form-select">
-                                <option value="">Select Assigned To</option>
-                                <option value="a">A</option>
-                                <option value="b">B</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="form-row mb-4">
-                    <div class="col-md-12 d-flex justify-content-end">
-                        <div class="form-group mb-2 mr-3">
-                            <button type="button" class="btn btn-cancel btn-block">Cancel</button>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="pt" name="services[]"
+                                    value="PT">
+                                <label class="form-check-label" for="pt">PT</label>
+                            </div>
                         </div>
-                        <div class="form-group mb-2">
-                            <button type="submit" class="btn btn-save btn-block">Save</button>
+                    </div>
+                    <div class="form-group col-md-6" style="margin-left: 250px; margin-top:-50px;">
+                        <label for=" assigned_to"><b>Assigned To*</b></label>
+                        <select id="assigned_to" class="form-select" name="assigned_to">
+                            <option value="">Select Assigned To</option>
+                            <option value="a">A</option>
+                            <option value="b">B</option>
+                        </select>
+                    </div>
+
+
+                    <div class="form-row mb-4">
+                        <div class="col-md-12 d-flex justify-content-end">
+                            <div class="form-group mb-2 mr-3">
+                                <a href="{{ route('customer.index') }}" class="btn btn-cancel btn-block">Cancel</a>
+                            </div>
+                            <div class="form-group mb-2">
+                                <button type="submit" class="btn btn-save btn-block">Save</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-@endsection
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#shipping_address').change(function() {
-            if (this.checked) {
-                $('#country').val('country_id');
-                $('#state').val('state_id');
-            } else {
-                $('#country').val('');
-                $('#state').val('');
-            }
-            elseif(this.checked) {
-                $('#country1').val('country_id');
-                $('#state1').val('state_id');
+    @if ($errors->any())
+        {{ implode('', $errors->all('<div>:message</div>')) }}
+    @endif
 
-            }
+    <script>
+        $(document).ready(function() {
+            $('#billing_country_id').change(function() {
+                var countryId = $(this).val();
+                if (countryId) {
+                    $.ajax({
+                        url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
+                        type: 'GET',
+                        success: function(states) {
+                            $('#billing_state_id').empty().append(
+                                '<option value="">Select State</option>');
+                            $.each(states, function(key, state) {
+                                $('#billing_state_id').append('<option value="' + state
+                                    .id + '">' + state.name + '</option>');
+                            });
+                            $('#billing_city_id').empty().append(
+                                '<option value="">Select City</option>');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading states: ", error);
+                        }
+                    });
+                }
+            });
+
+            $('#billing_state_id').change(function() {
+                var stateId = $(this).val();
+                if (stateId) {
+                    $.ajax({
+                        url: "{{ route('get_cities', ':id') }}".replace(':id', stateId),
+                        type: 'GET',
+                        success: function(cities) {
+                            $('#billing_city_id').empty().append(
+                                '<option value="">Select City</option>');
+                            $.each(cities, function(key, city) {
+                                $('#billing_city_id').append('<option value="' + city
+                                    .id + '">' + city.name + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading cities: ", error);
+                        }
+                    });
+                }
+            });
+
+            $('#shipping_address').change(function() {
+                if ($(this).is(':checked')) {
+                    var billingCountry = $('#billing_country_id').val();
+                    $('#shipping_country_id').val(billingCountry).change();
+
+                    var billingState = $('#billing_state_id').val();
+                    $('#shipping_state_id').val(billingState).change();
+
+                    var billingCity = $('#billing_city_id').val();
+                    $('#shipping_city_id').val(billingCity);
+
+                    var billingAddress = $('#billing_address').val();
+                    $('#shipping_address').val(billingAddress);
+                } else {
+                    $('#shipping_country_id').val('').change();
+                    $('#shipping_state_id').val('').change();
+                    $('#shipping_city_id').val('');
+                    $('#shipping_address').val('');
+                }
+            });
+
+            $('#shipping_country_id').change(function() {
+                var countryId = $(this).val();
+                if (countryId) {
+                    $.ajax({
+                        url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
+                        type: 'GET',
+                        success: function(states) {
+                            $('#shipping_state_id').empty().append(
+                                '<option value="">Select State</option>');
+                            $.each(states, function(key, state) {
+                                $('#shipping_state_id').append('<option value="' + state
+                                    .id + '">' + state.name + '</option>');
+                            });
+                            $('#shipping_city_id').empty().append(
+                                '<option value="">Select City</option>');
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading states: ", error);
+                        }
+                    });
+                }
+            });
+
+            $('#shipping_state_id').change(function() {
+                var stateId = $(this).val();
+                if (stateId) {
+                    $.ajax({
+                        url: "{{ route('get_cities', ':id') }}".replace(':id', stateId),
+                        type: 'GET',
+                        success: function(cities) {
+                            $('#shipping_city_id').empty().append(
+                                '<option value="">Select City</option>');
+                            $.each(cities, function(key, city) {
+                                $('#shipping_city_id').append('<option value="' + city
+                                    .id + '">' + city.name + '</option>');
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading cities: ", error);
+                        }
+                    });
+                }
+            });
         });
-    });
-</script>
+    </script>
+@endsection

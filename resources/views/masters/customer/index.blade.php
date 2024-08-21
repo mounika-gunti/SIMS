@@ -50,30 +50,30 @@
                             </thead>
                             <tbody>
                                 @foreach ($customers as $customer)
+                                    <tr>
+                                        <td>{{ $customer->name }}</td>
+                                        <td>{{ $customer->phone_number }}</td>
+                                        <td>{{ $customer->countries }}</td>
+                                        <td>{{ $customer->states }}</td>
+                                        <td>{{ $customer->address }}</td>
+                                        <td>
+                                            <i class="fas fa-check-circle text-success"></i>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="#" class="btn btn-edit btn-sm me-2 rounded">
+                                                    Edit
+                                                </a>
+                                                <a href="#" class="btn btn-view btn-sm me-2 rounded">
+                                                    View
+                                                </a>
+                                                <a href="javascript:;" class="btn btn-deactivate btn-sm rounded">
+                                                    Deactivate
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
                                 @endforeach
-                                <tr>
-                                    <td>{{ $customer->name }}</td>
-                                    <td>{{ $customer->phone_number }}</td>
-                                    <td>{{ $customer->countries }}</td>
-                                    <td>{{ $customer->states }}</td>
-                                    <td>{{ $customer->address }}</td>
-                                    <td>
-                                        <i class="fas fa-check-circle text-success"></i>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="#" class="btn btn-edit btn-sm me-2 rounded">
-                                                Edit
-                                            </a>
-                                            <a href="#" class="btn btn-view btn-sm me-2 rounded">
-                                                View
-                                            </a>
-                                            <a href="javascript:;" class="btn btn-deactivate btn-sm rounded">
-                                                Deactivate
-                                            </a>
-                                        </div>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>

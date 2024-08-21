@@ -14,4 +14,7 @@ class Country extends Model
     protected $guarded=[];
 
 
+    public function state(){
+        $this->belongsTo(State::class);
+    }
 }
