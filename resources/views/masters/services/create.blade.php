@@ -22,14 +22,14 @@
         </div>
         <hr>
 
-        <form action="{{ route('services.store') }}" method="POST">
+        <form action="{{ route('services.storeMonthly') }}" method="POST">
             @csrf
             <div class="tab-content" id="tabcontent">
                 <div class="row mb-4 mt-3">
                     <div class="form-group col-md-4">
                         <label for="service_name"><b>Service Name*</b></label>
                         <input type="text" class="form-control" id="service_name" name="service_name"
-                            placeholder="Enter Service Name" required>
+                            placeholder="Enter Service Name">
                         @error('service_name')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -40,9 +40,9 @@
                             rows="3"></textarea>
                     </div>
                     <div class="form-group col-md-4">
-                        <label for="frequency"><b>Frequency*</b></label>
-                        <select id="frequency" name="frequency" class="form-select" required>
-                            @error('frequency')
+                        <label for="frequency_type"><b>Frequency*</b></label>
+                        <select id="frequency_type" name="frequency_type" class="form-select">
+                            @error('frequency_type')
                             <p class="text-danger">{{ $message }}</p>
                             @enderror
                             <option value="">Select Frequency</option>
@@ -50,201 +50,326 @@
                             <option value="quarterly">Quarterly</option>
                             <option value="biannually">Bi Annually</option>
                             <option value="annually">Annually</option>
-                            <option value="one-time">One - Time</option>
+                            <option value="one-time">One-Time</option>
                         </select>
-                        @error('frequency')
+                        @error('frequency_type')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
             </div>
+            {{-- <form id="monthly-form" action="{{ route('services.storeMonthly') }}" method="POST"> --}}
+            @csrf
+            <div class="row mb-4">
+                <div class="col-md-12 card-wrapper" id="monthly-card" style="display: none;">
+                    <div class="card">
+                        <div class="card-header text-center">
+                            <h5>Monthly</h5>
+                        </div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>Month Name</th>
+                                        <th>From Day</th>
+                                        <th>To Day</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="monthly_table">
+                                    @php
+                                    $index = 0;
+                                    @endphp
+                                    @foreach (['january', 'february', 'march', 'april', 'may', 'june', 'july',
+                                    'august', 'september', 'october', 'november', 'december'] as $month)
+                                    <tr data-row_id="{{ $index }}">
+                                        <td>
+                                            <input type="checkbox" id="month_{{ $month }}" name="months[]"
+                                                data-row_id="{{ $index }}" value="{{ $month }}"
+                                                class="form-check-input">
+                                        </td>
+                                        <td>{{ ucfirst($month) }}</td>
+                                        <td>
+                                            <input type="number" id="fromDay_{{ $month }}" name="from_day[{{ $month }}]"
+                                                class="form-control" min="1" max="31">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="toDay_{{ $month }}" name="to_day[{{ $month }}]"
+                                                class="form-control" min="1" max="31">
+                                        </td>
+                                    </tr>
+                                    @php
+                                    $index++;
+                                    @endphp
+                                    @endforeach
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="row mb-4">
-                <div class="col-md-6 card-wrapper" id="monthly-card" style="display: none;">
+                <div class="col-md-12 card-wrapper" id="quarterly-card" style="display: none;">
                     <div class="card">
                         <div class="card-header text-center">
-                            Monthly
+                            <h5>Quarterly</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="month" class="form-label">Month Name</label>
-                                    <select id="month" name="month_name" class="form-select mb-2">
-                                        <option selected>Select Month</option>
-                                        <option value="january">January</option>
-                                        <option value="february">February</option>
-                                        <option value="march">March</option>
-                                        <option value="april">April</option>
-                                        <option value="may">May</option>
-                                        <option value="june">June</option>
-                                        <option value="july">July</option>
-                                        <option value="august">August</option>
-                                        <option value="september">September</option>
-                                        <option value="october">October</option>
-                                        <option value="november">November</option>
-                                        <option value="december">December</option>
-                                    </select>
-                                    @error('month_name')
-                                    <p class="text-danger">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="fromDay" class="form-label">From Day</label>
-                                    <input type="number" id="fromDay" name="from_day" class="form-control mb-2" min="1"
-                                        max="31" value="1">
-                                    <label for="toDay" class="form-label">To Day</label>
-                                    <input type="number" id="toDay" name="to_day" class="form-control" min="1" max="31"
-                                        value="31">
-                                    @error('to_day')
-                                    <p class="text-danger">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>Quarter Name</th>
+                                        <th>Select Month</th>
+                                        <th>From Day</th>
+                                        <th>To Day</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="quarterly_table">
+                                    @foreach ([
+                                    'january-march' => 'January-March',
+                                    'april-june' => 'April-June',
+                                    'july-september' => 'July-September',
+                                    'october-december' => 'October-December'
+                                    ] as $value => $label)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="quarter_{{ $value }}" name="quarter_name"
+                                                value="{{ $value }}" class="form-check-input">
+                                        </td>
+                                        <td>{{ $label }}</td>
+                                        <td>
+                                            <select id="month_{{ $value }}" name="month_name[{{ $value }}]"
+                                                class="form-select">
+                                                <option value="">Select Month</option>
+                                                @if ($value == 'january-march')
+                                                <option value="January">January</option>
+                                                <option value="February">February</option>
+                                                <option value="March">March</option>
+                                                @elseif ($value == 'april-june')
+                                                <option value="April">April</option>
+                                                <option value="May">May</option>
+                                                <option value="June">June</option>
+                                                @elseif ($value == 'july-september')
+                                                <option value="July">July</option>
+                                                <option value="August">August</option>
+                                                <option value="September">September</option>
+                                                @elseif ($value == 'october-december')
+                                                <option value="October">October</option>
+                                                <option value="November">November</option>
+                                                <option value="December">December</option>
+                                                @endif
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="fromDay_{{ $value }}" name="from_day[{{ $value }}]"
+                                                class="form-control" min="1" max="31">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="toDay_{{ $value }}" name="to_day[{{ $value }}]"
+                                                class="form-control" min="1" max="31">
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-6 card-wrapper" id="quarterly-card" style="display: none;">
+            <div class="row mb-4">
+                <div class="col-md-12 card-wrapper" id="biannually-card" style="display: none;">
                     <div class="card">
                         <div class="card-header text-center">
-                            Quarterly
+                            <h5> Bi Annually</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="from_month" class="form-label">From</label>
-                                    <select id="from_month" name="from_month" class="form-select mb-2">
-                                        <option selected>Select Month</option>
-                                        <option value="january-march">January-March</option>
-                                        <option value="april-june">April-June</option>
-                                        <option value="july-september">July-September</option>
-                                        <option value="october-december">October-December</option>
-                                    </select>
-                                    @error('to_day')
-                                    <p class="text-danger">{{ $message }}</p>
-                                    @enderror
-                                    <input type="number" id="from_day" name="from_day" class="form-control" min="1"
-                                        max="31" value="1">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="to_month" class="form-label">To</label>
-                                    <select id="to_month" name="to_month" class="form-select mb-2">
-                                        <option selected>Select Month</option>
-                                        <option value="january-march">January-March</option>
-                                        <option value="april-june">April-June</option>
-                                        <option value="july-september">July-September</option>
-                                        <option value="october-december">October-December</option>
-                                    </select>
-                                    <input type="number" id="from_day" name="from_day" class="form-control" min="1"
-                                        max="31" value="31">
-                                </div>
-                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>Biannual Name</th>
+                                        <th>Select Month</th>
+                                        <th>From Day</th>
+                                        <th>To Day</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ([
+                                    'january-june' => 'January-June',
+                                    'july-december' => 'July-December'
+                                    ] as $value => $label)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="biannual_{{ $value }}" name="biannual_name"
+                                                value="{{ $value }}" class="form-check-input">
+                                        </td>
+                                        <td>{{ $label }}</td>
+                                        <td>
+                                            <select id="month_{{ $value }}" name="month_name[{{ $value }}]"
+                                                class="form-select">
+                                                <option value="">Select Month</option>
+                                                @if ($value == 'january-june')
+                                                <option value="January">January</option>
+                                                <option value="February">February</option>
+                                                <option value="March">March</option>
+                                                <option value="April">April</option>
+                                                <option value="May">May</option>
+                                                <option value="June">June</option>
+                                                @elseif ($value == 'july-december')
+                                                <option value="July">July</option>
+                                                <option value="August">August</option>
+                                                <option value="September">September</option>
+                                                <option value="November">October</option>
+                                                <option value="June">November</option>
+                                                <option value="December">December</option>
+                                                @endif
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="fromDay_{{ $value }}" name="from_day[{{ $value }}]"
+                                                class="form-control" min="1" max="31">
+                                        </td>
+                                        <td>
+                                            <input type="number" id="toDay_{{ $value }}" name="to_day[{{ $value }}]"
+                                                class="form-control" min="1" max="31">
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
+            </div>
 
-
-                <div class="col-md-6 card-wrapper" id="biannually-card" style="display: none;">
+            <div class="row mb-4">
+                <div class="col-md-12 card-wrapper" id="one-time-card" style="display: none;">
                     <div class="card">
                         <div class="card-header text-center">
-                            Bi Annually
+                            <h5> One Time</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="month_name" class="form-label">From</label>
-                                    <select id="month_name" name="month_name" class="form-select mb-2">
-                                        <option selected>Select Month</option>
-                                        <option value="january-june">January-June</option>
-                                        <option value="july-december">July-December</option>
-                                    </select>
-                                    <input type="number" id="from_day" name="from_day" class="form-control" min="1"
-                                        max="31" value="1">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="to_month" class="form-label">To</label>
-                                    <select id="to_month" name="to_month" class="form-select mb-2">
-                                        <option selected>Select Month</option>
-                                        <option value="january-june">January-June</option>
-                                        <option value="july-december">July-December</option>
-                                    </select>
-                                    <input type="number" id="toBiannualDay" name="to_biannual_day" class="form-control"
-                                        min="1" max="31" value="31">
-                                </div>
-                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (['range_1'] as $index => $range)
+                                    <tr>
+                                        <td>
+                                            <input type="date" id="fromDate_{{ $index }}" name="from_day[{{ $index }}]"
+                                                class="form-control">
+                                        </td>
+                                        <td>
+                                            <input type="date" id="toDate_{{ $index }}" name="to_day[{{ $index }}]"
+                                                class="form-control">
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
+            </div>
 
 
-                <div class="col-md-6 card-wrapper" id="one-time-card" style="display: none;">
+            <div class="row mb-4">
+                <div class="col-md-12 card-wrapper" id="annually-card" style="display: none;">
                     <div class="card">
                         <div class="card-header text-center">
-                            One Time
+                            <h5>Annually</h5>
                         </div>
                         <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-5">
-                                    <label for="fromDate" class="form-label">From Date *</label>
-                                    <input type="date" class="form-control" id="fromDate" name="from_date" required>
-                                </div>
-                                <div class="col-md-5">
-                                    <label for="toDate" class="form-label">To Date *</label>
-                                    <input type="date" class="form-control" id="toDate" name="to_date" required>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 card-wrapper" id="annually-card" style="display: none;">
-                    <div class="card">
-                        <div class="card-header text-center">
-                            Annual
-                        </div>
-                        <div class="card-body">
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="annualFromMonth" class="form-label">From</label>
-                                    <select id="annualFromMonth" name="annual_from_month" class="form-select mb-2">
-                                        <option selected>Select Month</option>
-                                        <option value="january">January</option>
-                                        <option value="february">February</option>
-                                        <option value="march">March</option>
-                                        <option value="april">April</option>
-                                        <option value="may">May</option>
-                                        <option value="june">June</option>
-                                        <option value="july">July</option>
-                                        <option value="august">August</option>
-                                        <option value="september">September</option>
-                                        <option value="october">October</option>
-                                        <option value="november">November</option>
-                                        <option value="december">December</option>
-                                    </select>
-                                    <input type="number" id="annualFromDay" name="annual_from_day" class="form-control"
-                                        min="1" max="31" value="1">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="annualToMonth" class="form-label">To</label>
-                                    <select id="annualToMonth" name="annual_to_month" class="form-select mb-2">
-                                        <option selected>Select Month</option>
-                                        <option value="january">January</option>
-                                        <option value="february">February</option>
-                                        <option value="march">March</option>
-                                        <option value="april">April</option>
-                                        <option value="may">May</option>
-                                        <option value="june">June</option>
-                                        <option value="july">July</option>
-                                        <option value="august">August</option>
-                                        <option value="september">September</option>
-                                        <option value="october">October</option>
-                                        <option value="november">November</option>
-                                        <option value="december">December</option>
-                                    </select>
-                                    <input type="number" id="annualToDay" name="annual_to_day" class="form-control"
-                                        min="1" max="31" value="31">
-                                </div>
-                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Select</th>
+                                        <th>From Month</th>
+                                        <th>From Day</th>
+                                        <th>To Month</th>
+                                        <th>To Day</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ([
+                                    'january-december' => ['from_month' => 'January', 'from_day' => 1, 'to_month' =>
+                                    'December', 'to_day' => 31]
+                                    ] as $value => $dates)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" id="annual_{{ $value }}" name="annual_names"
+                                                value="{{ $value }}" class="form-check-input">
+                                        </td>
+                                        <td>
+                                            <select id="fromMonth_{{ $value }}" name="from_month[{{ $value }}]"
+                                                class="form-select mb-2">
+                                                <option value="">Select Month</option>
+                                                @foreach ([
+                                                'january' => 'January',
+                                                'february' => 'February',
+                                                'march' => 'March',
+                                                'april' => 'April',
+                                                'may' => 'May',
+                                                'june' => 'June',
+                                                'july' => 'July',
+                                                'august' => 'August',
+                                                'september' => 'September',
+                                                'october' => 'October',
+                                                'november' => 'November',
+                                                'december' => 'December'
+                                                ] as $month_value => $month_label)
+                                                <option value="{{ $month_value }}"
+                                                    {{ $month_value === $dates['from_month'] ? 'selected' : '' }}>
+                                                    {{ $month_label }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="toDay_{{ $value }}" name="to_day[{{ $value }}]"
+                                                class="form-control" min="1" max="31" value="{{ $dates['to_day'] }}">
+                                        </td>
+                                        <td>
+                                            <select id="toMonth_{{ $value }}" name="to_month[{{ $value }}]"
+                                                class="form-select mb-2">
+                                                <option value="">Select Month</option>
+                                                @foreach ([
+                                                'january' => 'January',
+                                                'february' => 'February',
+                                                'march' => 'March',
+                                                'april' => 'April',
+                                                'may' => 'May',
+                                                'june' => 'June',
+                                                'july' => 'July',
+                                                'august' => 'August',
+                                                'september' => 'September',
+                                                'october' => 'October',
+                                                'november' => 'November',
+                                                'december' => 'December'
+                                                ] as $month_value => $month_label)
+                                                <option value="{{ $month_value }}"
+                                                    {{ $month_value === $dates['to_month'] ? 'selected' : '' }}>
+                                                    {{ $month_label }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" id="toDay_{{ $value }}" name="to_day[{{ $value }}]"
+                                                class="form-control" min="1" max="31" value="{{ $dates['to_day'] }}">
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -261,22 +386,104 @@
                 </div>
             </div>
         </form>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
     </div>
 </div>
 
 <script>
     $(document).ready(function() {
-        $('#frequency').on('change', function() {
-            var selectedFrequency = $(this).val();
-            $('.card-wrapper').hide();
-            if (selectedFrequency) {
-                $('#' + selectedFrequency + '-card').show();
-            }
+    $('#frequency_type').on('change', function() {
+        var selectedType = $(this).val();
+        $('.card-wrapper').hide();
+        if (selectedType) {
+            $('#' + selectedType + '-card').show();
+        }
+    });
+var monthly_type_list = [];
+function updateMonthlyList() {
+    monthly_type_list = [];
+    $('#monthly_table input:checked').each(function() {
+        var row_id = $(this).data('row_id');
+        var month_name = $(this).closest('tr').find('td').eq(1).text().trim();
+        var from_day = $(this).closest('tr').find('.from_day').val();
+        var to_day = $(this).closest('tr').find('.to_day').val();
 
-            var isRequired = selectedFrequency === 'one-time';
-            $('#fromDate').attr('required', isRequired);
-            $('#toDate').attr('required', isRequired);
+        monthly_type_list.push({
+            month_name: month_name,
+            from_day: from_day,
+            to_day: to_day
         });
     });
+}
+
+$(document).on('change', 'input:checkbox, input.from_day, input.to_day', function() {
+    updateMonthlyList();
+});
+
+$('#save_btn').click(function(e) {
+    e.preventDefault();
+    var frequency_type = $('#frequency_type').val();
+    if (frequency_type === "monthly") {
+        $.ajax({
+            url: '{{ route('services.storeMonthly') }}',
+            method: 'POST',
+            data: { monthly_type_list: monthly_type_list, _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                window.location.href = response.redirect_url;
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
+});
+
+var quarterly_type_list = [];
+function updateQuarterlyList() {
+    quarterly_type_list = [];
+    $('#quarterly_table input:checked').each(function() {
+        var row_id = $(this).data('row_id');
+        var quarter_name = $(this).closest('tr').find('td').eq(2).text().trim();
+        var from_day = $(this).closest('tr').find('.from_day').val();
+        var to_day = $(this).closest('tr').find('.to_day').val();
+
+        quarterly_type_list.push({
+            quarter_name: quarter_name,
+            from_day: from_day,
+            to_day: to_day
+        });
+    });
+}
+
+$(document).on('change', 'input:checkbox, input.from_day, input.to_day', function() {
+    updateQuarterlyList();
+});
+
+$('#save_btn').click(function(e) {
+    e.preventDefault();
+    var frequency_type = $('#frequency_type').val();
+    if (frequency_type === "quarterly") {
+        $.ajax({
+            url: '{{ route('services.storeQuarterly') }}',
+            method: 'POST',
+            data: { quarterly_type_list: quarterly_type_list, _token: '{{ csrf_token() }}' },
+            success: function(response) {
+                window.location.href = response.redirect_url;
+            },
+            error: function(xhr) {
+                console.log(xhr.responseText);
+            }
+        });
+    }
+});
+});
 </script>
 @endsection

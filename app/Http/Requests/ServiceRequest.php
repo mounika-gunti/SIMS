@@ -21,53 +21,14 @@ class ServiceRequest extends FormRequest
      */
     public function rules()
     {
-        $frequency = $this->input('frequency');
+        $frequency_type = $this->input('frequency_type');
 
         $rules = [
             'service_name' => 'required|string|max:255',
             'details' => 'nullable|string',
-            'frequency' => 'required|in:monthly,quarterly,biannually,annually,onetime',
+            'frequency_type' => 'required|in:monthly,quarterly,biannually,annually,onetime',
+            'month_name' => 'required|string',
         ];
-
-        switch ($frequency) {
-            case 'monthly':
-                $rules['month_name'] = 'required|string';
-                $rules['from_day'] = 'required|integer|min:1|max:31';
-                $rules['to_day'] = 'required|integer|min:1|max:31';
-                break;
-
-            case 'quarterly':
-                $rules['quarter_name'] = 'required|string';
-                // $rules['from_quarter_month'] = 'required|string';
-                // $rules['to_quarter_month'] = 'required|string';
-                // $rules['from_quarter_day'] = 'required|integer|min:1|max:31';
-                // $rules['to_quarter_day'] = 'required|integer|min:1|max:31';
-                $rules['from_day'] = 'required|integer|min:1|max:31';
-                $rules['to_day'] = 'required|integer|min:1|max:31';
-                break;
-
-            case 'biannually':
-                $rules['biannual_name'] = 'required|string|in:first,second';
-                // $rules['from_biannual_month'] = 'required|string';
-                // $rules['to_biannual_month'] = 'required|string';
-                // $rules['from_biannual_day'] = 'required|integer|min:1|max:31';
-                // $rules['to_biannual_day'] = 'required|integer|min:1|max:31';
-                $rules['from_day'] = 'required|integer|min:1|max:31';
-                $rules['to_day'] = 'required|integer|min:1|max:31';
-                break;
-
-            case 'annually':
-                $rules['annual_from_month'] = 'required|string';
-                $rules['annual_to_month'] = 'required|string';
-                $rules['annual_from_day'] = 'required|integer|min:1|max:31';
-                $rules['annual_to_day'] = 'required|integer|min:1|max:31';
-                break;
-
-            case 'onetime':
-                $rules['from_date'] = 'required|date';
-                $rules['to_date'] = 'required|date|after_or_equal:from_date';
-                break;
-        }
 
         return $rules;
     }
