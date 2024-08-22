@@ -34,143 +34,100 @@ class ServiceController extends Controller
 
     public function storeMonthly(Request $request)
     {
-
         // dd($request->all());
-        $validated = $request->validate([
-            'service_name' => 'required|string|max:255',
-            'details' => 'nullable|string',
-            'months' => 'array',
-            'months.*' => 'in:january,february,march,april,may,june,july,august,september,october,november, december',
-            'from_day' => 'array',
-            'to_day' => 'array',
-        ]);
-
-
         $service = Service::create([
-            'name' => $validated['service_name'],
-            'details' => $validated['details'],
-            'frequency' => 'monthly',
+            'name' => $request->service_name,
+            'details' => $request->details,
+            'frequency' => $request->frequency_type,
         ]);
 
-
-        foreach ($validated['months'] as $month) {
+        foreach ($request->monthly_type_list as $row) {
             ServiceOccurrence::create([
                 'service_id' => $service->id,
-                'frequency_type' => 'monthly',
-                'month_name' => $month,
-                'from_day' => $validated['from_day'][$month] ?? null,
-                'to_day' => $validated['to_day'][$month] ?? null,
+                'frequency_type' => $request->frequency_type,
+                'month_name' => $row['month_name'],
+                'from_day' => $row['from_day'],
+                'to_day' => $row['to_day'],
             ]);
-        }
 
-        return redirect()->route('services.index')->with('success', 'Monthly service added successfully.');
+
+            return redirect()->route('services.index')->with('success', 'Monthly services added successfully.');
+        }
     }
+
 
     public function storeQuarterly(Request $request)
     {
-
-        dd($request->all());
-        $validated = $request->validate([
-            'service_name' => 'required|string|max:255',
-            'details' => 'nullable|string',
-            'quarter_name' => 'array',
-            'quarter_name.*' => 'in:january-march,april-june,july-september,october-december',
-            'month_name' => 'array',
-            'from_day' => 'array',
-            'to_day' => 'array',
-        ]);
-
-
+        // dd($request->all());
         $service = Service::create([
-            'service_name' => $validated['service_name'],
-            'details' => $validated['details'],
-            'frequency' => 'quarterly',
+            'name' => $request->service_name,
+            'details' => $request->details,
+            'frequency' => $request->frequency_type,
         ]);
 
-
-        foreach ($validated['quarter_name'] as $quarter) {
+        foreach ($request->quarterly_type_list as $row) {
             ServiceOccurrence::create([
                 'service_id' => $service->id,
-                'frequency_type' => 'quarterly',
-                'quarter' => $quarter,
-                'month' => $validated['month_name'][$quarter] ?? null,
-                'from_day' => $validated['from_day'][$quarter] ?? null,
-                'to_day' => $validated['to_day'][$quarter] ?? null,
+                'frequency_type' => $request->frequency_type,
+                'quarter_name' => $row['quarter_name'],
+                'from_month' => $row['from_month'],
+                'from_day' => $row['from_day'],
+                'to_day' => $row['to_day'],
+                'to_month' => $row['to_month'],
             ]);
         }
 
-        return redirect()->route('services.index')->with('success', 'Quarterly service added successfully.');
+        return redirect()->route('services.index')->with('success', 'Quarterly services added successfully.');
     }
 
     public function storeBiannually(Request $request)
     {
-        $validated = $request->validate([
-            'service_name' => 'required|string|max:255',
-            'details' => 'nullable|string',
-            'biannual_name' => 'array',
-            'biannual_name.*' => 'in:january-june,july-december',
-            'month_name' => 'array',
-            'from_day' => 'array',
-            'to_day' => 'array',
-        ]);
-
-
+        // dd($request->all());
         $service = Service::create([
-            'service_name' => $validated['service_name'],
-            'details' => $validated['details'],
-            'frequency' => 'biannually',
+            'name' => $request->service_name,
+            'details' => $request->details,
+            'frequency' => $request->frequency_type,
         ]);
 
-
-        foreach ($validated['biannual_name'] as $biannual) {
+        foreach ($request->biannual_type_list as $row) {
             ServiceOccurrence::create([
                 'service_id' => $service->id,
-                'frequency_type' => 'biannually',
-                'biannual' => $biannual,
-                'month' => $validated['month_name'][$biannual] ?? null,
-                'from_day' => $validated['from_day'][$biannual] ?? null,
-                'to_day' => $validated['to_day'][$biannual] ?? null,
+                'frequency_type' => $request->frequency_type,
+                'biannual_name' => $row['biannual_name'],
+                'from_month' => $row['from_month'],
+                'from_day' => $row['from_day'],
+                'to_day' => $row['to_day'],
+                'to_month' => $row['to_month'],
             ]);
         }
 
-        return redirect()->route('services.index')->with('success', 'Biannual service added successfully.');
+        return redirect()->route('services.index')->with('success', 'Quarterly services added successfully.');
     }
+
 
     public function storeAnnually(Request $request)
     {
-        $validated = $request->validate([
-            'service_name' => 'required|string|max:255',
-            'details' => 'nullable|string',
-            'annual_names' => 'array',
-            'annual_names.*' => 'in:january-december',
-            'from_month' => 'array',
-            'from_day' => 'array',
-            'to_month' => 'array',
-            'to_day' => 'array',
-        ]);
-
-
+        dd($request->all());
         $service = Service::create([
-            'service_name' => $validated['service_name'],
-            'details' => $validated['details'],
-            'frequency' => 'annually',
+            'name' => $request->service_name,
+            'details' => $request->details,
+            'frequency' => $request->frequency_type,
         ]);
 
-
-        foreach ($validated['annual_names'] as $annual) {
+        foreach ($request->annual_type_list as $row) {
             ServiceOccurrence::create([
                 'service_id' => $service->id,
-                'frequency_type' => 'annually',
-                'annual' => $annual,
-                'from_month' => $validated['from_month'][$annual] ?? null,
-                'from_day' => $validated['from_day'][$annual] ?? null,
-                'to_month' => $validated['to_month'][$annual] ?? null,
-                'to_day' => $validated['to_day'][$annual] ?? null,
+                'frequency_type' => $request->frequency_type,
+                'from_month' => $row['from_month'],
+                'from_day' => $row['from_day'],
+                'to_day' => $row['to_day'],
+                'to_month' => $row['to_month'],
             ]);
         }
 
-        return redirect()->route('services.index')->with('success', 'Annual service added successfully.');
+        return redirect()->route('services.index')->with('success', 'Quarterly services added successfully.');
     }
+
 
     public function storeOneTime(Request $request)
     {
