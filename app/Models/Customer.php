@@ -4,30 +4,54 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use HasFactory;
+    use HasFactory;Use SoftDeletes;
     protected $table = 'customers';
 
     protected $guarded = [];
 
-    public function country()
+    public function Country()
     {
         return $this->belongsTo(Country::class, 'country_id');
     }
-
-    public function state()
+    public function State()
     {
         return $this->belongsTo(State::class, 'state_id');
     }
-
-    public function city()
+    public function City()
     {
         return $this->belongsTo(City::class, 'city_id');
     }
+    public function billingCountry()
+    {
+        return $this->belongsTo(Country::class, 'billing_country_id');
+    }
 
+    public function billingState()
+    {
+        return $this->belongsTo(State::class, 'billing_state_id');
+    }
 
+    public function billingCity()
+    {
+        return $this->belongsTo(City::class, 'billing_city_id');
+    }
 
+    public function shippingCountry()
+    {
+        return $this->belongsTo(Country::class, 'shipping_country_id');
+    }
 
+    public function shippingState()
+    {
+        return $this->belongsTo(State::class, 'shipping_state_id');
+    }
+
+    public function shippingCity()
+    {
+        return $this->belongsTo(City::class, 'shipping_city_id');
+    }
 }

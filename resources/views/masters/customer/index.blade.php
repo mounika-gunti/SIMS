@@ -41,9 +41,7 @@
                                 <tr>
                                     <th scope="col">Customer Name</th>
                                     <th scope="col">Phone Number</th>
-                                    <th scope="col">Country</th>
-                                    <th scope="col">State</th>
-                                    <th scope="col">Address</th>
+                                    <th scope="col">Service Name</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Actions</th>
                                 </tr>
@@ -53,23 +51,29 @@
                                     <tr>
                                         <td>{{ $customer->name }}</td>
                                         <td>{{ $customer->phone_number }}</td>
-                                        <td>{{ $customer->countries }}</td>
-                                        <td>{{ $customer->states }}</td>
-                                        <td>{{ $customer->address }}</td>
+
                                         <td>
                                             <i class="fas fa-check-circle text-success"></i>
                                         </td>
+                                        <td></td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <a href="#" class="btn btn-edit btn-sm me-2 rounded">
+                                                <a href="{{ route('customer.edit', $customer->id) }}"
+                                                    class="btn btn-edit btn-sm me-2 rounded">
                                                     Edit
                                                 </a>
-                                                <a href="#" class="btn btn-view btn-sm me-2 rounded">
+                                                <a href="{{ route('customer.show', $customer->id) }}"
+                                                    class="btn btn-view btn-sm me-2 rounded">
                                                     View
                                                 </a>
-                                                <a href="javascript:;" class="btn btn-deactivate btn-sm rounded">
-                                                    Deactivate
-                                                </a>
+                                                <form action="{{ route('customer.destroy', $customer->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button class="btn btn-deactivate btn-sm rounded">
+                                                        Deactivate
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

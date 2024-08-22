@@ -23,22 +23,22 @@ class CustomerRequest extends FormRequest
     {
         return [
 
-                'name' => 'required|string|max:255',
-                'email' => 'nullable|email|max:255',
-                'phone_number' => 'nullable|string|max:20',
-                'payment_terms' => 'nullable|string|max:255',
-                'credit_days' => 'nullable|integer|min:0',
-                'description' => 'nullable|string|max:1000',
-                'shipping_country_id' => 'required|exists:countries,id',
-                'shipping_state_id' => 'required|exists:states,id',
-                'shipping_city_id' => 'required|exists:cities,id',
-                'shipping_address' => 'required|string|max:500',
-                'billing_country_id' => 'required|exists:countries,id',
-                'billing_state_id' => 'required|exists:states,id',
-                'billing_city_id' => 'required|exists:cities,id',
-                'billing_address' => 'required|string|max:500',
-                'gst_number' => 'required|string|max:15|regex:/^\d{2}[A-Z]{5}\d{4}[A-Z]{1}[A-Z\d]{1}[Z]{1}[A-Z\d]{1}$/',
-                'assigned_to' => 'nullable|exists:users,id',
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'phone_number' => 'nullable|string|max:15',
+            'payment_terms' => 'nullable|string|max:255',
+            'credit_days' => 'nullable|integer',
+            'description' => 'nullable|string',
+            'billing_country_id' => 'required|exists:countries,id',
+            'billing_state_id' => 'required|exists:states,id',
+            'billing_city_id' => 'required|exists:cities,id',
+            'billing_address' => 'required|string|max:255',
+            'gst_number' => 'required|string|max:15',
+            'services' => 'nullable|array',
+            'shipping_country_id' => 'nullable|exists:countries,id',
+            'shipping_state_id' => 'nullable|exists:states,id',
+            'shipping_city_id' => 'nullable|exists:cities,id',
+            'shipping_address' => 'nullable|string|max:255',
         ];
     }
 }

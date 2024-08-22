@@ -286,5 +286,29 @@
                 }
             });
         });
+
+        $('#same_as_billing').change(function() {
+            if ($(this).is(':checked')) {
+
+                $('#shipping_country_id').val($('#billing_country_id').val()).trigger('change');
+
+                setTimeout(function() {
+                    $('#shipping_state_id').val($('#billing_state_id').val()).trigger('change');
+
+                    setTimeout(function() {
+                        $('#shipping_city_id').val($('#billing_city_id').val());
+                    }, 300);
+                }, 300);
+
+
+                $('#shipping_address').val($('#billing_address').val());
+            } else {
+
+                $('#shipping_country_id').val('').change();
+                $('#shipping_state_id').val('').change();
+                $('#shipping_city_id').val('').change();
+                $('#shipping_address').val('');
+            }
+        });
     </script>
 @endsection
