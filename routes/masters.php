@@ -52,7 +52,7 @@ Route::post('/service/store-monthly', [ServiceController::class, 'storeMonthly']
 Route::post('/service/store-quarterly', [ServiceController::class, 'storeQuarterly'])->name('services.storeQuarterly');
 Route::post('/service/store-biannually', [ServiceController::class, 'storeBiAnnually'])->name('services.storeBiAnnually');
 Route::post('/service/store-annually', [ServiceController::class, 'storeAnnually'])->name('services.storeAnnually');
-Route::post('/service/store-onetime', [ServiceController::class, 'storeOneTime'])->name('services.storeOneTime');
+Route::post('/services/store-OneTime', [ServiceController::class, 'storeOneTime'])->name('services.storeOneTime');
 
 
 Route::get('/product_type', [ProductTypeController::class, 'index'])->name('product_type.index');

@@ -49,7 +49,7 @@
                         <option value="quarterly">Quarterly</option>
                         <option value="biannually">Bi Annually</option>
                         <option value="annually">Annually</option>
-                        <option value="one-time">One-Time</option>
+                        <option value="onetime">One-Time</option>
                     </select>
                     @error('frequency_type')
                     <p class="text-danger">{{ $message }}</p>
@@ -221,7 +221,7 @@
                                     <th>To Day</th>
                                 </tr>
                             </thead>
-                            <tbody id="biannual_table">
+                            <tbody id="biannually_table">
                                 @foreach ([
                                 'january-june' => 'January-June',
                                 'july-december' => 'July-December'
@@ -235,7 +235,7 @@
                                     <td class="biannual_name" data-row_id="{{ $index }}">{{ $label }}</td>
                                     <td>
                                         <select id="month_{{ $index }}" name="from_month[{{ $index }}]"
-                                            class="form-select from_month" data-row_id="{{ $index }}">
+                                            data-row_id="{{ $index }}" class="form-select from_month">
                                             <option value="">Select Month</option>
                                             @if ($index == 'january-june')
                                             <option value="January">January</option>
@@ -294,7 +294,7 @@
         </div>
 
         <div class="row mb-4">
-            <div class="col-md-12 card-wrapper" id="one-time-card" style="display: none;">
+            <div class="col-md-12 card-wrapper" id="onetime-card" style="display: none;">
                 <div class="card">
                     <div class="card-header text-center">
                         <h5> One Time</h5>
@@ -307,16 +307,14 @@
                                     <th>To Date</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="onetime_table">
                                 @foreach (['range_1'] as $index => $range)
                                 <tr>
                                     <td>
-                                        <input type="date" id="fromDate_{{ $index }}" name="from_day[{{ $index }}]"
-                                            class="form-control">
+                                        <input type="date" data-row_id="{{ $index }}" class="form-control from_date">
                                     </td>
                                     <td>
-                                        <input type="date" id="toDate_{{ $index }}" name="to_day[{{ $index }}]"
-                                            class="form-control">
+                                        <input type="date" data-row_id="{{ $index }}" class="form-control to_date">
                                     </td>
                                 </tr>
                                 @endforeach
@@ -345,15 +343,15 @@
                                     <th>To Day</th>
                                 </tr>
                             </thead>
-                            <tbody id="annual_table">
+                            <tbody id="annually_table">
                                 @foreach ([
                                 'january-december' => ['from_month' => 'January', 'from_day' => 1, 'to_month' =>
                                 'December', 'to_day' => 31]
                                 ] as $index => $dates)
                                 <tr>
                                     <td>
-                                        <select id="month_{{ $index }}" name="from_month[{{ $index }}]"
-                                            class="form-select from_month" data-row_id="{{ $index }}">
+                                        <select name="from_month[{{ $index }}]" class="form-select from_month"
+                                            data-row_id="{{ $index }}">
                                             <option value="">Select Month</option>
                                             @foreach ([
                                             'january' => 'January',
@@ -377,12 +375,13 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" id="fromDate_{{ $index }}" name="from_day[{{ $index }}] "
-                                            class="form-control">
+                                        <input type="number" name="from_day[{{ $index }}]" class="form-control from_day"
+                                            min="1" max="31">
+
                                     </td>
                                     <td>
-                                        <select id="month_{{ $index }}" name="to_month[{{ $index }}]"
-                                            class="form-select to_month" data-row_id="{{ $index }}">
+                                        <select name="to_month[{{ $index }}]" class="form-select to_month"
+                                            data-row_id="{{ $index }}">
                                             <option value="">Select Month</option>
                                             @foreach ([
                                             'january' => 'January',
@@ -406,8 +405,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" id="toDate_{{ $index }}" name="to_day[{{ $index }}]"
-                                            class="form-control">
+                                        <input type="number" name="to_day[{{ $index }}]" class="form-control to_day">
                                     </td>
                                 </tr>
                                 @endforeach
@@ -549,27 +547,85 @@ $('#save_btn').click(function(e) {
     }
 });
 
-var annual_type_list = [];
-function updateAnnuallyList() {
-    annual_type_list = [];
-    $('#annual_table .select_month:checked').each(function() {
+var biannually_type_list = [];
+function updateBiannuallyList() {
+    biannually_type_list = [];
+    $('#biannually_table .select_month:checked').each(function() {
         var row_id = $(this).data('row_id');
+        var biannual_name = row_id === 'january-june' ? 'first' : 'second';
         var from_month = $(`.from_month[data-row_id="${row_id}"]`).val();
         var to_month = $(`.to_month[data-row_id="${row_id}"]`).val();
         var from_day = $(`.from_day[data-row_id="${row_id}"]`).val();
         var to_day = $(`.to_day[data-row_id="${row_id}"]`).val();
 
-        annual_type_list.push({
+        biannually_type_list.push({
+            biannual_name: biannual_name,
             from_day: from_day,
             to_day: to_day,
             from_month: from_month,
             to_month: to_month,
         });
     });
-    console.log("annually:", annual_type_list);
+    console.log("biannually:", biannually_type_list);
 }
 
-$(document).on('change', 'input:checkbox, input.from_day, input.to_day, select.from_month, select.to_month', function() {
+$(document).on('change', 'input:checkbox, input.from_day, input.to_day', function() {
+    updateBiannuallyList();
+});
+
+$('#save_btn').click(function(e) {
+    e.preventDefault();
+    console.log('Saving biannually data...');
+    var service_name = $('#service_name').val();
+    var details = $('#details').val();
+    var frequency_type = $('#frequency_type').val();
+    console.log('Frequency Type:', frequency_type);
+
+    if (frequency_type === "biannually") {
+        console.log('Making AJAX request...');
+        $.ajax({
+            url: '{{ route('services.storeBiAnnually') }}',
+            method: 'POST',
+            data: {
+                service_name: service_name,
+                details: details,
+                frequency_type: frequency_type,
+                biannually_type_list: biannually_type_list,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                console.log('Success:', response);
+                window.location.href = response.redirect_url;
+            },
+            error: function(xhr) {
+                console.log('Error:', xhr.responseText);
+            }
+        });
+    }
+});
+
+
+var annually_type_list = [];
+function updateAnnuallyList() {
+    annually_type_list = [];
+    $('#annually_table tr').each(function() {
+        var row_id = $(this).find('.from_month').data('row_id');
+        var from_month = $(this).find('.from_month').val();
+        var to_month = $(this).find('.to_month').val();
+        var from_day = $(this).find('.from_day').val();
+        var to_day = $(this).find('.to_day').val();
+
+        annually_type_list.push({
+            from_day: from_day,
+            to_day: to_day,
+            from_month: from_month,
+            to_month: to_month,
+        });
+    });
+    console.log("annually:", annually_type_list);
+}
+
+$(document).on('change', 'input.from_day, input.to_day, select.from_month, select.to_month', function() {
     updateAnnuallyList();
 });
 
@@ -587,7 +643,55 @@ $('#save_btn').click(function(e) {
                 service_name: service_name,
                 details: details,
                 frequency_type: frequency_type,
-                annual_type_list: annual_type_list,
+                annually_type_list: annually_type_list,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                console.log('Success:', response);
+                window.location.href = response.redirect_url;
+            },
+            error: function(xhr) {
+                console.log('Error:', xhr.responseText);
+            }
+        });
+    }
+});
+
+var onetime_type_list = [];
+function updateonetimeList() {
+    onetime_type_list = [];
+    $('#onetime_table tr').each(function() {
+        var row_id = $(this).find('.from_date').data('row_id');
+        var from_date = $(this).find('.from_date').val();
+        var to_date = $(this).find('.to_date').val();
+
+            onetime_type_list.push({
+                from_date: from_date,
+                to_date: to_date,
+            });
+    });
+    console.log("onetime:", onetime_type_list);
+}
+
+$(document).on('change', 'input.from_date, input.to_date', function() {
+    updateonetimeList();
+});
+
+$('#save_btn').click(function(e) {
+    e.preventDefault();
+    var service_name = $('#service_name').val();
+    var details = $('#details').val();
+    var frequency_type = $('#frequency_type').val();
+
+    if (frequency_type === "onetime") {
+        $.ajax({
+            url: '{{ route('services.storeOneTime') }}',
+            method: 'POST',
+            data: {
+                service_name: service_name,
+                details: details,
+                frequency_type: frequency_type,
+                onetime_type_list: onetime_type_list,
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {

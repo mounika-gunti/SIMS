@@ -42,30 +42,36 @@ Services
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach($services as $service)
                             <tr>
-                                <td>Mounika</td>
-                                <td>1234567898</td>
-                                <td>India</td>
-                                <td>Karnataka</td>
-                                <td>Bangalore</td>
+                                <td>{{ $service->name }}</td>
+                                <td>{{ $service->details }}</td>
+                                <td>{{ $service->frequency }}</td>
+                                <td></td>
+                                <td></td>
                                 <td>
                                     <i class="fas fa-check-circle text-success"></i>
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="" class="btn btn-edit btn-sm me-2 rounded">
+                                        <a href="{{ route('services.edit', $service->id) }}"
+                                            class="btn btn-edit btn-sm me-2 rounded">
                                             Edit
                                         </a>
-                                        <a href="" class="btn btn-view btn-sm me-2 rounded">
+                                        <a href="{{ route('services.show', $service->id) }}"
+                                            class="btn btn-view btn-sm me-2 rounded">
                                             View
                                         </a>
-                                        <a href="javascript:;" class="btn btn-deactivate btn-sm rounded">
+                                        <a href="javascript:;" data-id="{{ $service->id }}"
+                                            class="btn btn-deactivate btn-sm rounded">
                                             Deactivate
                                         </a>
                                     </div>
                                 </td>
                             </tr>
+                            @endforeach
                         </tbody>
+
                     </table>
                 </div>
             </div>
