@@ -25,10 +25,10 @@ class CustomerRequest extends FormRequest
 
             'name' => 'required|string|max:255',
             'email' => 'nullable|email|max:255',
-            'phone_number' => 'nullable|string|max:15',
+            'phone_number' => 'required|string|max:15',
             'payment_terms' => 'nullable|string|max:255',
             'credit_days' => 'nullable|integer',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:1000',
             'billing_country_id' => 'required|exists:countries,id',
             'billing_state_id' => 'required|exists:states,id',
             'billing_city_id' => 'required|exists:cities,id',
@@ -39,6 +39,7 @@ class CustomerRequest extends FormRequest
             'shipping_state_id' => 'nullable|exists:states,id',
             'shipping_city_id' => 'nullable|exists:cities,id',
             'shipping_address' => 'nullable|string|max:255',
+            'assigned_to'=>'required|'
         ];
     }
 }

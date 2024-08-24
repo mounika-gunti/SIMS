@@ -13,6 +13,16 @@ class Customer extends Model
 
     protected $guarded = [];
 
+    public function service(){
+        return $this->hasMany(Service::class, 'service_id');
+
+
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class, 'assigned_to');
+    }
     public function Country()
     {
         return $this->belongsTo(Country::class, 'country_id');

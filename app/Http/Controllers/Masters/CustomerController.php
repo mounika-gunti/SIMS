@@ -9,6 +9,8 @@ use App\Models\Customer;
 use App\Models\Country;
 use App\Models\State;
 use App\Models\City;
+use App\Models\Employee;
+use App\Models\Service;
 use Carbon\Carbon;
 
 
@@ -20,7 +22,7 @@ class CustomerController extends Controller
 
         public function index()
         {
-            $customers = Customer::with('billingCountry', 'billingState', 'billingCity','shippingCountry', 'shippingState', 'shippingCity')->get();
+            $customers = Customer::all();
             return view('masters.customer.index', compact('customers'));
         }
 
@@ -28,11 +30,13 @@ class CustomerController extends Controller
     public function create()
     {
         $customers=Customer::with('country','state','city')->get();
+        $employees = Employee::select('id', 'first_name')->get();
         $countries=Country::all();
         $states=State::all();
         $cities=City::all();
+        $services=Service::all();
 
-        return view('masters.customer.create',compact('customers','countries','states','cities'));
+        return view('masters.customer.create',compact('customers','countries','states','cities','employees','services'));
     }
 
     public function store(CustomerRequest $request)
@@ -52,6 +56,8 @@ class CustomerController extends Controller
         $customer->billing_city_id = $validatedData['billing_city_id'];
         $customer->billing_address = $validatedData['billing_address'];
         $customer->gst_number = $validatedData['gst_number'];
+        $customer->assigned_to = $validatedData['assigned_to'];
+
 
 
         if ($request->filled('same_as_billing')) {
@@ -82,12 +88,14 @@ class CustomerController extends Controller
     $customer->phone_number = $validatedData['phone_number'];
     $customer->payment_terms = $validatedData['payment_terms'];
     $customer->credit_days = $validatedData['credit_days'];
-    $customer->description = $validatedData['description'];
+    $customer->description = $validatedData['description'] ?? null;
     $customer->billing_country_id = $validatedData['billing_country_id'];
     $customer->billing_state_id = $validatedData['billing_state_id'];
     $customer->billing_city_id = $validatedData['billing_city_id'];
     $customer->billing_address = $validatedData['billing_address'];
     $customer->gst_number = $validatedData['gst_number'];
+    $customer->assigned_to = $validatedData['assigned_to'];
+
 
     if ($request->has('shipping_address')) {
         $customer->shipping_country_id = $customer->billing_country_id;
@@ -109,23 +117,26 @@ class CustomerController extends Controller
 
     public function show($id)
     {
-            $customers = Customer::with('billingCountry', 'billingState', 'billingCity', 'shippingCountry', 'shippingState', 'shippingCity')->findOrFail($id);
+        $customers = Customer::with('billingCountry','billingState','billingCity','shippingCountry','shippingState','shippingState')->find($id);
             $countries = Country::all();
             $states = State::all();
             $cities = City::all();
+            $employees = Employee::select('id', 'first_name')->get();
 
-        return view('masters.customer.view',compact('customers','countries','states','cities'));
+
+        return view('masters.customer.view',compact('customers','countries','states','cities','employees'));
     }
 
     public function edit($id)
     {
-        $customers = Customer::with('billingCountry', 'billingState', 'billingCity', 'shippingCountry', 'shippingState', 'shippingCity')->findOrFail($id);
+        $customers = Customer::findOrFail($id);
 
         $countries = Country::all();
         $states = State::all();
         $cities = City::all();
+        $employees = Employee::select('id', 'first_name')->get();
 
-        return view('masters.customer.edit', compact('customers', 'countries', 'states', 'cities'));
+        return view('masters.customer.edit', compact('customers', 'countries', 'states', 'cities','employees'));
     }
 
 

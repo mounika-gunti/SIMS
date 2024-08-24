@@ -21,5 +21,12 @@ class Employee extends Model
     ];
 
 
+public function customers()
+{
+    return $this->hasMany(Customer::class, 'assigned_to');
+}
+
+
+
 
 }

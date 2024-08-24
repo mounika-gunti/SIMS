@@ -29,6 +29,9 @@
                             <label for="customer_name"><b>Customer Name*</b></label>
                             <input type="text" class="form-control" name="name" id="name"
                                 placeholder="Enter Customer Name" required>
+                            @error('name')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="form-group col-md-4">
                             <label for="email_id"><b>Email Id</b></label>
@@ -36,9 +39,13 @@
                                 placeholder="Enter Email ">
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="phone_number"><b>Phone Number</b></label>
+                            <label for="phone_number"><b>Phone Number*</b></label>
                             <input type="text" class="form-control" id="phone_number" name="phone_number"
                                 placeholder="Enter Phone Number">
+                            @error('phone_number')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+
                         </div>
                     </div>
                     <div class="row mb-4">
@@ -59,32 +66,45 @@
                     </div>
                     <div class="row mb-3">
                         <div class="form-group col-md-4">
-                            <label for="shipping_country_id"><b>Country*</b></label>
+                            <label for="billing_country_id"><b>Country*</b></label>
                             <select class="form-select" name="billing_country_id" id="billing_country_id" required>
                                 <option selected disabled>Select Country</option>
                                 @foreach ($countries as $con)
                                     <option value="{{ $con->id }}">{{ $con->name }}</option>
                                 @endforeach
                             </select>
+                            @error('billing_country_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="shipping_state_id"><b>State/Region*</b></label>
+                            <label for="billing_state_id"><b>State/Region*</b></label>
                             <select class="form-select" name="billing_state_id" id="billing_state_id" required>
                                 <option selected disabled>Select State</option>
                             </select>
+                            @error('billing_state_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="shipping_city_id"><b>City</b></label>
+                            <label for="billing_city_id"><b>City*</b></label>
                             <select class="form-select" name="billing_city_id" id="billing_city_id">
                                 <option selected disabled>Select City</option>
                             </select>
                         </div>
+                        @error('billing_city_id')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
                     <div class="row mb-3">
                         <div class="form-group col-md-6">
-                            <label for="address"><b>Address</b></label>
+                            <label for="address"><b>Address*</b></label>
                             <textarea class="form-control" id="billing_address" name="billing_address" placeholder="Enter Address" rows="3"></textarea>
                         </div>
+                        @error('billing_address')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
+
                     </div>
                     <div class="row mb-2">
                         <div class="col-md-12 d-flex align-items-center">
@@ -104,18 +124,28 @@
                                     <option value="{{ $con->id }}">{{ $con->name }}</option>
                                 @endforeach
                             </select>
+                            @error('shipping_country_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="form-group col-md-4">
                             <label for="shipping_state_id"><b>State/Region*</b></label>
                             <select class="form-select" name="shipping_state_id" id="shipping_state_id" required>
                                 <option selected disabled>Select State</option>
                             </select>
+                            @error('shipping_state_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                         <div class="form-group col-md-4">
-                            <label for="shipping_city_id"><b>City</b></label>
+                            <label for="shipping_city_id"><b>City*</b></label>
                             <select class="form-select" name="shipping_city_id" id="shipping_city_id">
                                 <option selected disabled>Select City</option>
                             </select>
+                            @error('shipping_city_id')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -130,29 +160,45 @@
                                 placeholder="Enter GST Registration Number">
                         </div>
                     </div>
-                    <div class="row mb-3">
-                        <div class="form-group col-md-3">
+                    <div class="row mb-3 d-flex">
+                        <div class="form-group col-md-6">
                             <label for="services"><b>Services</b></label>
-                            <div class="form-check">
+                            {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="gst" name="services[]"
                                     value="GST">
                                 <label class="form-check-label" for="gst">GST</label>
+                            </div> --}}
+                            <div>
+                                @foreach ($services as $service)
+                                    <div class="form-check">
+                                        <input class="form-check-input service-checkbox" type="checkbox"
+                                            value="{{ $service->id }}" name="services" id="service">
+                                        <label class="form-check-label" for="service">
+                                            {{ $service->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
                             </div>
 
-                            <div class="form-check">
+                            {{-- <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="pt" name="services[]"
                                     value="PT">
                                 <label class="form-check-label" for="pt">PT</label>
-                            </div>
+                            </div> --}}
                         </div>
-                    </div>
-                    <div class="form-group col-md-6" style="margin-left: 250px; margin-top:-50px;">
-                        <label for=" assigned_to"><b>Assigned To*</b></label>
-                        <select id="assigned_to" class="form-select" name="assigned_to">
-                            <option value="">Select Assigned To</option>
-                            <option value="a">A</option>
-                            <option value="b">B</option>
-                        </select>
+                        <div class="form-group col-md-6 justify-content-end">
+                            <label for="assigned_to"><b>Assigned To*</b></label>
+                            <select class="form-select" name="assigned_to" id="assigned_to" required>
+                                <option selected disabled>Select Assigned To</option>
+                                @foreach ($employees as $employee)
+                                    <option value="{{ $employee->id }}">{{ $employee->first_name }}</option>
+                                @endforeach
+                            </select>
+                            @error('assigned_to')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+
+                        </div>
                     </div>
 
 
@@ -171,9 +217,6 @@
         </div>
     </div>
 
-    @if ($errors->any())
-        {{ implode('', $errors->all('<div>:message</div>')) }}
-    @endif
 
     <script>
         $(document).ready(function() {
