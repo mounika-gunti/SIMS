@@ -10,5 +10,5 @@ class Menus extends Model
     use HasFactory;
     protected $table = 'menus';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'address', 'icon'];
 }

@@ -26,7 +26,7 @@ class UserManagementController extends Controller
     }
     public function store(UserRequest $request)
     {
-
+        // dd($request->all());
         $validatedData = $request->validated();
         $validatedData['password'] = bcrypt($validatedData['password']);
 
@@ -62,7 +62,7 @@ class UserManagementController extends Controller
 
     public function update(UserRequest $request, $id)
     {
-
+        dd($request->all());
         $validatedData = $request->validated();
 
         if (!empty($validatedData['password'])) {
@@ -175,6 +175,7 @@ class UserManagementController extends Controller
         }
         return response()->json(['success' => 'User permissions updated successfully'], 200);
     }
+
 
     public function export()
     {

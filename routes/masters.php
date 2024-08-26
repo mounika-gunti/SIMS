@@ -57,6 +57,12 @@ Route::post('/service/store-biannually', [ServiceController::class, 'storeBiAnnu
 Route::post('/service/store-annually', [ServiceController::class, 'storeAnnually'])->name('services.storeAnnually');
 Route::post('/services/store-OneTime', [ServiceController::class, 'storeOneTime'])->name('services.storeOneTime');
 
+Route::put('/service/update-monthly/{id}', [ServiceController::class, 'updateMonthly'])->name('services.updateMonthly');
+Route::put('/service/update-quarterly,{id}', [ServiceController::class, 'updateQuarterly'])->name('services.updateQuarterly');
+Route::put('/service/update-biannually,{id}', [ServiceController::class, 'updateBiAnnually'])->name('services.updateBiAnnually');
+Route::put('/service/update-annually,{id}', [ServiceController::class, 'updateAnnually'])->name('services.updateAnnually');
+Route::put('/services/update-OneTime,{id}', [ServiceController::class, 'storeOneTime'])->name('services.updateOneTime');
+
 
 Route::get('/product_type', [ProductTypeController::class, 'index'])->name('product_type.index');
 // Route::post('/product_type/store', [ProductTypeController::class, 'store'])->name('product_type.store');

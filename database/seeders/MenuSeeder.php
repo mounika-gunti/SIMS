@@ -14,11 +14,11 @@ class MenuSeeder extends Seeder
     public function run(): void
     {
         $menus = [
-            ['name' => 'Customer Master', 'address' => 'master/customer_master', 'icon' => "fa fa-address-book"],
-            ['name' => 'Employee Details', 'address' => 'master/employee_details', 'icon' => "fa fa-address-book"],
-            ['name' => 'Service Master', 'address' => 'master/service_master', 'icon' => "fa fa-address-book"],
-            ['name' => 'Reports', 'address' => 'master/reports', 'icon' => "fa fa-address-book"],
-            ['name' => 'User Management', 'address' => 'master/user_management', 'icon' => "fa fa-address-book"],
+            ['name' => 'Customer Master', 'address' => 'customer', 'icon' => "fa fa-address-book"],
+            ['name' => 'Employee Details', 'address' => 'employee_master', 'icon' => "fa fa-address-book"],
+            ['name' => 'Service Master', 'address' => 'services', 'icon' => "fa fa-address-book"],
+            ['name' => 'Reports', 'address' => 'reports', 'icon' => "fa fa-address-book"],
+            ['name' => 'User Management', 'address' => 'user_management', 'icon' => "fa fa-address-book"],
         ];
         Menus::truncate();
         foreach ($menus as $menu) {

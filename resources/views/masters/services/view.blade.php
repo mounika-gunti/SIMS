@@ -21,8 +21,6 @@
             <h3 class="mb-0"><b>View Service Master</b></h3>
         </div>
         <hr>
-
-        @csrf
         <div class="tab-content" id="tabcontent">
             <div class="row mb-4 mt-3">
                 <div class="form-group col-md-4">
@@ -82,35 +80,38 @@
                                 </tr>
                             </thead>
                             <tbody id="monthly_table">
-                                @php $index = 0; @endphp
                                 @foreach (['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august',
                                 'september', 'october', 'november', 'december'] as $month)
                                 @php
                                 $monthKey = strtolower($month);
-                                $isSelected = isset($occurrences['monthly'][$monthKey]);
-                                $fromDay = $isSelected ? $occurrences['monthly'][$monthKey]['from_day'] : '';
-                                $toDay = $isSelected ? $occurrences['monthly'][$monthKey]['to_day'] : '';
+                                $isSelected = isset($occurences['monthly'][$monthKey]);
+                                $fromDay = $isSelected ? $occurences['monthly'][$monthKey]['from_day'] : '';
+                                $toDay = $isSelected ? $occurences['monthly'][$monthKey]['to_day'] : '';
                                 @endphp
-                                <tr data-row_id="{{ $index }}">
+                                <tr data-row_id="{{ $loop->index }}">
                                     <td>
-                                        <input type="checkbox" data-row_id="{{ $index }}"
-                                            class="form-check-input select_month" {{ $isSelected ? 'checked' : '' }}>
+                                        <input type="checkbox" data-row_id="{{ $loop->index }}"
+                                            class="form-check-input select_month" {{ $isSelected ? 'checked' : '' }}
+                                            disabled>
                                     </td>
-                                    <td class="month_name" data-row_id="{{ $index }}">{{ ucfirst($month) }}</td>
-                                    <td>
-                                        <input type="number" data-row_id="{{ $index }}" class="form-control from_day"
-                                            min="1" max="31" value="{{ $fromDay }}">
+                                    <td class="month_name" data-row_id="{{ $loop->index }}">
+                                        {{ ucfirst($month) }}
                                     </td>
                                     <td>
-                                        <input type="number" data-row_id="{{ $index }}" class="form-control to_day"
-                                            min="1" max="31" value="{{ $toDay }}">
+                                        <input type="number" name="from_day[{{ $loop->index }}]"
+                                            data-row_id="{{ $loop->index }}" class="form-control from_day" min="1"
+                                            max="31" value="{{ $fromDay }}" disabled>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="to_day[{{ $loop->index }}]"
+                                            data-row_id="{{ $loop->index }}" class="form-control to_day" min="1"
+                                            max="31" value="{{ $toDay }}" disabled>
                                     </td>
                                 </tr>
-                                @php $index++; @endphp
                                 @endforeach
                             </tbody>
-                        </table>
 
+                        </table>
                     </div>
                 </div>
             </div>
@@ -141,71 +142,82 @@
                                 'july-september' => 'July-September',
                                 'october-december' => 'October-December'
                                 ] as $index => $label)
+                                @php
+                                $isSelected = isset($occurences['quarterly'][$index]);
+                                $fromMonth = $isSelected ? $occurences['quarterly'][$index]['from_month'] : '';
+                                $fromDay = $isSelected ? $occurences['quarterly'][$index]['from_day'] : '';
+                                $toMonth = $isSelected ? $occurences['quarterly'][$index]['to_month'] : '';
+                                $toDay = $isSelected ? $occurences['quarterly'][$index]['to_day'] : '';
+                                @endphp
                                 <tr>
                                     <td>
-                                        <input type="checkbox" id="quarter_{{ $index }}" name="quarter_name"
-                                            value="{{ $index }}" class="form-check-input select_month"
-                                            data-row_id="{{ $index }}">
+                                        <input type="checkbox" id="quarter_{{ $index }}"
+                                            name="quarter_name[{{ $index }}]" value="{{ $index }}"
+                                            class="form-check-input select_month" {{ $isSelected ? 'checked' : '' }}
+                                            disabled>
                                     </td>
-                                    <td class="quarter_name" data-row_id="{{ $index }}">{{ $label }}</td>
+                                    <td class="quarter_name">{{ $label }}</td>
                                     <td>
-                                        <select id="month_{{ $index }}" name="from_month[{{ $index }}]"
-                                            data-row_id="{{ $index }}" class="form-select from_month">
+                                        <select id="from_month_{{ $index }}" name="from_month[{{ $index }}]"
+                                            class="form-select from_month">
                                             <option value="">Select Month</option>
-                                            @if ($index == 'january-march')
-                                            <option value="January">January</option>
-                                            <option value="February">February</option>
-                                            <option value="March">March</option>
-                                            @elseif ($index == 'april-june')
-                                            <option value="April">April</option>
-                                            <option value="May">May</option>
-                                            <option value="June">June</option>
-                                            @elseif ($index == 'july-september')
-                                            <option value="July">July</option>
-                                            <option value="August">August</option>
-                                            <option value="September">September</option>
-                                            @elseif ($index == 'october-december')
-                                            <option value="October">October</option>
-                                            <option value="November">November</option>
-                                            <option value="December">December</option>
-                                            @endif
+                                            @foreach ([
+                                            'January' => 'January',
+                                            'February' => 'February',
+                                            'March' => 'March',
+                                            'April' => 'April',
+                                            'May' => 'May',
+                                            'June' => 'June',
+                                            'July' => 'July',
+                                            'August' => 'August',
+                                            'September' => 'September',
+                                            'October' => 'October',
+                                            'November' => 'November',
+                                            'December' => 'December'
+                                            ] as $month_value => $month_label)
+                                            <option value="{{ $month_value }}"
+                                                {{ $month_value === $fromMonth ? 'selected' : '' }}>
+                                                {{ $month_label }}
+                                            </option>
+                                            @endforeach
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" data-row_id="{{ $index }}" class="form-control from_day"
-                                            min="1" max="31">
+                                        <input type="number" name="from_day[{{ $index }}]" class="form-control from_day"
+                                            min="1" max="31" value="{{ $fromDay }}">
                                     </td>
                                     <td>
-                                        <select id="month_{{ $index }}" name="to_month[{{ $index }}]"
-                                            data-row_id="{{ $index }}" class="form-select to_month">
+                                        <select id="to_month_{{ $index }}" name="to_month[{{ $index }}]"
+                                            class="form-select to_month">
                                             <option value="">Select Month</option>
-                                            @if ($index == 'january-march')
-                                            <option value="January">January</option>
-                                            <option value="February">February</option>
-                                            <option value="March">March</option>
-                                            @elseif ($index == 'april-june')
-                                            <option value="April">April</option>
-                                            <option value="May">May</option>
-                                            <option value="June">June</option>
-                                            @elseif ($index == 'july-september')
-                                            <option value="July">July</option>
-                                            <option value="August">August</option>
-                                            <option value="September">September</option>
-                                            @elseif ($index == 'october-december')
-                                            <option value="October">October</option>
-                                            <option value="November">November</option>
-                                            <option value="December">December</option>
-                                            @endif
+                                            @foreach ([
+                                            'January' => 'January',
+                                            'February' => 'February',
+                                            'March' => 'March',
+                                            'April' => 'April',
+                                            'May' => 'May',
+                                            'June' => 'June',
+                                            'July' => 'July',
+                                            'August' => 'August',
+                                            'September' => 'September',
+                                            'October' => 'October',
+                                            'November' => 'November',
+                                            'December' => 'December'
+                                            ] as $month_value => $month_label)
+                                            <option value="{{ $month_value }}"
+                                                {{ $month_value === $toMonth ? 'selected' : '' }}>
+                                                {{ $month_label }}
+                                            </option>
+                                            @endforeach
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" data-row_id="{{ $index }}" class="form-control to_day"
-                                            min="1" max="31">
+                                        <input type="number" name="to_day[{{ $index }}]" class="form-control to_day"
+                                            min="1" max="31" value="{{ $toDay }}">
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
-
                         </table>
                     </div>
                 </div>
@@ -235,68 +247,84 @@
                                 'january-june' => 'January-June',
                                 'july-december' => 'July-December'
                                 ] as $index => $label)
+                                @php
+                                $isSelected = isset($occurences['biannually'][$index]);
+                                $fromMonth = $isSelected ? $occurences['biannually'][$index]['from_month'] : '';
+                                $fromDay = $isSelected ? $occurences['biannually'][$index]['from_day'] : '';
+                                $toMonth = $isSelected ? $occurences['biannually'][$index]['to_month'] : '';
+                                $toDay = $isSelected ? $occurences['biannually'][$index]['to_day'] : '';
+                                @endphp
                                 <tr>
                                     <td>
-                                        <input type="checkbox" id="biannual_{{ $index }}" name="biannual_name"
-                                            value="{{ $index }}" class="form-check-input select_month"
-                                            data-row_id="{{ $index }}">
+                                        <input type="checkbox" id="biannual_{{ $index }}"
+                                            name="biannually_name[{{ $index }}]" value="{{ $index }}"
+                                            class="form-check-input select_month" {{ $isSelected ? 'checked' : '' }}>
                                     </td>
-                                    <td class="biannual_name" data-row_id="{{ $index }}">{{ $label }}</td>
+                                    <td class="biannual_name">{{ $label }}</td>
                                     <td>
-                                        <select id="month_{{ $index }}" name="from_month[{{ $index }}]"
-                                            data-row_id="{{ $index }}" class="form-select from_month">
+                                        <select id="from_month_{{ $index }}" name="from_month[{{ $index }}]"
+                                            class="form-select from_month">
                                             <option value="">Select Month</option>
-                                            @if ($index == 'january-june')
-                                            <option value="January">January</option>
-                                            <option value="February">February</option>
-                                            <option value="March">March</option>
-                                            <option value="April">April</option>
-                                            <option value="May">May</option>
-                                            <option value="June">June</option>
-                                            @elseif ($index == 'july-december')
-                                            <option value="July">July</option>
-                                            <option value="August">August</option>
-                                            <option value="September">September</option>
-                                            <option value="October">October</option>
-                                            <option value="November">November</option>
-                                            <option value="December">December</option>
-                                            @endif
+                                            @foreach ([
+                                            'January' => 'January',
+                                            'February' => 'February',
+                                            'March' => 'March',
+                                            'April' => 'April',
+                                            'May' => 'May',
+                                            'June' => 'June',
+                                            'July' => 'July',
+                                            'August' => 'August',
+                                            'September' => 'September',
+                                            'October' => 'October',
+                                            'November' => 'November',
+                                            'December' => 'December'
+                                            ] as $month_value => $month_label)
+                                            <option value="{{ $month_value }}"
+                                                {{ $month_value === $fromMonth ? 'selected' : '' }}>
+                                                {{ $month_label }}
+                                            </option>
+                                            @endforeach
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" data-row_id="{{ $index }}" class="form-control from_day"
-                                            min="1" max="31">
+                                        <input type="number" name="from_day[{{ $index }}]" class="form-control from_day"
+                                            min="1" max="31" value="{{ $fromDay }}">
                                     </td>
                                     <td>
-                                        <select id="month_{{ $index }}" name="to_month[{{ $index }}]"
-                                            class="form-select to_month" data-row_id="{{ $index }}">
+                                        <select id="to_month_{{ $index }}" name="to_month[{{ $index }}]"
+                                            class="form-select to_month">
                                             <option value="">Select Month</option>
-                                            @if ($index == 'january-june')
-                                            <option value="January">January</option>
-                                            <option value="February">February</option>
-                                            <option value="March">March</option>
-                                            <option value="April">April</option>
-                                            <option value="May">May</option>
-                                            <option value="June">June</option>
-                                            @elseif ($index == 'july-december')
-                                            <option value="July">July</option>
-                                            <option value="August">August</option>
-                                            <option value="September">September</option>
-                                            <option value="October">October</option>
-                                            <option value="November">November</option>
-                                            <option value="December">December</option>
-                                            @endif
+                                            @foreach ([
+                                            'January' => 'January',
+                                            'February' => 'February',
+                                            'March' => 'March',
+                                            'April' => 'April',
+                                            'May' => 'May',
+                                            'June' => 'June',
+                                            'July' => 'July',
+                                            'August' => 'August',
+                                            'September' => 'September',
+                                            'October' => 'October',
+                                            'November' => 'November',
+                                            'December' => 'December'
+                                            ] as $month_value => $month_label)
+                                            <option value="{{ $month_value }}"
+                                                {{ $month_value === $toMonth ? 'selected' : '' }}>
+                                                {{ $month_label }}
+                                            </option>
+                                            @endforeach
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" data-row_id="{{ $index }}" class="form-control to_day"
-                                            min="1" max="31">
+                                        <input type="number" name="to_day[{{ $index }}]" class="form-control to_day"
+                                            min="1" max="31" value="{{ $toDay }}">
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
-
                         </table>
+
+
                     </div>
                 </div>
             </div>
@@ -317,17 +345,20 @@
                                 </tr>
                             </thead>
                             <tbody id="onetime_table">
-                                @foreach (['range_1'] as $index => $range)
+                                @foreach ($occurences['onetime'] as $index => $service_occurence)
                                 <tr>
                                     <td>
-                                        <input type="date" data-row_id="{{ $index }}" class="form-control from_date">
+                                        <input type="date" data-row_id="{{ $index }}" class="form-control from_date"
+                                            value="{{ $service_occurence['from_date'] ?? '' }}" disabled>
                                     </td>
                                     <td>
-                                        <input type="date" data-row_id="{{ $index }}" class="form-control to_date">
+                                        <input type="date" data-row_id="{{ $index }}" class="form-control to_date"
+                                            value="{{ $service_occurence['to_date'] ?? '' }}" disabled>
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
+
                         </table>
                     </div>
                 </div>
@@ -352,14 +383,11 @@
                                 </tr>
                             </thead>
                             <tbody id="annually_table">
-                                @foreach ([
-                                'january-december' => ['from_month' => 'January', 'from_day' => 1, 'to_month' =>
-                                'December', 'to_day' => 31]
-                                ] as $index => $dates)
+                                @foreach ($occurences['annually'] as $index => $dates)
                                 <tr>
                                     <td>
                                         <select name="from_month[{{ $index }}]" class="form-select from_month"
-                                            data-row_id="{{ $index }}">
+                                            data-row_id="{{ $index }}" disabled>
                                             <option value="">Select Month</option>
                                             @foreach ([
                                             'january' => 'January',
@@ -376,7 +404,8 @@
                                             'december' => 'December'
                                             ] as $month_value => $month_label)
                                             <option value="{{ $month_value }}"
-                                                {{ $month_value === $dates['from_month'] ? 'selected' : '' }}>
+                                                {{ $month_value === strtolower($dates['from_month']) ? 'selected' : '' }}
+                                                disabled>
                                                 {{ $month_label }}
                                             </option>
                                             @endforeach
@@ -384,12 +413,11 @@
                                     </td>
                                     <td>
                                         <input type="number" name="from_day[{{ $index }}]" class="form-control from_day"
-                                            min="1" max="31">
-
+                                            min="1" max="31" value="{{ $dates['from_day'] ?? '' }}" disabled>
                                     </td>
                                     <td>
                                         <select name="to_month[{{ $index }}]" class="form-select to_month"
-                                            data-row_id="{{ $index }}">
+                                            data-row_id="{{ $index }}" disabled>
                                             <option value="">Select Month</option>
                                             @foreach ([
                                             'january' => 'January',
@@ -406,14 +434,15 @@
                                             'december' => 'December'
                                             ] as $month_value => $month_label)
                                             <option value="{{ $month_value }}"
-                                                {{ $month_value === $dates['to_month'] ? 'selected' : '' }}>
+                                                {{ $month_value === strtolower($dates['to_month']) ? 'selected' : '' }}>
                                                 {{ $month_label }}
                                             </option>
                                             @endforeach
                                         </select>
                                     </td>
                                     <td>
-                                        <input type="number" name="to_day[{{ $index }}]" class="form-control to_day">
+                                        <input type="number" name="to_day[{{ $index }}]" class="form-control to_day"
+                                            min="1" max="31" value="{{ $dates['to_day'] ?? '' }}" disabled>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -437,22 +466,22 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-
         function toggleFrequencyCard() {
             var selectedFrequency = $('#frequency').val();
             $('.card-wrapper').hide();
             $('#' + selectedFrequency + '-card').show();
         }
-
         toggleFrequencyCard();
         $('#frequency').on('change', toggleFrequencyCard);
         function setInitialFieldValues() {
             $('.card-wrapper').each(function() {
                 $(this).find('input[type="checkbox"]').each(function() {
-                if ($(this).data('checked') === true) {
+
+                    if ($(this).data('checked') === true) {
                         $(this).prop('checked', true);
                     }
                 });
+
                 $(this).find('input[type="text"]').each(function() {
                     var inputValue = $(this).data('value');
                     if (inputValue) {
@@ -461,8 +490,8 @@
                 });
             });
         }
-
         setInitialFieldValues();
     });
 </script>
+
 @endsection
