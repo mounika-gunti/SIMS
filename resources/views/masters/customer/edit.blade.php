@@ -166,19 +166,21 @@
                 </div>
                 <div class="row mb-3 d-flex">
                     <div class="form-group col-md-6">
-                        <label for="services"><b>Services</b></label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="gst" name="services[]"
-                                value="GST">
-                            <label class="form-check-label" for="gst">GST</label>
-                        </div>
 
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="pt" name="services[]"
-                                value="PT">
-                            <label class="form-check-label" for="pt">PT</label>
+                        <label for="services"><b>Services</b></label>
+                        <div>
+                            @foreach ($services as $service)
+                                <div class="form-check">
+                                    <input class="form-check-input service-checkbox" type="checkbox"
+                                        value="{{ $service->id }}" name="services" id="services">
+                                    <label class="form-check-label" for="services">
+                                        {{ $service->name }}
+                                    </label>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
+
                     <div class="form-group col-md-6">
                         <label for="assigned_to"><b>Assigned To*</b></label>
                         <select class="form-select" name="assigned_to" id="assigned_to" required>
@@ -192,19 +194,20 @@
                         </select>
                     </div>
                 </div>
-
-                <div class="form-row mb-4">
-                    <div class="col-md-12 d-flex justify-content-end">
-                        <div class="form-group mb-2 mr-3">
-                            <a href="{{ route('customer.index') }}" class="btn btn-cancel btn-block">Cancel</a>
-                        </div>
-                        <div class="form-group mb-2">
-                            <button type="submit" class="btn btn-save btn-block">Update</button>
-                        </div>
-                    </div>
-                </div>
         </div>
-        </form>
+
+        <div class="form-row mb-4">
+            <div class="col-md-12 d-flex justify-content-end">
+                <div class="form-group mb-2 mr-3">
+                    <a href="{{ route('customer.index') }}" class="btn btn-cancel btn-block">Cancel</a>
+                </div>
+                <div class="form-group mb-2">
+                    <button type="submit" class="btn btn-save btn-block">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
     </div>
     </div>
 

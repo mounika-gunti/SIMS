@@ -53,9 +53,19 @@
                                         <td>{{ $customer->phone_number }}</td>
 
                                         <td>
+                                            @if ($customer->services->isNotEmpty())
+                                                @foreach ($customer->services as $service)
+                                                    {{ $service->name }}{{ !$loop->last ? ', ' : '' }}
+                                                @endforeach
+                                            @else
+                                                N/A
+                                            @endif
+                                        </td>
+
+                                        <td>
                                             <i class="fas fa-check-circle text-success"></i>
                                         </td>
-                                        <td></td>
+
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <a href="{{ route('customer.edit', $customer->id) }}"

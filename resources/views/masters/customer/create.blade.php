@@ -161,31 +161,36 @@
                         </div>
                     </div>
                     <div class="row mb-3 d-flex">
-                        <div class="form-group col-md-6">
+                        {{-- <div class="form-group col-md-6">
                             <label for="services"><b>Services</b></label>
-                            {{-- <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="gst" name="services[]"
-                                    value="GST">
-                                <label class="form-check-label" for="gst">GST</label>
-                            </div> --}}
                             <div>
                                 @foreach ($services as $service)
                                     <div class="form-check">
+                                        <input class="services_id" type="hidden" id="services_id">
                                         <input class="form-check-input service-checkbox" type="checkbox"
                                             value="{{ $service->id }}" name="services" id="service">
-                                        <label class="form-check-label" for="service">
+                                        <label class="form-check-label" for="services">
                                             {{ $service->name }}
                                         </label>
                                     </div>
                                 @endforeach
                             </div>
-
-                            {{-- <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="pt" name="services[]"
-                                    value="PT">
-                                <label class="form-check-label" for="pt">PT</label>
-                            </div> --}}
+                        </div> --}}
+                        <div class="form-group col-md-6">
+                            <label for="services"><b>Services</b></label>
+                            <div>
+                                @foreach ($services as $service)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="{{ $service->id }}"
+                                            name="services[]" id="service_{{ $service->id }}">
+                                        <label class="form-check-label" for="service_{{ $service->id }}">
+                                            {{ $service->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
                         </div>
+
                         <div class="form-group col-md-6 justify-content-end">
                             <label for="assigned_to"><b>Assigned To*</b></label>
                             <select class="form-select" name="assigned_to" id="assigned_to" required>
