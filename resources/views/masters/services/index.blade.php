@@ -35,8 +35,6 @@ Services
                                 <th scope="col">Service Name</th>
                                 <th scope="col">Details</th>
                                 <th scope="col">Frequency</th>
-                                <th scope="col">Duration From</th>
-                                <th scope="col">Duration To</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                             </tr>
@@ -47,8 +45,6 @@ Services
                                 <td>{{ $service->name }}</td>
                                 <td>{{ $service->details }}</td>
                                 <td>{{ $service->frequency }}</td>
-                                <td></td>
-                                <td></td>
                                 <td>
                                     <i class="fas fa-check-circle text-success"></i>
                                 </td>
