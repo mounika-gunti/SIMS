@@ -12,9 +12,9 @@ class Service extends Model
 
     protected $guarded = [];
 
-    public function customer(){
-        return $this->belongsTo(Customer::class);
+    public function customers()
+{
+    return $this->belongsToMany(Customer::class, 'customer_services', 'service_id', 'customer_id');
+}
 
-
-    }
 }

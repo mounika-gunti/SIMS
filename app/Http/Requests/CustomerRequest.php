@@ -39,7 +39,9 @@ class CustomerRequest extends FormRequest
             'shipping_state_id' => 'nullable|exists:states,id',
             'shipping_city_id' => 'nullable|exists:cities,id',
             'shipping_address' => 'nullable|string|max:255',
-            'assigned_to'=>'required|'
+            'assigned_to'=>'required',
+            'services_id' =>'required|exists:services,id',
+
         ];
     }
 }

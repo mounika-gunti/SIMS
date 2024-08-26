@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Masters;
 
 use App\Http\Requests\CustomerRequest;
+use App\Models\CustomerService;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Customer;
@@ -12,7 +13,7 @@ use App\Models\City;
 use App\Models\Employee;
 use App\Models\Service;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -22,8 +23,9 @@ class CustomerController extends Controller
 
         public function index()
         {
-            $customers = Customer::all();
-            return view('masters.customer.index', compact('customers'));
+            $customers = Customer::with('services')->get();
+            $services = Service::all();
+            return view('masters.customer.index', compact('customers','services'));
         }
 
 
@@ -39,43 +41,51 @@ class CustomerController extends Controller
         return view('masters.customer.create',compact('customers','countries','states','cities','employees','services'));
     }
 
-    public function store(CustomerRequest $request)
-    {
-        $validatedData = $request->validated();
 
-        $customer = new Customer();
+public function store(CustomerRequest $request)
+{
+    $validatedData = $request->validated();
 
-        $customer->name = $validatedData['name'];
-        $customer->email = $validatedData['email'];
-        $customer->phone_number = $validatedData['phone_number'];
-        $customer->payment_terms = $validatedData['payment_terms'];
-        $customer->credit_days = $validatedData['credit_days'];
-        $customer->description = $validatedData['description'];
-        $customer->billing_country_id = $validatedData['billing_country_id'];
-        $customer->billing_state_id = $validatedData['billing_state_id'];
-        $customer->billing_city_id = $validatedData['billing_city_id'];
-        $customer->billing_address = $validatedData['billing_address'];
-        $customer->gst_number = $validatedData['gst_number'];
-        $customer->assigned_to = $validatedData['assigned_to'];
+    $customer = new Customer();
+    $customer->name = $validatedData['name'];
+    $customer->email = $validatedData['email'];
+    $customer->phone_number = $validatedData['phone_number'];
+    $customer->payment_terms = $validatedData['payment_terms'];
+    $customer->credit_days = $validatedData['credit_days'];
+    $customer->description = $validatedData['description'];
+    $customer->billing_country_id = $validatedData['billing_country_id'];
+    $customer->billing_state_id = $validatedData['billing_state_id'];
+    $customer->billing_city_id = $validatedData['billing_city_id'];
+    $customer->billing_address = $validatedData['billing_address'];
+    $customer->gst_number = $validatedData['gst_number'];
+    $customer->assigned_to = $validatedData['assigned_to'];
+    $customer->services_id = $validatedData['services_id'];
 
-
-
-        if ($request->filled('same_as_billing')) {
-            $customer->shipping_country_id = $customer->billing_country_id;
-            $customer->shipping_state_id = $customer->billing_state_id;
-            $customer->shipping_city_id = $customer->billing_city_id;
-            $customer->shipping_address = $customer->billing_address;
-        } else {
-            $customer->shipping_country_id = $validatedData['shipping_country_id'] ?? null;
-            $customer->shipping_state_id = $validatedData['shipping_state_id'] ?? null;
-            $customer->shipping_city_id = $validatedData['shipping_city_id'] ?? null;
-            $customer->shipping_address = $validatedData['shipping_address'] ?? null;
-        }
-
-        $customer->save();
-
-        return redirect()->route('customer.index')->with('success', 'Customer created successfully.');
+    if ($request->filled('same_as_billing')) {
+        $customer->shipping_country_id = $customer->billing_country_id;
+        $customer->shipping_state_id = $customer->billing_state_id;
+        $customer->shipping_city_id = $customer->billing_city_id;
+        $customer->shipping_address = $customer->billing_address;
+    } else {
+        $customer->shipping_country_id = $validatedData['shipping_country_id'] ?? null;
+        $customer->shipping_state_id = $validatedData['shipping_state_id'] ?? null;
+        $customer->shipping_city_id = $validatedData['shipping_city_id'] ?? null;
+        $customer->shipping_address = $validatedData['shipping_address'] ?? null;
     }
+    $customer->save();
+
+    if (isset($validatedData['services']) && is_array($validatedData['services'])) {
+        foreach ($validatedData['services'] as $serviceId) {
+            DB::table('customer_services')->insert([
+                'customer_id' => $customer->id,
+                'service_id' => $serviceId
+            ]);
+        }
+    }
+
+    return redirect()->route('customer.index')->with('success', 'Customer created successfully.');
+}
+
 
 
     public function update(CustomerRequest $request, $id)
@@ -96,6 +106,11 @@ class CustomerController extends Controller
     $customer->gst_number = $validatedData['gst_number'];
     $customer->assigned_to = $validatedData['assigned_to'];
 
+    $customerservice = CustomerService::findOrFail($id);
+
+    $customerservice->services = $validatedData['services'];
+
+
 
     if ($request->has('shipping_address')) {
         $customer->shipping_country_id = $customer->billing_country_id;
@@ -110,6 +125,8 @@ class CustomerController extends Controller
     }
 
     $customer->save();
+    $customerservice->save();
+
 
     return redirect()->route('customer.index')->with('status', 'Customer Updated Successfully');
 }
@@ -121,10 +138,11 @@ class CustomerController extends Controller
             $countries = Country::all();
             $states = State::all();
             $cities = City::all();
-            $employees = Employee::select('id', 'first_name')->get();
+            $employees= Employee::select('id', 'first_name')->get();
+            $services = Service::select('id', 'name')->get();
 
 
-        return view('masters.customer.view',compact('customers','countries','states','cities','employees'));
+        return view('masters.customer.view',compact('customers','countries','states','cities','employees','services'));
     }
 
     public function edit($id)
@@ -135,8 +153,10 @@ class CustomerController extends Controller
         $states = State::all();
         $cities = City::all();
         $employees = Employee::select('id', 'first_name')->get();
+        $services = Service::select('id' ,'name')->get();
 
-        return view('masters.customer.edit', compact('customers', 'countries', 'states', 'cities','employees'));
+
+        return view('masters.customer.edit', compact('customers', 'countries', 'states', 'cities','employees','services'));
     }
 
 
