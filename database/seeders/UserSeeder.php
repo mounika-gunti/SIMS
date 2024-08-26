@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -22,15 +22,15 @@ class UserSeeder extends Seeder
         Artisan::call('db:seed MenuSeeder');
         Artisan::call('db:seed RoleSeeder');
         User::truncate();
-        $user = User::where('username','superadmin')->first();
-        if(!$user){
+        $user = User::where('username', 'superadmin')->first();
+        if (!$user) {
             $user = User::create([
                 'username' => 'superadmin',
                 'first_name' => 'DoozieSoft',
-                'middle_name'=>'',
+                'middle_name' => '',
                 'last_name' => 'Admin',
-                'last_logged_in_at'=> Carbon::now(),
-                'active_from'=>Carbon::now(),
+                'last_logged_in_at' => Carbon::now(),
+                'active_from' => Carbon::now(),
                 'role_id' => '1',
                 'password' => Hash::make('SIMS#123'),
             ]);

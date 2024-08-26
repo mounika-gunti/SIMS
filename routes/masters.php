@@ -36,7 +36,7 @@ Route::post('/user_management/store', [UserManagementController::class, 'store']
 Route::get('/user_management/manage_user', [UserManagementController::class, 'manage'])->name('user_management.manage_user');
 Route::get('/user_management/edit_user/{id}', [UserManagementController::class, 'edit_user'])->name('user_management.edit_user');
 Route::put('/user_management/update_user/{id}', [UserManagementController::class, 'update_user'])->name('user_management.update_user');
-Route::put('/user_management/update/{id}', [UserManagementController::class, 'updateMenus'])->name('user_management.update_user');
+Route::post('/user_management/update/{id}', [UserManagementController::class, 'updateMenus'])->name('user_management.update_user');
 Route::get('/user_management/user_permission/{id}', [UserManagementController::class, 'permission'])->name('user_management.user_permission');
 Route::get('/user_management/change_password/{id}', [UserManagementController::class, 'password'])->name('user_management.change_password');
 Route::put('/user_management/update_password/{id}', [UserManagementController::class, 'updatePassword'])->name('user_management.update_password');
