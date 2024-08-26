@@ -11,8 +11,9 @@ class Service extends Model
     protected $table = 'services';
     protected $guarded = [];
 
-    public function serviceOccurences()
-    {
-        return $this->hasMany(ServiceOccurence::class);
-    }
+    public function customers()
+{
+    return $this->belongsToMany(Customer::class, 'customer_services', 'service_id', 'customer_id');
+}
+
 }
