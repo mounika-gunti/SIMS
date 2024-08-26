@@ -23,14 +23,14 @@ class UserRequest extends FormRequest
     {
         return [
             'first_name' => 'required|string',
-            'middle_name' => 'nullable',
-            'last_name' => 'nullable',
+            'middle_name' => 'nullable|string',
+            'last_name' => 'nullable|string',
             'username' => 'required|string|max:255|unique:users,username',
             'password' => 'required|string|min:6|confirmed',
-            'last_logged_in_at	' => 'nullable',
+            'last_logged_in_at' => 'nullable|date',
             'force_reset_password' => 'nullable',
             'role_id' => 'nullable|exists:roles,id',
-            'active_from' => 'nullable',
+            'active_from' => 'nullable|date',
         ];
     }
 }

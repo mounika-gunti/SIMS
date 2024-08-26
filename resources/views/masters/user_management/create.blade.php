@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
 <link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+
 @section('content')
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
     <div class="breadcrumb-title pe-3">Masters</div>
@@ -14,6 +15,7 @@
         </nav>
     </div>
 </div>
+
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -48,8 +50,8 @@
 
             <div class="row mb-4">
                 <div class="form-group col-md-5">
-                    <label for="confirm_password"><b>Confirm Password*</b></label>
-                    <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                    <label for="password_confirmation"><b>Confirm Password*</b></label>
+                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation"
                         placeholder="Enter Confirm Password" required>
                 </div>
             </div>
@@ -65,7 +67,16 @@
                 </div>
             </div>
         </form>
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
+
     </div>
-</div>
 </div>
 @endsection
