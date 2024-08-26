@@ -11,11 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->text('details')->nullable();
-            $table->timestamps();
+        Schema::table('service_occurence', function (Blueprint $table) {
+            $table->string('from_date')->after('to_month');
+            $table->string('to_date')->after('from_date');
         });
     }
 
@@ -24,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customer_types');
+        Schema::table('service_occurence', function (Blueprint $table) {
+            //
+        });
     }
 };

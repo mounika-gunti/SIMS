@@ -2,16 +2,16 @@
 @extends('layouts.common-scripts')
 <link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
 @section('title')
-Employee
+Services
 @endsection
 @section('content')
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-    <div class="breadcrumb-title pe-3">Parties</div>
+    <div class="breadcrumb-title pe-3">Masters</div>
     <div class="ps-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 p-0">
                 <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a></li>
-                <li class="breadcrumb-item active" aria-current="page">Employee Master</li>
+                <li class="breadcrumb-item active" aria-current="page">Service Master</li>
             </ol>
         </nav>
     </div>
@@ -19,19 +19,11 @@ Employee
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0"><b>Employee Master</b></h3>
-            <button type="button" class="btn btn-primary btn-add-checklist"
-                onclick="window.location.href='{{ route('employee.create') }}'">
-                Add Employee
+            <h3 class="mb-0"><b>Service Master</b></h3>
+            <button type="button" class="btn btn-primary btn-add-checklist me-2"
+                onclick="window.location.href='{{ route('services.create') }}'">
+                Add Service
             </button>
-        </div>
-        <div class="search-bar flex-grow-1">
-            <div class="position-relative">
-                <div class="col-lg-5">
-                    <input class="form-control rounded-5 px-5 search-control d-lg-block d-none" type="text"
-                        placeholder="Search by Employee Name, Aadhar Number">
-                </div>
-            </div>
         </div>
         <hr>
         <div class="row gy-3">
@@ -40,40 +32,38 @@ Employee
                     <table class="table table-striped">
                         <thead class="thead-light">
                             <tr>
-
-                                <th scope="col">Name</th>
-                                <th scope="col">Phone Number</th>
-                                <th scope="col">Designation</th>
-                                <th scope="col">Branch Name</th>
+                                <th scope="col">Service Name</th>
+                                <th scope="col">Details</th>
+                                <th scope="col">Frequency</th>
+                                <th scope="col">Duration From</th>
+                                <th scope="col">Duration To</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($employees as $employee)
+                            @foreach($services as $service)
                             <tr>
-                                <td>{{ $employee->first_name }}</td>
-                                <td>{{ $employee->phone_number }}</td>
-                                <td>{{ optional($employee->designation)->name ?? 'N/A' }}</td>
-                                <td>{{ optional($employee->branch)->name ?? 'N/A' }}</td>
+                                <td>{{ $service->name }}</td>
+                                <td>{{ $service->details }}</td>
+                                <td>{{ $service->frequency }}</td>
+                                <td></td>
+                                <td></td>
                                 <td>
-                                    @if($employee->status == 'active')
                                     <i class="fas fa-check-circle text-success"></i>
-                                    @else
-                                    <i class="fas fa-times-circle text-danger"></i>
-                                    @endif
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('employee.edit', $employee->id) }}"
+                                        <a href="{{ route('services.edit', $service->id) }}"
                                             class="btn btn-edit btn-sm me-2 rounded">
                                             Edit
                                         </a>
-                                        <a href="{{ route('employee.show', $employee->id) }}"
+                                        <a href="{{ route('services.show', $service->id) }}"
                                             class="btn btn-view btn-sm me-2 rounded">
                                             View
                                         </a>
-                                        <a href="javascript:;" class="btn btn-deactivate btn-sm rounded">
+                                        <a href="javascript:;" data-id="{{ $service->id }}"
+                                            class="btn btn-deactivate btn-sm rounded">
                                             Deactivate
                                         </a>
                                     </div>

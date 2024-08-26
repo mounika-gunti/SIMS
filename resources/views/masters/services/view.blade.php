@@ -18,7 +18,7 @@
 <div class="card">
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0"><b>Add Service Master</b></h3>
+            <h3 class="mb-0"><b>View Service Master</b></h3>
         </div>
         <hr>
 
@@ -28,35 +28,43 @@
                 <div class="form-group col-md-4">
                     <label for="service_name"><b>Service Name*</b></label>
                     <input type="text" class="form-control" id="service_name" name="service_name"
-                        placeholder="Enter Service Name">
+                        placeholder="Enter Service Name" value="{{ $service->name }}" disabled>
                     @error('service_name')
                     <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
                 <div class="form-group col-md-4">
                     <label for="details"><b>Details</b></label>
-                    <textarea class="form-control" id="details" name="details" placeholder="Enter Details"
-                        rows="3"></textarea>
+                    <textarea class="form-control" id="details" name="details" placeholder="Enter Details" rows="3"
+                        disabled>
+                    {{ $service->details }} </textarea>
                 </div>
                 <div class="form-group col-md-4">
-                    <label for="frequency_type"><b>Frequency*</b></label>
-                    <select id="frequency_type" name="frequency_type" class="form-select">
-                        @error('frequency_type')
+                    <label for="frequency"><b>Frequency*</b></label>
+                    <select id="frequency" name="frequency" class="form-select" disabled>
+                        @error('frequency')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
                         <option value="">Select Frequency</option>
-                        <option value="monthly">Monthly</option>
-                        <option value="quarterly">Quarterly</option>
-                        <option value="biannually">Bi Annually</option>
-                        <option value="annually">Annually</option>
-                        <option value="onetime">One-Time</option>
+                        <option value="monthly" {{ $service->frequency === 'monthly' ? 'selected' : '' }}>Monthly
+                        </option>
+                        <option value="quarterly" {{ $service->frequency === 'quarterly' ? 'selected' : '' }}>
+                            Quarterly</option>
+                        <option value="biannually" {{ $service->frequency === 'biannually' ? 'selected' : '' }}>Bi
+                            Annually</option>
+                        <option value="annually" {{ $service->frequency === 'annually' ? 'selected' : '' }}>
+                            Annually</option>
+                        <option value="onetime" {{ $service->frequency === 'onetime' ? 'selected' : '' }}>One-Time
+                        </option>
                     </select>
+
                     @error('frequency_type')
                     <p class="text-danger">{{ $message }}</p>
                     @enderror
                 </div>
             </div>
         </div>
+
         <div class="row mb-4">
             <div class="col-md-12 card-wrapper" id="monthly-card" style="display: none;">
                 <div class="card">
@@ -74,33 +82,35 @@
                                 </tr>
                             </thead>
                             <tbody id="monthly_table">
+                                @php $index = 0; @endphp
+                                @foreach (['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august',
+                                'september', 'october', 'november', 'december'] as $month)
                                 @php
-                                $index = 0;
+                                $monthKey = strtolower($month);
+                                $isSelected = isset($occurrences['monthly'][$monthKey]);
+                                $fromDay = $isSelected ? $occurrences['monthly'][$monthKey]['from_day'] : '';
+                                $toDay = $isSelected ? $occurrences['monthly'][$monthKey]['to_day'] : '';
                                 @endphp
-                                @foreach (['january', 'february', 'march', 'april', 'may', 'june', 'july',
-                                'august', 'september', 'october', 'november', 'december'] as $month)
                                 <tr data-row_id="{{ $index }}">
                                     <td>
                                         <input type="checkbox" data-row_id="{{ $index }}"
-                                            class="form-check-input select_month">
+                                            class="form-check-input select_month" {{ $isSelected ? 'checked' : '' }}>
                                     </td>
                                     <td class="month_name" data-row_id="{{ $index }}">{{ ucfirst($month) }}</td>
                                     <td>
                                         <input type="number" data-row_id="{{ $index }}" class="form-control from_day"
-                                            min="1" max="31">
+                                            min="1" max="31" value="{{ $fromDay }}">
                                     </td>
                                     <td>
                                         <input type="number" data-row_id="{{ $index }}" class="form-control to_day"
-                                            min="1" max="31">
+                                            min="1" max="31" value="{{ $toDay }}">
                                     </td>
                                 </tr>
-                                @php
-                                $index++;
-                                @endphp
+                                @php $index++; @endphp
                                 @endforeach
                             </tbody>
-
                         </table>
+
                     </div>
                 </div>
             </div>
@@ -195,6 +205,7 @@
                                 </tr>
                                 @endforeach
                             </tbody>
+
                         </table>
                     </div>
                 </div>
@@ -284,6 +295,7 @@
                                 </tr>
                                 @endforeach
                             </tbody>
+
                         </table>
                     </div>
                 </div>
@@ -417,288 +429,40 @@
                 <div class="form-group mb-2 mr-3">
                     <a href="{{ route('services.index') }}" class="btn btn-cancel btn-block">Cancel</a>
                 </div>
-                <div class="form-group mb-2">
-                    <button type="submit" class="btn btn-save btn-block" id="save_btn">Save</button>
-                </div>
             </div>
         </div>
         </form>
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
     </div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-    $('#frequency_type').on('change', function() {
-        var selectedType = $(this).val();
-        $('.card-wrapper').hide();
-        if (selectedType) {
-            $('#' + selectedType + '-card').show();
+
+        function toggleFrequencyCard() {
+            var selectedFrequency = $('#frequency').val();
+            $('.card-wrapper').hide();
+            $('#' + selectedFrequency + '-card').show();
         }
-    });
 
-   var monthly_type_list = [];
-   function updateMonthlyList() {
-    monthly_type_list = [];
-    $('#monthly_table .select_month:checked').each(function() {
-        var row_id = $(this).data('row_id');
-        var month_name = $(`.month_name[data-row_id="${row_id}"]`).text().trim();
-        var from_day = $(`.from_day[data-row_id="${row_id}"]`).val();
-        var to_day = $(`.to_day[data-row_id="${row_id}"]`).val();
-
-        monthly_type_list.push({
-            month_name: month_name,
-            from_day: from_day,
-            to_day: to_day
-        });
-        console.log("monthly:", monthly_type_list)
-    });
-}
-
- $(document).on('change', 'input:checkbox, input.from_day, input.to_day', function() {
-    updateMonthlyList();
-});
-$('#save_btn').click(function(e) {
-    e.preventDefault();
-    var service_name = $('#service_name').val();
-    var details = $('#details').val();
-    var frequency_type = $('#frequency_type').val();
-    if (frequency_type === "monthly") {
-        $.ajax({
-            url: '{{ route('services.storeMonthly') }}',
-            method: 'POST',
-            data: {
-            service_name: service_name,
-            details: details,
-            frequency_type: frequency_type,
-            monthly_type_list: monthly_type_list,
-            _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                window.location.href = response.redirect_url;
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-            }
-        });
-    }
-});
-
-var quarterly_type_list = [];
-function updateQuarterlyList() {
-    quarterly_type_list = [];
-    $('#quarterly_table .select_month:checked').each(function() {
-        var row_id = $(this).attr('data-row_id');
-        var quarter_name = $(`.quarter_name[data-row_id="${row_id}"]`).text().trim();
-        var from_month = $(`.from_month[data-row_id="${row_id}"]`).val();
-        var to_month = $(`.to_month[data-row_id="${row_id}"]`).val();
-        var from_day = $(`.from_day[data-row_id="${row_id}"]`).val();
-        var to_day = $(`.to_day[data-row_id="${row_id}"]`).val();
-
-        quarterly_type_list.push({
-            quarter_name: quarter_name,
-            from_day: from_day,
-            to_day: to_day,
-            from_month: from_month,
-            to_month: to_month,
-        });
-    });
-    console.log("quarterly:", quarterly_type_list);
-}
-
- $(document).on('change', 'input:checkbox, input.from_day, input.to_day', function() {
-    updateQuarterlyList();
-});
-$('#save_btn').click(function(e) {
-    e.preventDefault();
-    var service_name = $('#service_name').val();
-    var details = $('#details').val();
-    var frequency_type = $('#frequency_type').val();
-    if (frequency_type === "quarterly") {
-        $.ajax({
-            url: '{{ route('services.storeQuarterly') }}',
-            method: 'POST',
-            data: {
-            service_name: service_name,
-            details: details,
-            frequency_type: frequency_type,
-            quarterly_type_list: quarterly_type_list,
-            _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                window.location.href = response.redirect_url;
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-            }
-        });
-    }
-});
-
-var biannually_type_list = [];
-function updateBiannuallyList() {
-    biannually_type_list = [];
-    $('#biannually_table .select_month:checked').each(function() {
-        var row_id = $(this).data('row_id');
-        var biannual_name = row_id === 'january-june' ? 'first' : 'second';
-        var from_month = $(`.from_month[data-row_id="${row_id}"]`).val();
-        var to_month = $(`.to_month[data-row_id="${row_id}"]`).val();
-        var from_day = $(`.from_day[data-row_id="${row_id}"]`).val();
-        var to_day = $(`.to_day[data-row_id="${row_id}"]`).val();
-
-        biannually_type_list.push({
-            biannual_name: biannual_name,
-            from_day: from_day,
-            to_day: to_day,
-            from_month: from_month,
-            to_month: to_month,
-        });
-    });
-    console.log("biannually:", biannually_type_list);
-}
-
-$(document).on('change', 'input:checkbox, input.from_day, input.to_day', function() {
-    updateBiannuallyList();
-});
-
-$('#save_btn').click(function(e) {
-    e.preventDefault();
-    console.log('Saving biannually data...');
-    var service_name = $('#service_name').val();
-    var details = $('#details').val();
-    var frequency_type = $('#frequency_type').val();
-    console.log('Frequency Type:', frequency_type);
-
-    if (frequency_type === "biannually") {
-        console.log('Making AJAX request...');
-        $.ajax({
-            url: '{{ route('services.storeBiAnnually') }}',
-            method: 'POST',
-            data: {
-                service_name: service_name,
-                details: details,
-                frequency_type: frequency_type,
-                biannually_type_list: biannually_type_list,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                console.log('Success:', response);
-                window.location.href = response.redirect_url;
-            },
-            error: function(xhr) {
-                console.log('Error:', xhr.responseText);
-            }
-        });
-    }
-});
-
-
-var annually_type_list = [];
-function updateAnnuallyList() {
-    annually_type_list = [];
-    $('#annually_table tr').each(function() {
-        var row_id = $(this).find('.from_month').data('row_id');
-        var from_month = $(this).find('.from_month').val();
-        var to_month = $(this).find('.to_month').val();
-        var from_day = $(this).find('.from_day').val();
-        var to_day = $(this).find('.to_day').val();
-
-        annually_type_list.push({
-            from_day: from_day,
-            to_day: to_day,
-            from_month: from_month,
-            to_month: to_month,
-        });
-    });
-    console.log("annually:", annually_type_list);
-}
-
-$(document).on('change', 'input.from_day, input.to_day, select.from_month, select.to_month', function() {
-    updateAnnuallyList();
-});
-
-$('#save_btn').click(function(e) {
-    e.preventDefault();
-    var service_name = $('#service_name').val();
-    var details = $('#details').val();
-    var frequency_type = $('#frequency_type').val();
-
-    if (frequency_type === "annually") {
-        $.ajax({
-            url: '{{ route('services.storeAnnually') }}',
-            method: 'POST',
-            data: {
-                service_name: service_name,
-                details: details,
-                frequency_type: frequency_type,
-                annually_type_list: annually_type_list,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                console.log('Success:', response);
-                window.location.href = response.redirect_url;
-            },
-            error: function(xhr) {
-                console.log('Error:', xhr.responseText);
-            }
-        });
-    }
-});
-
-var onetime_type_list = [];
-function updateonetimeList() {
-    onetime_type_list = [];
-    $('#onetime_table tr').each(function() {
-        var row_id = $(this).find('.from_date').data('row_id');
-        var from_date = $(this).find('.from_date').val();
-        var to_date = $(this).find('.to_date').val();
-
-            onetime_type_list.push({
-                from_date: from_date,
-                to_date: to_date,
+        toggleFrequencyCard();
+        $('#frequency').on('change', toggleFrequencyCard);
+        function setInitialFieldValues() {
+            $('.card-wrapper').each(function() {
+                $(this).find('input[type="checkbox"]').each(function() {
+                if ($(this).data('checked') === true) {
+                        $(this).prop('checked', true);
+                    }
+                });
+                $(this).find('input[type="text"]').each(function() {
+                    var inputValue = $(this).data('value');
+                    if (inputValue) {
+                        $(this).val(inputValue);
+                    }
+                });
             });
+        }
+
+        setInitialFieldValues();
     });
-    console.log("onetime:", onetime_type_list);
-}
-
-$(document).on('change', 'input.from_date, input.to_date', function() {
-    updateonetimeList();
-});
-
-$('#save_btn').click(function(e) {
-    e.preventDefault();
-    var service_name = $('#service_name').val();
-    var details = $('#details').val();
-    var frequency_type = $('#frequency_type').val();
-
-    if (frequency_type === "onetime") {
-        $.ajax({
-            url: '{{ route('services.storeOneTime') }}',
-            method: 'POST',
-            data: {
-                service_name: service_name,
-                details: details,
-                frequency_type: frequency_type,
-                onetime_type_list: onetime_type_list,
-                _token: '{{ csrf_token() }}'
-            },
-            success: function(response) {
-                window.location.href = response.redirect_url;
-            },
-            error: function(xhr) {
-                console.log(xhr.responseText);
-            }
-        });
-    }
-});
-});
 </script>
 @endsection

@@ -2,145 +2,153 @@
 @extends('layouts.common-scripts')
 <link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
 @section('content')
-<div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-    <div class="breadcrumb-title pe-3">Masters</div>
-    <div class="ps-3">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0 p-0">
-                <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a></li>
-                <li class="breadcrumb-item active" aria-current="page">Customer Master</li>
-            </ol>
-        </nav>
-    </div>
-</div>
-<div class="card">
-    <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0"><b>View Customer Master</b></h3>
+    <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+        <div class="breadcrumb-title pe-3">Masters</div>
+        <div class="ps-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 p-0">
+                    <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Customer Master</li>
+                </ol>
+            </nav>
         </div>
-        <hr>
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <a class="nav-link active text-white" id="basic-info-tab" data-bs-toggle="tab" href="#basic-info"
-                    role="tab" aria-controls="basic-info" aria-selected="true">Basic Info</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link text-white" id="kyc-tab" data-bs-toggle="tab" href="#kyc" role="tab"
-                    aria-controls="kyc" aria-selected="false">KYC</a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link text-white" id="loans-tab" data-bs-toggle="tab" href="#loans" role="tab"
-                    aria-controls="loans" aria-selected="false">Loans</a>
-            </li>
-        </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="basic-info-tab">
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="mb-0"><b>View Customer Master</b></h3>
+            </div>
+            <hr>
+
+            <div class="tab-content" id="tabcontent">
                 <div class="row mb-4 mt-3">
-                    <div class="form-group col-md-5">
-                        <label for="aadhar_number"><b>Enter Aadhar Number</b></label>
-                        <input type="text" class="form-control" id="aadhar_number" disabled>
+                    <div class="form-group col-md-4">
+                        <label for="customer_name"><b>Customer Name*</b></label>
+                        <input type="text" class="form-control" id="customer_name"
+                            value="{{ old('name', $customers->name) }}" disabled>
                     </div>
-                    <div class="form-group col-md-2 d-flex align-items-end">
-                        <button type="button" class="btn btn-proceed btn-block">Proceed</button>
+                    <div class="form-group col-md-4">
+                        <label for="email_id"><b>Email Id</b></label>
+                        <input type="text" class="form-control" id="email_id"
+                            value="{{ old('email', $customers->email) }}" disabled>
                     </div>
-                </div>
-                <div class="row mb-4 mt-3">
-                    <div class="form-group col-md-3">
-                        <label for="name"><b>Name*</b></label>
-                        <input type="text" class="form-control" id="name" disabled>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="phone_number"><b>Phone Number*</b></label>
-                        <input type="text" class="form-control" id="phone_number" disabled>
-                    </div>
-                    <div class="form-group col-md-3">
-                        <label for="whatsapp_number"><b>Whatsapp Number</b></label>
-                        <input type="text" class="form-control" id="whatsapp_number" disabled>
+                    <div class="form-group col-md-4">
+                        <label for="phone_number"><b>Phone Number</b></label>
+                        <input type="text" class="form-control" id="phone_number"
+                            value="{{ old('phone_number', $customers->phone_number) }}" disabled>
                     </div>
                 </div>
                 <div class="row mb-4">
-                    <div class="form-group col-md-5">
-                        <label for="address"><b>Details</b></label>
-                        <textarea class="form-control" id="address" rows="3" disabled></textarea>
+                    <div class="form-group col-md-4">
+                        <label for="payment terms"><b>Payment Terms</b></label>
+                        <input type="text" class="form-control" id="payment terms"
+                            value="{{ old('payment_terms', $customers->payment_terms) }}" disabled>
                     </div>
-                    <div class="form-group col-md-3">
-                        <label for="alternate_number"><b>Alternate Contact Number*</b></label>
-                        <input type="text" class="form-control" id="alternate_number" disabled>
+                    <div class="form-group col-md-4">
+                        <label for="credit days"><b>Credit Days</b></label>
+                        <input type="text" class="form-control" id="credit days"
+                            value="{{ old('credit_days', $customers->credit_days) }}" disabled>
                     </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="kyc" role="tabpanel" aria-labelledby="kyc-tab">
-                <div class="row mb-4 mt-3">
-                    <div class="form-group col-md-5">
-                        <label for="aadhar_number"><b>Aadhar Number</b></label>
-                        <input type="text" class="form-control" id="aadhar_number" disabled>
-                    </div>
-                    <div class="form-group col-md-5">
-                        <label for="aadhar_attachment"><b>Attach Aadhar</b></label>
-                        <input type="file" class="form-control" id="aadhar_attachment" disabled>
+                    <div class="form-group col-md-4">
+                        <label for="description"><b>Description</b></label>
+                        <textarea class="form-control" id="description" name="description" placeholder="Enter Description" rows="3"
+                            disabled>{{ $customers->description }}</textarea>
                     </div>
                 </div>
-                <div class="row mb-4 mt-3">
-                    <div class="form-group col-md-5">
-                        <label for="pan_number"><b>PAN Number</b></label>
-                        <input type="text" class="form-control" id="pan_number" disabled>
+                <div class="row mb-3">
+                    <div class="form-group col-md-4">
+                        <label for="billing_country_id"><b>Country*</b></label>
+                        <input type="text" class="form-control w-3" name="billing_country_id" id="billing_country_id"
+                            value="{{ $customers->billingCountry ? $customers->billingCountry->name : '' }}" disabled>
                     </div>
-                    <div class="form-group col-md-5">
-                        <label for="pan_attachment"><b>Attach PAN</b></label>
-                        <input type="file" class="form-control" id="pan_attachment" disabled>
+
+                    <div class="form-group col-md-4">
+                        <label for="billing_state_id"><b>State*</b></label>
+                        <input type="text" class="form-control w-3" name="billing_state_id" id="billing_state_id"
+                            value="{{ $customers->billingState ? $customers->billingState->name : '' }}" disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="billing_city_id"><b>City*</b></label>
+                        <input type="text" class="form-control w-3" name="billing_city_id" id="billing_city_id"
+                            value="{{ $customers->billingCity ? $customers->billingCity->name : '' }}" disabled>
                     </div>
                 </div>
-            </div>
-            <div class="tab-pane fade" id="loans" role="tabpanel" aria-labelledby="loans-tab">
-                <div class="row gy-3">
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th scope="col">Product Type</th>
-                                        <th scope="col">Loan Number</th>
-                                        <th scope="col">Bank</th>
-                                        <th scope="col">Employee</th>
-                                        <th scope="col">Reffered By</th>
-                                        <th scope="col">Amount</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Home Loan</td>
-                                        <td>1234567</td>
-                                        <td>SBI</td>
-                                        <td>Mounika</td>
-                                        <td>Deepak</td>
-                                        <td>10000</td>
-                                        <td>
-                                            <i class="fas fa-check-circle text-success"></i>
-                                        </td>
-                                        <td>
-                                            <div class="btn-group" role="group">
-                                                <a href="" class="btn btn-view btn-sm me-2 rounded">
-                                                    View
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        <label for="address"><b>Address</b></label>
+                        <textarea class="form-control" id="address" rows="3" disabled>{{ $customers->billing_address }}</textarea>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-12 d-flex align-items-center">
+                        <h5 class="mb-0 me-2">Shipping Address*</h5>
+                        {{-- <input class="form-check-input" type="checkbox" id="shipping_address">
+                        <label class="form-check-label" for="shipping_address"></label>
+                        <h5>(Same as Billing Address)</h5> --}}
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="form-group col-md-4">
+                        <label for="shipping_country_id"><b>Country*</b></label>
+                        <input type="text" class="form-control w-3" name="shipping_country_id" id="shipping_country_id"
+                            value="{{ $customers->shippingCountry ? $customers->shippingCountry->name : '' }}" disabled>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="shipping_state_id"><b>State*</b></label>
+                        <input type="text" class="form-control w-3" name="shipping_state_id" id="shipping_state_id"
+                            value="{{ $customers->shippingState ? $customers->shippingState->name : '' }}" disabled>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="shipping_city_id"><b>City*</b></label>
+                        <input type="text" class="form-control w-3" name="shipping_city_id" id="shipping_city_id"
+                            value="{{ $customers->shippingCity ? $customers->shippingCity->name : '' }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="form-group col-md-6">
+                        <label for="address"><b>Address</b></label>
+                        <textarea class="form-control" id="address" rows="3" disabled>{{ $customers->billing_address }}</textarea>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="gst_registration_number"><b>GST Registration Number</b></label>
+                        <input type="text" class="form-control" id="gst_registration_number"
+                            value="{{ old('gst_number', $customers->gst_number) }}" disabled>
+                    </div>
+                </div>
+                <div class="row mb-3 d-flex">
+                    <div class="form-group col-md-6">
+                        <label for="services"><b>Services</b></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="gst">
+                            <label class="form-check-label" for="gst">
+                                GST
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="pt">
+                            <label class="form-check-label" for="pt">
+                                PT
+                            </label>
                         </div>
                     </div>
+                    <div class="form-group col-md-6">
+                        <label for="assigned_to"><b>Assigned To*</b></label>
+                        <input type="text" class="form-control w-3" name="assigned_to" id="assigned_to"
+                            value="{{ $customers->employee ? $customers->employee->first_name : '' }}" disabled>
+                    </div>
+
                 </div>
             </div>
         </div>
         <div class="form-row mb-4">
             <div class="col-md-12 d-flex justify-content-end">
                 <div class="form-group mb-2 mr-3">
-                    <button type="button" class="btn btn-cancel btn-block">Cancel</button>
+                    <a href="{{ route('customer.index') }}" class="btn btn-cancel btn-block">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    </div>
 @endsection

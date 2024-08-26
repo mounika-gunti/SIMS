@@ -26,14 +26,15 @@
                 <div class="form-group col-md-5">
                     <label for="first_name"><b>Display Name*</b></label>
                     <input type="text" class="form-control" id="first_name" name="first_name"
-                        placeholder="Enter Display Name">
+                        placeholder="Enter Display Name" required>
                 </div>
             </div>
 
             <div class="row mb-4">
                 <div class="form-group col-md-5">
                     <label for="username"><b>User Name*</b></label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username"
+                        required>
                 </div>
             </div>
 
@@ -41,7 +42,7 @@
                 <div class="form-group col-md-5">
                     <label for="password"><b>Password*</b></label>
                     <input type="password" class="form-control" id="password" name="password"
-                        placeholder="Enter Password">
+                        placeholder="Enter Password" required>
                 </div>
             </div>
 
@@ -49,7 +50,7 @@
                 <div class="form-group col-md-5">
                     <label for="confirm_password"><b>Confirm Password*</b></label>
                     <input type="password" class="form-control" id="confirm_password" name="confirm_password"
-                        placeholder="Enter Confirm Password">
+                        placeholder="Enter Confirm Password" required>
                 </div>
             </div>
 
