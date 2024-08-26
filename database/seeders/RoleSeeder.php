@@ -16,16 +16,13 @@ class RoleSeeder extends Seeder
         DB::table('roles')->truncate();
         DB::table('roles')->insert([
             [
-                'key' => 'superadmin',
-                'Name' => 'superadmin',
+                'name' => 'superadmin',
             ],
             [
-                'key' => 'admin',
-                'Name' => 'Admin',
+                'name' => 'Admin',
             ],
             [
-                'key' => 'employee',
-                'Name' => 'Employee',
+                'name' => 'Employee',
             ]
 
 
