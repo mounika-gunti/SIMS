@@ -57,7 +57,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row mb-4">
             <div class="col-md-12 card-wrapper" id="monthly-card" style="display: none;">
                 <div class="card">
@@ -196,7 +195,6 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-
                         </table>
                     </div>
                 </div>
@@ -286,7 +284,6 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-
                         </table>
                     </div>
                 </div>
@@ -336,7 +333,6 @@
                         <table class="table">
                             <thead>
                                 <tr>
-
                                     <th>From Month</th>
                                     <th>From Day</th>
                                     <th>To Month</th>
