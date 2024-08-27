@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
 
 @section('title')
     Employee
@@ -54,13 +54,14 @@
                                 <div class="form-row mb-4">
                                     <div class="col-md-12 d-flex justify-content-end">
                                         <div class="form-group ">
-                                            <button type="submit" class="btn btn-cancel btn-block"
-                                                id="next-basicInfo">Update</button>
+                                            <a href="{{ route('employee_master.index') }}" class="btn btn-cancel btn-block"
+                                                id="cancel-basicInfo">Cancel</a>
                                         </div>
                                         <div class="form-group ">
-                                            <a href="{{ route('employee_master.index') }}" class="btn btn-cancel btn-block"
-                                                id="cancel-basicInfo">Cancel</button>
+                                            <button type="submit" class="btn btn-save btn-block"
+                                                id="next-basicInfo">Update</button>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>

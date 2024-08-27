@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
 
 @section('content')
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -21,7 +21,7 @@
             </div>
             <hr>
 
-            <form action="{{ route('customer.store') }}" method="POST">
+            <form action="{{ route('customer.store') }}" method="POST" id="customer-form">
                 @csrf
                 <div class="tab-content" id="tabcontent">
                     <div class="row mb-4 mt-3">
@@ -161,21 +161,7 @@
                         </div>
                     </div>
                     <div class="row mb-3 d-flex">
-                        {{-- <div class="form-group col-md-6">
-                            <label for="services"><b>Services</b></label>
-                            <div>
-                                @foreach ($services as $service)
-                                    <div class="form-check">
-                                        <input class="services_id" type="hidden" id="services_id">
-                                        <input class="form-check-input service-checkbox" type="checkbox"
-                                            value="{{ $service->id }}" name="services" id="service">
-                                        <label class="form-check-label" for="services">
-                                            {{ $service->name }}
-                                        </label>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div> --}}
+
                         <div class="form-group col-md-6">
                             <label for="services"><b>Services</b></label>
                             <div>
@@ -205,15 +191,14 @@
 
                         </div>
                     </div>
-
-
                     <div class="form-row mb-4">
                         <div class="col-md-12 d-flex justify-content-end">
                             <div class="form-group mb-2 mr-3">
                                 <a href="{{ route('customer.index') }}" class="btn btn-cancel btn-block">Cancel</a>
                             </div>
                             <div class="form-group mb-2">
-                                <button type="submit" class="btn btn-save btn-block">Save</button>
+                                <button type="button" onclick="confirmSave(event)"
+                                    class="btn btn-save btn-block">Save</button>
                             </div>
                         </div>
                     </div>
@@ -223,116 +208,136 @@
     </div>
 
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
     <script>
-        $(document).ready(function() {
-            $('#billing_country_id').change(function() {
-                var countryId = $(this).val();
-                if (countryId) {
-                    $.ajax({
-                        url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
-                        type: 'GET',
-                        success: function(states) {
-                            $('#billing_state_id').empty().append(
-                                '<option value="">Select State</option>');
-                            $.each(states, function(key, state) {
-                                $('#billing_state_id').append('<option value="' + state
-                                    .id + '">' + state.name + '</option>');
-                            });
-                            $('#billing_city_id').empty().append(
-                                '<option value="">Select City</option>');
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error loading states: ", error);
-                        }
+        function confirmSave(ev) {
+            ev.preventDefault();
+            swal({
+                    title: "Customer Added Successfully",
+                    icon: "success",
+
+                    buttons: true,
+                    dangerMode: false,
+                })
+                .then((willSave) => {
+                    if (willSave) {
+                        document.getElementById('customer-form').submit();
+                    }
+                });
+        }
+
+        $('#billing_country_id').change(function() {
+            var countryId = $(this).val();
+            if (countryId) {
+                $.ajax({
+                    url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
+                    type: 'GET',
+                    success: function(states) {
+                        $('#billing_state_id').empty().append(
+                            '<option value="">Select State</option>');
+                        $.each(states, function(key, state) {
+                            $('#billing_state_id').append('<option value="' + state
+                                .id + '">' + state.name + '</option>');
+                        });
+                        $('#billing_city_id').empty().append(
+                            '<option value="">Select City</option>');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error loading states: ", error);
+                    }
+                });
+            }
+        });
+
+        $('#billing_state_id').change(function() {
+            var stateId = $(this).val();
+            if (stateId) {
+                $.ajax({
+                    url: "{{ route('get_cities', ':id') }}".replace(':id', stateId),
+                    type: 'GET',
+                    success: function(cities) {
+                        $('#billing_city_id').empty().append(
+                            '<option value="">Select City</option>');
+                        $.each(cities, function(key, city) {
+                            $('#billing_city_id').append('<option value="' + city
+                                .id + '">' + city.name + '</option>');
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error loading cities: ", error);
+                    }
+                });
+            }
+        });
+
+        $('#shipping_address').change(function() {
+            if ($(this).is(':checked')) {
+                var billingCountry = $('#billing_country_id').val();
+                $('#shipping_country_id').val(billingCountry).change();
+
+                var billingState = $('#billing_state_id').val();
+                $('#shipping_state_id').val(billingState).change();
+
+                var billingCity = $('#billing_city_id').val();
+                $('#shipping_city_id').val(billingCity);
+
+                var billingAddress = $('#billing_address').val();
+                $('#shipping_address').val(billingAddress);
+            } else {
+                $('#shipping_country_id').val('').change();
+                $('#shipping_state_id').val('').change();
+                $('#shipping_city_id').val('');
+                $('#shipping_address').val('');
+            }
+        });
+
+        $('#shipping_country_id').change(function() {
+            var countryId = $(this).val();
+            if (countryId) {
+                $.ajax({
+                    url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
+                    type: 'GET',
+                    success: function(states) {
+                        $('#shipping_state_id').empty().append(
+                            '<option value="">Select State</option>');
+                        $.each(states, function(key, state) {
+                            $('#shipping_state_id').append('<option value="' + state
+                                .id + '">' + state.name + '</option>');
+                        });
+                        $('#shipping_city_id').empty().append(
+                            '<option value="">Select City</option>');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error loading states: ", error);
+                    }
+                });
+            }
+        });
+
+        $('#shipping_state_id').change(function() {
+        var stateId = $(this).val();
+        if (stateId) {
+            $.ajax({
+                url: "{{ route('get_cities', ':id') }}".replace(':id', stateId),
+                type: 'GET',
+                success: function(cities) {
+                    $('#shipping_city_id').empty().append(
+                        '<option value="">Select City</option>');
+                    $.each(cities, function(key, city) {
+                        $('#shipping_city_id').append('<option value="' + city
+                            .id + '">' + city.name + '</option>');
                     });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading cities: ", error);
                 }
             });
-
-            $('#billing_state_id').change(function() {
-                var stateId = $(this).val();
-                if (stateId) {
-                    $.ajax({
-                        url: "{{ route('get_cities', ':id') }}".replace(':id', stateId),
-                        type: 'GET',
-                        success: function(cities) {
-                            $('#billing_city_id').empty().append(
-                                '<option value="">Select City</option>');
-                            $.each(cities, function(key, city) {
-                                $('#billing_city_id').append('<option value="' + city
-                                    .id + '">' + city.name + '</option>');
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error loading cities: ", error);
-                        }
-                    });
-                }
-            });
-
-            $('#shipping_address').change(function() {
-                if ($(this).is(':checked')) {
-                    var billingCountry = $('#billing_country_id').val();
-                    $('#shipping_country_id').val(billingCountry).change();
-
-                    var billingState = $('#billing_state_id').val();
-                    $('#shipping_state_id').val(billingState).change();
-
-                    var billingCity = $('#billing_city_id').val();
-                    $('#shipping_city_id').val(billingCity);
-
-                    var billingAddress = $('#billing_address').val();
-                    $('#shipping_address').val(billingAddress);
-                } else {
-                    $('#shipping_country_id').val('').change();
-                    $('#shipping_state_id').val('').change();
-                    $('#shipping_city_id').val('');
-                    $('#shipping_address').val('');
-                }
-            });
-
-            $('#shipping_country_id').change(function() {
-                var countryId = $(this).val();
-                if (countryId) {
-                    $.ajax({
-                        url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
-                        type: 'GET',
-                        success: function(states) {
-                            $('#shipping_state_id').empty().append(
-                                '<option value="">Select State</option>');
-                            $.each(states, function(key, state) {
-                                $('#shipping_state_id').append('<option value="' + state
-                                    .id + '">' + state.name + '</option>');
-                            });
-                            $('#shipping_city_id').empty().append(
-                                '<option value="">Select City</option>');
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error loading states: ", error);
-                        }
-                    });
-                }
-            });
-
-            $('#shipping_state_id').change(function() {
-                var stateId = $(this).val();
-                if (stateId) {
-                    $.ajax({
-                        url: "{{ route('get_cities', ':id') }}".replace(':id', stateId),
-                        type: 'GET',
-                        success: function(cities) {
-                            $('#shipping_city_id').empty().append(
-                                '<option value="">Select City</option>');
-                            $.each(cities, function(key, city) {
-                                $('#shipping_city_id').append('<option value="' + city
-                                    .id + '">' + city.name + '</option>');
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error loading cities: ", error);
-                        }
-                    });
-                }
-            });
+        }
+        });
         });
 
         $('#same_as_billing').change(function() {
