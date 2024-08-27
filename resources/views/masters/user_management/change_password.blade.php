@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
 
 @section('content')
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -21,7 +21,8 @@
         </div>
         <hr>
 
-        <form action="{{ route('user_management.update_password', ['id' => $id]) }}">
+        <form id="changePasswordForm" action="{{ route('user_management.update_password', ['id' => $id]) }}"
+            method="POST">
             @csrf
             @method('PUT')
 
@@ -55,4 +56,53 @@
 
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('changePasswordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var form = this;
+            var formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Password changed successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = '{{ route('user_management.manage_user') }}';
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: data.message || 'An error occurred.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An error occurred while changing the password.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        });
+    });
+</script>
 @endsection

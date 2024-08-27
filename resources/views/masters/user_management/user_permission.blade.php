@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
 
 @section('title')
 User Management
@@ -67,6 +67,7 @@ User Management
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
@@ -154,7 +155,14 @@ User Management
             data: requestData,
             success: function(response) {
                 if (response.success) {
-                    window.location.href = '{{ route('user_management.manage_user') }}';
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'User permissions updated successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(function() {
+                        window.location.href = '{{ route('user_management.manage_user') }}';
+                    });
                 }
             },
             error: function(xhr, status, error) {
@@ -169,6 +177,7 @@ User Management
         });
     });
 });
+
 
 </script>
 @endsection

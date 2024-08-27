@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 @section('title')
 Services
 @endsection
@@ -46,7 +47,11 @@ Services
                                 <td>{{ $service->details }}</td>
                                 <td>{{ $service->frequency }}</td>
                                 <td>
+                                    @if($service->deleted_at == null)
                                     <i class="fas fa-check-circle text-success"></i>
+                                    @else
+                                    <i class="fas fa-times-circle text-danger"></i>
+                                    @endif
                                 </td>
                                 <td>
                                     <div class="btn-group" role="group">
@@ -58,39 +63,74 @@ Services
                                             class="btn btn-view btn-sm me-2 rounded">
                                             View
                                         </a>
-                                        <a href="javascript:;" data-id="{{ $service->id }}"
-                                            class="btn btn-deactivate btn-sm rounded">
-                                            Deactivate
-                                        </a>
+                                        @if($service->deleted_at == null)
+                                        <form id="deactivate-form-{{ $service->id }}" method="POST"
+                                            action="{{ route('service.deactivate', $service->id) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <!-- Ensure method matches your route's expected method -->
+                                            <button type="button"
+                                                class="btn btn-deactivate btn-sm rounded deactivate-btn"
+                                                data-id="{{ $service->id }}">Deactivate</button>
+                                        </form>
+                                        @else
+                                        <form id="activate-form-{{ $service->id }}" method="POST"
+                                            action="{{ route('service.activate', $service->id) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <!-- Ensure method matches your route's expected method -->
+                                            <button type="button" class="btn btn-activate btn-sm rounded activate-btn"
+                                                data-id="{{ $service->id }}">Activate</button>
+                                        </form>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
                             @endforeach
                         </tbody>
-
                     </table>
                 </div>
             </div>
         </div>
-        <div class="form-row mt-3">
-            <div class="col-12">
-                <div id="checklist-container">
-                    <div class="pb-3 checklist-item">
-                        <div class="input-group">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
-</div>
-<div class="container-fluid mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-            </div>
-        </div>
-    </div>
-</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $('.deactivate-btn').click(function(){
+            var serviceId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to deactivate this service!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, deactivate it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#deactivate-form-' + serviceId).submit();
+                }
+            });
+        });
+
+        $('.activate-btn').click(function(){
+            var serviceId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to activate this service!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, activate it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#activate-form-' + serviceId).submit();
+                }
+            });
+        });
+    });
+</script>
 @endsection
