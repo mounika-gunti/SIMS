@@ -34,13 +34,13 @@ class CustomerRequest extends FormRequest
             'billing_city_id' => 'required|exists:cities,id',
             'billing_address' => 'required|string|max:255',
             'gst_number' => 'required|string|max:15',
-            'services' => 'nullable|array',
+            // 'services' => 'nullable|array',
             'shipping_country_id' => 'nullable|exists:countries,id',
             'shipping_state_id' => 'nullable|exists:states,id',
             'shipping_city_id' => 'nullable|exists:cities,id',
             'shipping_address' => 'nullable|string|max:255',
             'assigned_to'=>'required',
-            'services_id' =>'required|exists:services,id',
+            'services_id' =>'nullable|exists:services,id',
 
         ];
     }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
 
 @section('title')
     Employee Master
@@ -23,7 +23,8 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3 class="mb-0"><b>Add Employee Details</b></h3>
             </div>
-            <form action="{{ route('employee_master.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('employee_master.store') }}" method="POST" enctype="multipart/form-data"
+                id="employee-form">
                 @csrf
                 <div class="row gy-4">
                     <div class="col-lg-6">
@@ -55,7 +56,8 @@
                     <div class="form-row mb-4">
                         <div class="col-md-12 d-flex justify-content-end">
                             <div class="form-group mb-2">
-                                <button type="submit" class="btn btn-save btn-block">Save</button>
+                                <button type="button" onclick="confirmSave(event)"
+                                    class="btn btn-save btn-block">Save</button>
                             </div>
                             <div class="form-group mb-2 mr-3">
                                 <a href="{{ route('employee_master.index') }}" class="btn btn-cancel btn-block">Cancel</a>
@@ -67,3 +69,25 @@
         </div>
     </div>
 @endsection
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+    integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    function confirmSave(ev) {
+        ev.preventDefault();
+        swal({
+                title: "Employee Added Successfully",
+                icon: "success",
+
+                buttons: true,
+                dangerMode: false,
+            })
+            .then((willSave) => {
+                if (willSave) {
+                    document.getElementById('employee-form').submit();
+                }
+            });
+    }
+</script>

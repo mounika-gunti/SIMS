@@ -20,6 +20,8 @@ use App\Http\Controllers\UserManagementController;
 
 
 Route::resource('/employee_master', EmployeeMasterController::class);
+Route::post('/employee_master/deactivate/{id}', [EmployeeMasterController::class, 'deactivate'])->name('employee_master.deactivate');
+Route::post('/employee_master/activate/{id}', [EmployeeMasterController::class, 'active'])->name('employee_master.activate');
 
 
 
@@ -46,6 +48,10 @@ Route::get('/user_management/export_users', [UserManagementController::class, 'e
 Route::resource('/customer', CustomerController::class);
 Route::get('/get_states/{country_id}', [CustomerController::class, 'state'])->name('get_states');
 Route::get('/get_cities/{state_id}', [CustomerController::class, 'city'])->name('get_cities');
+Route::post('/customer/deactivate/{id}', [CustomerController::class, 'deactivate'])->name('customer.deactivate');
+Route::post('/customer/activate/{id}', [CustomerController::class, 'activate'])->name('customer.activate');
+
+
 
 
 

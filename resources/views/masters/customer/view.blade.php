@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
 @section('content')
     <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
         <div class="breadcrumb-title pe-3">Masters</div>
@@ -82,9 +82,7 @@
                 <div class="row mb-2">
                     <div class="col-md-12 d-flex align-items-center">
                         <h5 class="mb-0 me-2">Shipping Address*</h5>
-                        {{-- <input class="form-check-input" type="checkbox" id="shipping_address">
-                        <label class="form-check-label" for="shipping_address"></label>
-                        <h5>(Same as Billing Address)</h5> --}}
+
                     </div>
                 </div>
 
@@ -145,10 +143,9 @@
         <div class="form-row mb-4">
             <div class="col-md-12 d-flex justify-content-end">
                 <div class="form-group mb-2 mr-3">
-                    <a href="{{ route('customer.index') }}" class="btn btn-cancel btn-block">Cancel</button>
+                    <a href="{{ route('customer.index') }}" class="btn btn-cancel btn-block">Cancel</a>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 @endsection

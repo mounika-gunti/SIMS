@@ -9,12 +9,15 @@ class CustomerService extends Model
 {
     use HasFactory;
 
-    protected $table='customer_services';
+    protected $guarded = [];
 
-    protected $guarded =[];
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
+    }
 
-
-    public function customer(){
-        return $this->belongsTo(Customer::class, 'customer');
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'service_id');
     }
 }
