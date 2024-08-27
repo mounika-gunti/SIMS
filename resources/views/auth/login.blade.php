@@ -50,15 +50,14 @@ Login
                         <div class="form-body mt-4">
                             <form method="POST" action="{{ route('login') }}" class="row g-3">
                                 @csrf
-
                                 <div class="col-12">
-                                    <label for="email" class="form-label">Email <span
+                                    <label for="username" class="form-label">Username <span
                                             class="text-danger">*</span></label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                        id="email" placeholder="jhon@example.com" value="{{ old('email') }}" required
-                                        autocomplete="email" autofocus>
+                                    <input type="text" class="form-control @error('username') is-invalid @enderror"
+                                        id="username" name="username" placeholder="Enter Username"
+                                        value="{{ old('username') }}" required autocomplete="username" autofocus>
 
-                                    @error('email')
+                                    @error('username')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
@@ -68,7 +67,7 @@ Login
                                     <label for="password" class="form-label">Password <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group" id="show_hide_password">
-                                        <input type="password" type="password"
+                                        <input type="password"
                                             class="form-control @error('password') is-invalid @enderror" name="password"
                                             required autocomplete="current-password" placeholder="Enter your password">
                                         <a href="javascript:void(0);" class="input-group-text bg-transparent"><i
@@ -84,15 +83,15 @@ Login
 
                                 <div class="col-md-6">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="checkbox"
+                                        <input class="form-check-input" type="checkbox" name="remember" id="checkbox"
                                             {{ old('remember') ? 'checked' : '' }}>
                                         <label class="form-check-label" for="checkbox">Remember Me</label>
                                     </div>
                                 </div>
 
                                 @if (Route::has('password.request'))
-                                <div class="col-md-6 text-end"> <a href="{{ route('password.request') }}">Forgot
-                                        Password ?</a>
+                                <div class="col-md-6 text-end">
+                                    <a href="{{ route('password.request') }}">Forgot Password?</a>
                                 </div>
                                 @endif
 
@@ -104,12 +103,12 @@ Login
 
                                 <div class="col-12">
                                     <div class="text-start">
-                                        {{-- <p class="mb-0">Don't have an account yet? <a
-                                                href="{{ route('register') }}">Sign Up</a>
-                                        </p> --}}
+                                        {{-- <p class="mb-0">Don't have an account yet? <a href="{{ route('register') }}">Sign
+                                        Up</a></p> --}}
                                     </div>
                                 </div>
                             </form>
+
                         </div>
 
                     </div>

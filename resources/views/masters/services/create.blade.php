@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
 
 @section('content')
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -22,7 +22,6 @@
         </div>
         <hr>
 
-        @csrf
         <div class="tab-content" id="tabcontent">
             <div class="row mb-4 mt-3">
                 <div class="form-group col-md-4">
@@ -423,15 +422,6 @@
             </div>
         </div>
         </form>
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
     </div>
 </div>
 
@@ -483,7 +473,7 @@ $('#save_btn').click(function(e) {
             _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                window.location.href = response.redirect_url;
+                window.location.href = '{{ route('services.index') }}';
             },
             error: function(xhr) {
                 console.log(xhr.responseText);
@@ -534,7 +524,7 @@ $('#save_btn').click(function(e) {
             _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                window.location.href = response.redirect_url;
+                window.location.href = '{{ route('services.index') }}';
             },
             error: function(xhr) {
                 console.log(xhr.responseText);
@@ -591,7 +581,7 @@ $('#save_btn').click(function(e) {
             },
             success: function(response) {
                 console.log('Success:', response);
-                window.location.href = response.redirect_url;
+                window.location.href = '{{ route('services.index') }}';
             },
             error: function(xhr) {
                 console.log('Error:', xhr.responseText);
@@ -644,7 +634,7 @@ $('#save_btn').click(function(e) {
             },
             success: function(response) {
                 console.log('Success:', response);
-                window.location.href = response.redirect_url;
+                window.location.href = '{{ route('services.index') }}';
             },
             error: function(xhr) {
                 console.log('Error:', xhr.responseText);

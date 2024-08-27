@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
 
 @section('title')
 Manage User
@@ -57,20 +57,31 @@ Manage User
                                 <td>{{ $user->username }}</td>
                                 <td>Picture</td>
                                 <td>
-                                    <div class="action-buttons">
+                                    <div class="d-inline">
                                         <a href="{{ route('user_management.edit_user', $user->id) }}"
                                             class="btn btn-edit btn-sm me-2 rounded">
                                             Edit
                                         </a>
-                                        <form action="{{ route('user_management.delete', ['id' => $user->id]) }}"
-                                            method="POST" style="display:inline;">
+                                        @if($user->deleted_at == null)
+                                        <form id="deactivate-form-{{ $user->id }}" method="POST"
+                                            action="{{ route('user.deactivate', $user->id) }}" style="display: inline;">
                                             @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-deactivate btn-sm rounded"
-                                                onclick="return confirm('Are you sure you want to delete the user?')">
-                                                Delete
-                                            </button>
+                                            @method('PUT')
+                                            <!-- Adjust if needed -->
+                                            <button type="button"
+                                                class="btn btn-deactivate btn-sm rounded deactivate-btn"
+                                                data-id="{{ $user->id }}">Deactivate</button>
                                         </form>
+                                        @else
+                                        <form id="activate-form-{{ $user->id }}" method="POST"
+                                            action="{{ route('user.activate', $user->id) }}" style="display: inline;">
+                                            @csrf
+                                            @method('PUT')
+                                            <!-- Adjust if needed -->
+                                            <button type="button" class="btn btn-activate btn-sm rounded activate-btn"
+                                                data-id="{{ $user->id }}">Activate</button>
+                                        </form>
+                                        @endif
                                         <a href="{{ route('user_management.user_permission', ['id' => $user->id]) }}"
                                             class="btn btn-view btn-sm me-2 rounded">
                                             User Permission
@@ -91,5 +102,42 @@ Manage User
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        $('.deactivate-btn').click(function(){
+            var userId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to deactivate this user!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, deactivate it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#deactivate-form-' + userId).submit();
+                }
+            });
+        });
 
+        $('.activate-btn').click(function(){
+            var userId = $(this).data('id');
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to activate this user!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, activate it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#activate-form-' + userId).submit();
+                }
+            });
+        });
+    });
+</script>
 @endsection

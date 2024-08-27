@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\ServiceOccurence;
 use App\Http\Requests\ServiceRequest;
 use Illuminate\Http\RedirectResponse;
+use Carbon\Carbon;
 
 
 class ServiceController extends Controller
@@ -25,7 +26,6 @@ class ServiceController extends Controller
 
     public function edit($id)
     {
-
         $service = Service::with('serviceOccurences')->findOrFail($id);
 
         $occurences = [
@@ -194,7 +194,7 @@ class ServiceController extends Controller
             'frequency' => $request->frequency_type,
         ]);
 
-        foreach ($request->biannual_type_list as $row) {
+        foreach ($request->biannually_type_list as $row) {
             ServiceOccurence::create([
                 'service_id' => $service->id,
                 'frequency_type' => $request->frequency_type,
@@ -206,7 +206,7 @@ class ServiceController extends Controller
             ]);
         }
 
-        return redirect()->route('services.index')->with('success', 'Quarterly services added successfully.');
+        return redirect()->route('services.index')->with('success', 'Biannually services added successfully.');
     }
 
     public function storeAnnually(Request $request)
@@ -232,7 +232,6 @@ class ServiceController extends Controller
         return redirect()->route('services.index')->with('success', 'Annually services added successfully.');
     }
 
-
     public function storeOneTime(Request $request)
     {
         // dd($request->all());
@@ -250,13 +249,13 @@ class ServiceController extends Controller
                 'to_date' => $row['to_date'],
             ]);
         }
-        return redirect()->route('services.index')->with('success', 'Quarterly services added successfully.');
+        return redirect()->route('services.index')->with('success', 'OneTime services added successfully.');
     }
 
     public function updateMonthly(Request $request, $id)
     {
 
-        dd($request->all());
+        // dd($request->all());
         $service = Service::findOrFail($id);
         $service->update([
             'name' => $request->service_name,
@@ -332,7 +331,7 @@ class ServiceController extends Controller
             ]);
         }
 
-        return redirect()->route('services.index')->with('success', 'Biannual services updated successfully.');
+        return redirect()->route('services.index')->with('success', 'Biannually services updated successfully.');
     }
 
     public function updateAnnually(Request $request, $id)
@@ -362,18 +361,14 @@ class ServiceController extends Controller
         return redirect()->route('services.index')->with('success', 'Annually services updated successfully.');
     }
 
-    public function updateOneTime(Request $request, $id)
+    public function updateOneTime(Request $request)
     {
-        $service = Service::findOrFail($id);
-        $service->update([
+        // dd($request->all());
+        $service = Service::create([
             'name' => $request->service_name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
-
-
-        ServiceOccurence::where('service_id', $id)->delete();
-
 
         foreach ($request->onetime_type_list as $row) {
             ServiceOccurence::create([
@@ -383,7 +378,22 @@ class ServiceController extends Controller
                 'to_date' => $row['to_date'],
             ]);
         }
+        return redirect()->route('services.index')->with('success', 'OneTime services updated successfully.');
+    }
 
-        return redirect()->route('services.index')->with('success', 'One-time services updated successfully.');
+    public function deactivate($id)
+    {
+        $services = Service::find($id);
+        $services->deleted_at = Carbon::now();
+        $services->save();
+        return redirect()->back()->with('success', 'Service deactivated.');
+    }
+
+    public function active($id)
+    {
+        $services = Service::find($id);
+        $services->deleted_at = null;
+        $services->save();
+        return redirect()->back()->with('success', 'Service activated.');
     }
 }

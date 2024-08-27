@@ -28,6 +28,7 @@ class ServiceRequest extends FormRequest
             'details' => 'nullable|string',
             'frequency_type' => 'required|in:monthly,quarterly,biannually,annually,onetime',
             'month_name' => 'required|string',
+            'deleted_at' => 'nullable|date'
         ];
 
         return $rules;

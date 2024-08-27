@@ -1,3 +1,17 @@
+@php
+$user = auth()->user();
+$user_menus = [];
+
+if ($user) {
+$user_menus = DB::table('user_menus as um')
+->leftJoin('menus as m', 'm.id', '=', 'um.menu_id')
+->where('um.user_id', '=', $user->id)
+->where('is_alloted', '=', 1)
+->select('m.name as menu_name', 'm.address')
+->get();
+}
+@endphp
+
 <!--start sidebar-->
 <aside class="sidebar-wrapper" data-simplebar="true">
     <div class="sidebar-header">
@@ -15,55 +29,42 @@
         <!--navigation-->
         <ul class="metismenu" id="sidenav">
             <li>
-                <a href="http://127.0.0.1:8000/dashboard" class="has-arrow">
-                    <div class="parent-icon"><i class="material-icons-outlined">home</i>
-                    </div>
+                <a href="{{ url('/dashboard') }}" class="has-arrow {{ Request::is('dashboard*') ? 'active' : '' }}">
+                    <div class="parent-icon"><i class="material-icons-outlined">home</i></div>
                     <div class="menu-title">My Dashboard</div>
                 </a>
             </li>
+
+            @foreach ($user_menus as $menu)
             <li>
-                <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="material-icons-outlined">widgets</i>
+                <a href="{{ url($menu->address) }}" class="has-arrow {{ Request::is($menu->address) ? 'active' : '' }}">
+                    <div class="parent-icon">
+                        @if ($menu->menu_name == 'Customer Master')
+                        <i class="fa fa-address-book" aria-hidden="true"></i>
+                        @elseif ($menu->menu_name == 'Employee Details')
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        @elseif ($menu->menu_name == 'Service Master')
+                        <i class="fa fa-cogs" aria-hidden="true"></i>
+                        @elseif ($menu->menu_name == 'Reports')
+                        <i class="fa fa-file-alt" aria-hidden="true"></i>
+                        @elseif ($menu->menu_name == 'User Management')
+                        <i class="fa fa-user" aria-hidden="false"></i>
+                        @endif
                     </div>
-                    <div class="menu-title"> Customer Master</div>
+                    <div class="menu-title">{{ $menu->menu_name }}</div>
                 </a>
-            </li>
-            <li>
-                <a class="has-arrow" href="javascript:;">
-                    <div class="parent-icon"><i class="material-icons-outlined">apps</i>
-                    </div>
-                    <div class="menu-title">Employee Master</div>
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;" class="has-arrow">
-                    <div class="parent-icon"><i class="material-icons-outlined">shopping_bag</i>
-                    </div>
-                    <div class="menu-title">Service Master</div>
-                </a>
-            </li>
-            <li>
-                <a class="has-arrow" href="javascript:;">
-                    <div class="parent-icon"><i class="material-icons-outlined">person</i>
-                    </div>
-                    <div class="menu-title">User Management</div>
-                </a>
+
+                @if ($menu->menu_name == 'User Management')
                 <ul>
                     <li><a href="{{ route('user_management.index') }}"><i
-                                class="material-icons-outlined">arrow_right</i>Add User</a>
-                    </li>
+                                class="material-icons-outlined">arrow_right</i>Add User</a></li>
                     <li><a href="{{ route('user_management.manage_user') }}"><i
-                                class="material-icons-outlined">arrow_right</i>Manage User</a>
-                    </li>
+                                class="material-icons-outlined">arrow_right</i>Manage User</a></li>
                 </ul>
+                @endif
             </li>
-            <li>
-                <a class="has-arrow" href="javascript:;">
-                    <div class="parent-icon"><i class="material-icons-outlined">view_agenda</i>
-                    </div>
-                    <div class="menu-title">Reports</div>
-                </a>
-            </li>
+            @endforeach
+
         </ul>
         <!--end navigation-->
     </div>
