@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
 
 @section('title')
 User Management
@@ -67,23 +67,22 @@ User Management
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
-    // Handle 'Check All' functionality
+
     $('.check_all_menu').on('change', function() {
         var isChecked = $(this).is(':checked');
         $('#user_permission_table input[type="checkbox"]').prop('checked', isChecked);
     });
 
-    // Handle row checkbox functionality
     $(document).on('change', '.checkbox-container input[type="checkbox"]', function() {
         var isChecked = $(this).is(':checked');
         var row = $(this).closest('tr');
         row.find('input[type="checkbox"]').prop('checked', isChecked);
     });
 
-    // Fetch user permissions and populate the table
     var user_id = $('#user_id').val();
     $.ajax({
         type: 'GET',
@@ -117,7 +116,6 @@ User Management
         }
     });
 
-    // Handle form submission
     $('#userManagementForm').on('submit', function(event) {
         event.preventDefault();
 
@@ -157,7 +155,14 @@ User Management
             data: requestData,
             success: function(response) {
                 if (response.success) {
-                    window.location.href = '{{ route('user_management.manage_user') }}';
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'User permissions updated successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then(function() {
+                        window.location.href = '{{ route('user_management.manage_user') }}';
+                    });
                 }
             },
             error: function(xhr, status, error) {
@@ -172,6 +177,7 @@ User Management
         });
     });
 });
+
 
 </script>
 @endsection

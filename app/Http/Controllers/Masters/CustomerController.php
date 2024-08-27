@@ -59,7 +59,9 @@ public function store(CustomerRequest $request)
     $customer->billing_address = $validatedData['billing_address'];
     $customer->gst_number = $validatedData['gst_number'];
     $customer->assigned_to = $validatedData['assigned_to'];
-    $customer->services_id = $validatedData['services_id'];
+
+
+
 
     if ($request->filled('same_as_billing')) {
         $customer->shipping_country_id = $customer->billing_country_id;
@@ -106,11 +108,6 @@ public function store(CustomerRequest $request)
     $customer->gst_number = $validatedData['gst_number'];
     $customer->assigned_to = $validatedData['assigned_to'];
 
-    $customerservice = CustomerService::findOrFail($id);
-
-    $customerservice->services = $validatedData['services'];
-
-
 
     if ($request->has('shipping_address')) {
         $customer->shipping_country_id = $customer->billing_country_id;
@@ -125,7 +122,8 @@ public function store(CustomerRequest $request)
     }
 
     $customer->save();
-    $customerservice->save();
+    $customer->services()->sync($validatedData['services'] ?? []);
+
 
 
     return redirect()->route('customer.index')->with('status', 'Customer Updated Successfully');
@@ -160,12 +158,20 @@ public function store(CustomerRequest $request)
     }
 
 
-    public function destroy( $id)
+    public function deactivate( $id)
     {
         $customers = Customer::findOrFail($id);
         $customers->deleted_at = Carbon::now();
         $customers->save();
-        return redirect()->route('customer.index')->with('status','Customer deactivate successfully.');
+        return redirect()->back()->with('status','Customer deactivate successfully.');
+    }
+
+    public function activate($id)
+    {
+        $customers = Customer::findOrFail($id);
+        $customers->deleted_at = null;
+        $customers->save();
+        return redirect()->back()->with('success', 'Customer activated Successfully .');
     }
 
     public function state($country_id)

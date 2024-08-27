@@ -10,6 +10,7 @@ use App\Http\Requests\UserRequest;
 use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UserManagementController extends Controller
 {
@@ -45,7 +46,8 @@ class UserManagementController extends Controller
                 'delete' => 0,
             ]);
         }
-        return redirect()->route('user_management.index')->with('success', 'User created successfully.');
+
+        return redirect()->route('user_management.index')->with('success', 'User added successfully!');
     }
 
     public function view($id)
@@ -99,6 +101,7 @@ class UserManagementController extends Controller
 
     public function update_user(UserRequest $request, $id)
     {
+        dd($request->all());
         $validatedData = $request->validated();
 
         if (!empty($validatedData['password'])) {
@@ -129,8 +132,9 @@ class UserManagementController extends Controller
         $user->password = bcrypt($validatedData['new_password']);
         $user->save();
 
-        return redirect()->route('user_management.manage_user')->with('success', 'Password updated successfully.');
+        return response()->json(['success' => true, 'message' => 'Password updated successfully.']);
     }
+
     public function permission($id)
     {
         $menus = Menus::select('name')->distinct()->get();
@@ -175,10 +179,24 @@ class UserManagementController extends Controller
         }
         return response()->json(['success' => 'User permissions updated successfully'], 200);
     }
-
-
     public function export()
     {
         return Excel::download(new UsersExport, 'users.xlsx');
+    }
+
+    public function deactivate($id)
+    {
+        $users = Users::find($id);
+        $users->deleted_at = Carbon::now();
+        $users->save();
+        return redirect()->back()->with('success', 'Service deactivated.');
+    }
+
+    public function active($id)
+    {
+        $users = Users::find($id);
+        $users->deleted_at = null;
+        $users->save();
+        return redirect()->back()->with('success', 'Service activated.');
     }
 }

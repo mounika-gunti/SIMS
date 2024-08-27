@@ -1,6 +1,8 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
-<link rel="stylesheet" href="{{ asset('build/css/customer_checklist.css') }}">
+<link rel="stylesheet" href="{{ asset('build/css/style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 @section('title')
     Customer
 @endsection
@@ -63,7 +65,11 @@
                                         </td>
 
                                         <td>
-                                            <i class="fas fa-check-circle text-success"></i>
+                                            @if (is_null($customer->deleted_at))
+                                                <i class="fas fa-check-circle text-success"></i>
+                                            @else
+                                                <i class="fas fa-times-circle text-danger"></i>
+                                            @endif
                                         </td>
 
                                         <td>
@@ -76,14 +82,26 @@
                                                     class="btn btn-view btn-sm me-2 rounded">
                                                     View
                                                 </a>
-                                                <form action="{{ route('customer.destroy', $customer->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-deactivate btn-sm rounded">
-                                                        Deactivate
-                                                    </button>
-                                                </form>
+
+                                                @if ($customer->deleted_at == null)
+                                                    <form id="deactivate-form-{{ $customer->id }}" method="POST"
+                                                        action="{{ route('customer.deactivate', $customer->id) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn btn-deactivate btn-sm rounded deactivate-btn"
+                                                            data-id="{{ $customer->id }}"
+                                                            onclick="confirmDeactivation(event, '{{ $customer->id }}')">Deactivate</button>
+                                                    </form>
+                                                @else
+                                                    <form id="activate-form-{{ $customer->id }}" method="POST"
+                                                        action="{{ route('customer.activate', $customer->id) }}">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="btn btn-activate btn-sm rounded activate-btn"
+                                                            data-id="{{ $customer->id }}"
+                                                            onclick="confirmActivation(event, '{{ $customer->id }}')">Activate</button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
@@ -95,4 +113,42 @@
             </div>
         </div>
     </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"
+        integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <script>
+        function confirmDeactivation(ev, customerId) {
+            ev.preventDefault();
+            swal({
+                    title: "Are you sure you want to deactivate this?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDeactivate) => {
+                    if (willDeactivate) {
+                        document.getElementById('deactivate-form-' + customerId).submit();
+                    }
+                });
+        }
+
+        function confirmActivation(ev, customerId) {
+            ev.preventDefault();
+            swal({
+                    title: "Are you sure you want to activate this?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willActivate) => {
+                    if (willActivate) {
+                        document.getElementById('activate-form-' + customerId).submit();
+                    }
+                });
+        }
+    </script>
 @endsection

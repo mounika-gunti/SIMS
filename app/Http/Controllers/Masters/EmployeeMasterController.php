@@ -43,7 +43,7 @@ class EmployeeMasterController extends Controller
 
         $employee->save();
 
-        return redirect()->route('employee_master.index')->with('success', 'Employee Master created successfully.');
+        return redirect()->route('employee_master.index')->with('success', 'Employee created successfully.');
     }
 
     public function update(EmployeeMasterRequest $request, $id)
@@ -61,15 +61,22 @@ class EmployeeMasterController extends Controller
     }
 
 
-        public function destroy( $id)
+        public function deactivate( $id)
         {
-            $product = Employee::findOrFail($id);
-            $product->deleted_at = Carbon::now();
-            $product->save();
+            $employee= Employee::findOrFail($id);
+            $employee->deleted_at = Carbon::now();
+            $employee->save();
 
-            return redirect()->route('employee_master.index')->with('status','Employee Master Deleted Successfully');
+            return redirect()->route('employee_master.index')->with('success','Employee Master Deleted Successfully');
         }
 
+        public function active($id)
+        {
+            $employee = Employee::findOrFail($id);
+            $employee->deleted_at = null;
+            $employee->save();
+            return redirect()->back()->with('success', 'Employee Master activated Successfully .');
+        }
 
 
 }
