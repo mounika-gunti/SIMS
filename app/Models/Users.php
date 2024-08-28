@@ -28,8 +28,8 @@ class Users extends Model
         return $this->belongsTo(Roles::class, 'role_id');
     }
 
-    public function employee(): HasOne
+    public function employee()
     {
-        return $this->hasOne(Employee::class);
+        return $this->hasOne(Employee::class, 'user_id');
     }
 }

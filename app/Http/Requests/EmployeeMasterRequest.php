@@ -27,7 +27,7 @@ class EmployeeMasterRequest extends FormRequest
             'middle_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'whatsapp_number' => 'nullable|string|max:15',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048'
+            'image_path' => 'required|mimes:jpg,jpeg,png,pdf,doc,docx|'
         ];
     }
 }

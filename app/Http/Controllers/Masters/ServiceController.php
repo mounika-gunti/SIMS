@@ -143,7 +143,7 @@ class ServiceController extends Controller
     public function storeMonthly(Request $request)
     {
         $service = Service::create([
-            'name' => $request->service_name,
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
@@ -165,7 +165,7 @@ class ServiceController extends Controller
     {
         // dd($request->all());
         $service = Service::create([
-            'name' => $request->service_name,
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
@@ -189,7 +189,7 @@ class ServiceController extends Controller
     {
         // dd($request->all());
         $service = Service::create([
-            'name' => $request->service_name,
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
@@ -213,7 +213,7 @@ class ServiceController extends Controller
     {
         // dd($request->all());
         $service = Service::create([
-            'name' => $request->service_name,
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
@@ -236,7 +236,7 @@ class ServiceController extends Controller
     {
         // dd($request->all());
         $service = Service::create([
-            'name' => $request->service_name,
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
@@ -258,7 +258,7 @@ class ServiceController extends Controller
         // dd($request->all());
         $service = Service::findOrFail($id);
         $service->update([
-            'name' => $request->service_name,
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
@@ -280,16 +280,17 @@ class ServiceController extends Controller
 
     public function updateQuarterly(Request $request, $id)
     {
+
+        // dd($request->all());
+
         $service = Service::findOrFail($id);
         $service->update([
-            'name' => $request->service_name,
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
 
-
         ServiceOccurence::where('service_id', $id)->delete();
-
 
         foreach ($request->quarterly_type_list as $row) {
             ServiceOccurence::create([
@@ -306,11 +307,16 @@ class ServiceController extends Controller
         return redirect()->route('services.index')->with('success', 'Quarterly services updated successfully.');
     }
 
+
     public function updateBiannually(Request $request, $id)
     {
+
+        // dd($request->all());
+
         $service = Service::findOrFail($id);
+
         $service->update([
-            'name' => $request->service_name,
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
@@ -318,27 +324,32 @@ class ServiceController extends Controller
 
         ServiceOccurence::where('service_id', $id)->delete();
 
+        $biannually_type_list = $request->biannually_type_list ?? [];
 
-        foreach ($request->biannual_type_list as $row) {
-            ServiceOccurence::create([
-                'service_id' => $service->id,
-                'frequency_type' => $request->frequency_type,
-                'biannual_name' => $row['biannual_name'],
-                'from_month' => $row['from_month'],
-                'from_day' => $row['from_day'],
-                'to_day' => $row['to_day'],
-                'to_month' => $row['to_month'],
-            ]);
+
+        if (is_array($biannually_type_list)) {
+            foreach ($biannually_type_list as $row) {
+                ServiceOccurence::create([
+                    'service_id' => $service->id,
+                    'frequency_type' => $request->frequency_type,
+                    'biannual_name' => $row['biannual_name'] ?? '',
+                    'from_month' => $row['from_month'] ?? '',
+                    'from_day' => $row['from_day'] ?? '',
+                    'to_day' => $row['to_day'] ?? '',
+                    'to_month' => $row['to_month'] ?? '',
+                ]);
+            }
         }
 
         return redirect()->route('services.index')->with('success', 'Biannually services updated successfully.');
     }
 
+
     public function updateAnnually(Request $request, $id)
     {
         $service = Service::findOrFail($id);
         $service->update([
-            'name' => $request->service_name,
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
@@ -361,14 +372,20 @@ class ServiceController extends Controller
         return redirect()->route('services.index')->with('success', 'Annually services updated successfully.');
     }
 
-    public function updateOneTime(Request $request)
+    public function updateOneTime(Request $request, $id)
     {
-        // dd($request->all());
-        $service = Service::create([
-            'name' => $request->service_name,
+
+        $service = Service::findOrFail($id);
+
+        $service->update([
+            'name' => $request->name,
             'details' => $request->details,
             'frequency' => $request->frequency_type,
         ]);
+
+
+        ServiceOccurence::where('service_id', $id)->delete();
+
 
         foreach ($request->onetime_type_list as $row) {
             ServiceOccurence::create([
@@ -378,8 +395,10 @@ class ServiceController extends Controller
                 'to_date' => $row['to_date'],
             ]);
         }
-        return redirect()->route('services.index')->with('success', 'OneTime services updated successfully.');
+
+        return redirect()->route('services.index')->with('success', 'One-time services updated successfully.');
     }
+
 
     public function deactivate($id)
     {

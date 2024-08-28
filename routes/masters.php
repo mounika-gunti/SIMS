@@ -33,7 +33,7 @@ Route::post('/user_management/store', [UserManagementController::class, 'store']
 Route::get('/user_management/manage_user', [UserManagementController::class, 'manage'])->name('user_management.manage_user');
 Route::get('/user_management/edit_user/{id}', [UserManagementController::class, 'edit_user'])->name('user_management.edit_user');
 Route::put('/user_management/update_user/{id}', [UserManagementController::class, 'update_user'])->name('user_management.update_user');
-Route::post('/user_management/update/{id}', [UserManagementController::class, 'updateMenus'])->name('user_management.update_user');
+Route::post('/user_management/update/{id}', [UserManagementController::class, 'updateMenus'])->name('user_management.update_menus');
 Route::get('/user_management/user_permission/{id}', [UserManagementController::class, 'permission'])->name('user_management.user_permission');
 Route::get('/user_management/change_password/{id}', [UserManagementController::class, 'password'])->name('user_management.change_password');
 Route::put('/user_management/update_password/{id}', [UserManagementController::class, 'updatePassword'])->name('user_management.update_password');
@@ -50,9 +50,6 @@ Route::get('/get_states/{country_id}', [CustomerController::class, 'state'])->na
 Route::get('/get_cities/{state_id}', [CustomerController::class, 'city'])->name('get_cities');
 Route::post('/customer/deactivate/{id}', [CustomerController::class, 'deactivate'])->name('customer.deactivate');
 Route::post('/customer/activate/{id}', [CustomerController::class, 'activate'])->name('customer.activate');
-
-
-
 
 
 Route::resource('/services', ServiceController::class);
@@ -72,11 +69,3 @@ Route::post('/service/update-onetime/{id}', [ServiceController::class, 'updateOn
 
 Route::put('/service/deactivate/{id}', [ServiceController::class, 'deactivate'])->name('service.deactivate');
 Route::put('/service/activate/{id}', [ServiceController::class, 'active'])->name('service.activate');
-
-
-Route::get('/product_type', [ProductTypeController::class, 'index'])->name('product_type.index');
-// Route::post('/product_type/store', [ProductTypeController::class, 'store'])->name('product_type.store');
-// Route::get('/product_type/create', [ProductTypeController::class, 'create'])->name('product_type.create');
-// Route::get('/product_type/edit/{id}', [ProductTypeController::class, 'edit'])->name('product_type.edit');
-// Route::put('/product_type/update/{id}', [ProductTypeController::class, 'update'])->name('product_type.update');
-// Route::delete('/product_type/destroy/{id}', [ProductTypeController::class, 'destroy'])->name('product_type.destroy');
