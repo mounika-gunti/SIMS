@@ -24,7 +24,7 @@ class ServiceRequest extends FormRequest
         $frequency_type = $this->input('frequency_type');
 
         $rules = [
-            'service_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'details' => 'nullable|string',
             'frequency_type' => 'required|in:monthly,quarterly,biannually,annually,onetime',
             'month_name' => 'required|string',

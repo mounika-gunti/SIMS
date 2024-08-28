@@ -25,17 +25,17 @@
         <div class="tab-content" id="tabcontent">
             <div class="row mb-4 mt-3">
                 <div class="form-group col-md-4">
-                    <label for="service_name"><b>Service Name*</b></label>
-                    <input type="text" class="form-control" id="service_name" name="service_name"
-                        placeholder="Enter Service Name">
-                    @error('service_name')
-                    <p class="text-danger">{{ $message }}</p>
+                    <label for="name"><b>Service Name*</b></label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter Service Name"
+                        value="{{ old('name') }}" required>
+                    @error('name')
+                    <span class="text-danger">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="form-group col-md-4">
                     <label for="details"><b>Details</b></label>
                     <textarea class="form-control" id="details" name="details" placeholder="Enter Details"
-                        rows="3"></textarea>
+                        rows="3">{{ old('details') }}</textarea>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="frequency_type"><b>Frequency*</b></label>
@@ -458,7 +458,7 @@
 });
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
     if (frequency_type === "monthly") {
@@ -466,7 +466,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.storeMonthly') }}',
             method: 'POST',
             data: {
-            service_name: service_name,
+            name: name,
             details: details,
             frequency_type: frequency_type,
             monthly_type_list: monthly_type_list,
@@ -509,7 +509,7 @@ function updateQuarterlyList() {
 });
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
     if (frequency_type === "quarterly") {
@@ -517,7 +517,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.storeQuarterly') }}',
             method: 'POST',
             data: {
-            service_name: service_name,
+            name: name,
             details: details,
             frequency_type: frequency_type,
             quarterly_type_list: quarterly_type_list,
@@ -561,11 +561,9 @@ $(document).on('change', 'input:checkbox, input.from_day, input.to_day', functio
 
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    console.log('Saving biannually data...');
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
-    console.log('Frequency Type:', frequency_type);
 
     if (frequency_type === "biannually") {
         console.log('Making AJAX request...');
@@ -573,7 +571,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.storeBiAnnually') }}',
             method: 'POST',
             data: {
-                service_name: service_name,
+                name: name,
                 details: details,
                 frequency_type: frequency_type,
                 biannually_type_list: biannually_type_list,
@@ -617,7 +615,7 @@ $(document).on('change', 'input.from_day, input.to_day, select.from_month, selec
 
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
 
@@ -626,7 +624,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.storeAnnually') }}',
             method: 'POST',
             data: {
-                service_name: service_name,
+                name: name,
                 details: details,
                 frequency_type: frequency_type,
                 annually_type_list: annually_type_list,
@@ -665,7 +663,7 @@ $(document).on('change', 'input.from_date, input.to_date', function() {
 
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
 
@@ -674,7 +672,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.storeOneTime') }}',
             method: 'POST',
             data: {
-                service_name: service_name,
+                name: name,
                 details: details,
                 frequency_type: frequency_type,
                 onetime_type_list: onetime_type_list,

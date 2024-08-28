@@ -21,12 +21,12 @@ class Employee extends Model
     ];
 
 
-public function customers()
-{
-    return $this->hasMany(Customer::class, 'assigned_to');
-}
-
-
-
-
+    public function customers()
+    {
+        return $this->hasMany(Customer::class, 'assigned_to');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

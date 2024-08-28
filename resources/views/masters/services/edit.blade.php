@@ -26,10 +26,10 @@
             <div class="tab-content" id="tabcontent">
                 <div class="row mb-4 mt-3">
                     <div class="form-group col-md-4">
-                        <label for="service_name"><b>Service Name*</b></label>
-                        <input type="text" class="form-control" id="service_name" name="service_name"
-                            placeholder="Enter Service Name" value="{{ $service->name }}">
-                        @error('service_name')
+                        <label for="name"><b>Service Name*</b></label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Enter Service Name"
+                            value="{{ $service->name }}">
+                        @error('name')
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
@@ -154,67 +154,64 @@
                                         <td>
                                             <input type="checkbox" id="quarter_{{ $index }}"
                                                 name="quarter_name[{{ $index }}]" value="{{ $index }}"
-                                                class="form-check-input select_month"
+                                                class="form-check-input select_month" data-row_id="{{ $index }}"
                                                 {{ $isSelected ? 'checked' : '' }}>
                                         </td>
                                         <td class="quarter_name">{{ $label }}</td>
                                         <td>
                                             <select id="from_month_{{ $index }}" name="from_month[{{ $index }}]"
-                                                class="form-select from_month">
+                                                data-row_id="{{ $index }}" class="form-select from_month">
                                                 <option value="">Select Month</option>
-                                                @foreach ([
-                                                'January' => 'January',
-                                                'February' => 'February',
-                                                'March' => 'March',
-                                                'April' => 'April',
-                                                'May' => 'May',
-                                                'June' => 'June',
-                                                'July' => 'July',
-                                                'August' => 'August',
-                                                'September' => 'September',
-                                                'October' => 'October',
-                                                'November' => 'November',
-                                                'December' => 'December'
-                                                ] as $month_value => $month_label)
-                                                <option value="{{ $month_value }}"
-                                                    {{ $month_value === $fromMonth ? 'selected' : '' }}>
-                                                    {{ $month_label }}
-                                                </option>
-                                                @endforeach
+                                                @if ($index == 'january-march')
+                                                <option value="January">January</option>
+                                                <option value="February">February</option>
+                                                <option value="March">March</option>
+                                                @elseif ($index == 'april-june')
+                                                <option value="April">April</option>
+                                                <option value="May">May</option>
+                                                <option value="June">June</option>
+                                                @elseif ($index == 'july-september')
+                                                <option value="July">July</option>
+                                                <option value="August">August</option>
+                                                <option value="September">September</option>
+                                                @elseif ($index == 'october-december')
+                                                <option value="October">October</option>
+                                                <option value="November">November</option>
+                                                <option value="December">December</option>
+                                                @endif
                                             </select>
                                         </td>
                                         <td>
                                             <input type="number" name="from_day[{{ $index }}]"
-                                                class="form-control from_day" min="1" max="31" value="{{ $fromDay }}">
+                                                class="form-control from_day" min="1" max="31" value="{{ $fromDay }}"
+                                                data-row_id="{{ $index }}">
                                         </td>
                                         <td>
                                             <select id="to_month_{{ $index }}" name="to_month[{{ $index }}]"
-                                                class="form-select to_month">
+                                                data-row_id="{{ $index }}" class="form-select to_month">
                                                 <option value="">Select Month</option>
-                                                @foreach ([
-                                                'January' => 'January',
-                                                'February' => 'February',
-                                                'March' => 'March',
-                                                'April' => 'April',
-                                                'May' => 'May',
-                                                'June' => 'June',
-                                                'July' => 'July',
-                                                'August' => 'August',
-                                                'September' => 'September',
-                                                'October' => 'October',
-                                                'November' => 'November',
-                                                'December' => 'December'
-                                                ] as $month_value => $month_label)
-                                                <option value="{{ $month_value }}"
-                                                    {{ $month_value === $toMonth ? 'selected' : '' }}>
-                                                    {{ $month_label }}
-                                                </option>
-                                                @endforeach
+                                                @if ($index == 'january-march')
+                                                <option value="January">January</option>
+                                                <option value="February">February</option>
+                                                <option value="March">March</option>
+                                                @elseif ($index == 'april-june')
+                                                <option value="April">April</option>
+                                                <option value="May">May</option>
+                                                <option value="June">June</option>
+                                                @elseif ($index == 'july-september')
+                                                <option value="July">July</option>
+                                                <option value="August">August</option>
+                                                <option value="September">September</option>
+                                                @elseif ($index == 'october-december')
+                                                <option value="October">October</option>
+                                                <option value="November">November</option>
+                                                <option value="December">December</option>
+                                                @endif
                                             </select>
                                         </td>
                                         <td>
                                             <input type="number" name="to_day[{{ $index }}]" class="form-control to_day"
-                                                min="1" max="31" value="{{ $toDay }}">
+                                                min="1" max="31" value="{{ $toDay }}" data-row_id="{{ $index }}">
                                         </td>
                                     </tr>
                                     @endforeach
@@ -258,14 +255,15 @@
                                     <tr>
                                         <td>
                                             <input type="checkbox" id="biannual_{{ $index }}"
-                                                name="biannually_name[{{ $index }}]" value="{{ $index }}"
-                                                class="form-check-input select_month"
-                                                {{ $isSelected ? 'checked' : '' }}>
+                                                name="biannually_type_list[{{ $index }}][biannual_name]"
+                                                value="{{ $index }}" class="form-check-input select_month"
+                                                data-row_id="{{ $index }}" {{ $isSelected ? 'checked' : '' }}>
                                         </td>
                                         <td class="biannual_name">{{ $label }}</td>
                                         <td>
-                                            <select id="from_month_{{ $index }}" name="from_month[{{ $index }}]"
-                                                class="form-select from_month">
+                                            <select id="from_month_{{ $index }}"
+                                                name="biannually_type_list[{{ $index }}][from_month]"
+                                                data-row_id="{{ $index }}" class="form-select from_month">
                                                 <option value="">Select Month</option>
                                                 @foreach ([
                                                 'January' => 'January',
@@ -289,11 +287,12 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="number" name="from_day[{{ $index }}]"
+                                            <input type="number" name="biannually_type_list[{{ $index }}][from_day]"
                                                 class="form-control from_day" min="1" max="31" value="{{ $fromDay }}">
                                         </td>
                                         <td>
-                                            <select id="to_month_{{ $index }}" name="to_month[{{ $index }}]"
+                                            <select id="to_month_{{ $index }}"
+                                                name="biannually_type_list[{{ $index }}][to_month]"
                                                 class="form-select to_month">
                                                 <option value="">Select Month</option>
                                                 @foreach ([
@@ -318,12 +317,13 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="number" name="to_day[{{ $index }}]" class="form-control to_day"
-                                                min="1" max="31" value="{{ $toDay }}">
+                                            <input type="number" name="biannually_type_list[{{ $index }}][to_day]"
+                                                class="form-control to_day" min="1" max="31" value="{{ $toDay }}">
                                         </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
+
                             </table>
                         </div>
                     </div>
@@ -517,7 +517,7 @@
 });
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
     if (frequency_type === "monthly") {
@@ -525,7 +525,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.updateMonthly', $service->id) }}',
             method: 'POST',
             data: {
-            service_name: service_name,
+            name: name,
             details: details,
             frequency_type: frequency_type,
             monthly_type_list: monthly_type_list,
@@ -546,11 +546,11 @@ function updateQuarterlyList() {
     quarterly_type_list = [];
     $('#quarterly_table .select_month:checked').each(function() {
         var row_id = $(this).attr('data-row_id');
-        var quarter_name = $(`.quarter_name[data-row_id="${row_id}"]`).text().trim();
-        var from_month = $(`.from_month[data-row_id="${row_id}"]`).val();
-        var to_month = $(`.to_month[data-row_id="${row_id}"]`).val();
-        var from_day = $(`.from_day[data-row_id="${row_id}"]`).val();
-        var to_day = $(`.to_day[data-row_id="${row_id}"]`).val();
+        var quarter_name = $(this).closest('tr').find('.quarter_name').text().trim();
+        var from_month = $(`select.from_month[data-row_id="${row_id}"]`).val();
+        var to_month = $(`select.to_month[data-row_id="${row_id}"]`).val();
+        var from_day = $(`input.from_day[data-row_id="${row_id}"]`).val();
+        var to_day = $(`input.to_day[data-row_id="${row_id}"]`).val();
 
         quarterly_type_list.push({
             quarter_name: quarter_name,
@@ -563,12 +563,14 @@ function updateQuarterlyList() {
     console.log("quarterly:", quarterly_type_list);
 }
 
- $(document).on('change', 'input:checkbox, input.from_day, input.to_day', function() {
+$(document).on('change', 'input:checkbox, input.from_day, input.to_day, select.from_month, select.to_month', function() {
     updateQuarterlyList();
 });
+
+
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
     if (frequency_type === "quarterly") {
@@ -576,11 +578,11 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.updateQuarterly', $service->id) }}',
             method: 'POST',
             data: {
-            service_name: service_name,
-            details: details,
-            frequency_type: frequency_type,
-            quarterly_type_list: quarterly_type_list,
-            _token: '{{ csrf_token() }}'
+                name: name,
+                details: details,
+                frequency_type: frequency_type,
+                quarterly_type_list: quarterly_type_list,
+                _token: '{{ csrf_token() }}'
             },
             success: function(response) {
                 window.location.href = '{{ route('services.index') }}';
@@ -592,16 +594,17 @@ $('#save_btn').click(function(e) {
     }
 });
 
+
 var biannually_type_list = [];
 function updateBiannuallyList() {
     biannually_type_list = [];
     $('#biannually_table .select_month:checked').each(function() {
         var row_id = $(this).data('row_id');
-        var biannual_name = row_id === 'january-june' ? 'first' : 'second';
-        var from_month = $(`.from_month[data-row_id="${row_id}"]`).val();
-        var to_month = $(`.to_month[data-row_id="${row_id}"]`).val();
-        var from_day = $(`.from_day[data-row_id="${row_id}"]`).val();
-        var to_day = $(`.to_day[data-row_id="${row_id}"]`).val();
+          var biannual_name = row_id === 'january-june' ? 'first' : 'second';
+        var from_month = $(`select.from_month[data-row_id="${row_id}"]`).val();
+        var to_month = $(`select.to_month[data-row_id="${row_id}"]`).val();
+        var from_day = $(`input.from_day[data-row_id="${row_id}"]`).val();
+        var to_day = $(`input.to_day[data-row_id="${row_id}"]`).val();
 
         biannually_type_list.push({
             biannual_name: biannual_name,
@@ -614,14 +617,14 @@ function updateBiannuallyList() {
     console.log("biannually:", biannually_type_list);
 }
 
-$(document).on('change', 'input:checkbox, input.from_day, input.to_day', function() {
+$(document).on('change', 'input:checkbox, input.from_day, input.to_day, select.from_month, select.to_month', function() {
     updateBiannuallyList();
 });
 
 $('#save_btn').click(function(e) {
     e.preventDefault();
     console.log('Saving biannually data...');
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
     console.log('Frequency Type:', frequency_type);
@@ -631,7 +634,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.updateBiAnnually', $service->id) }}',
             method: 'POST',
             data: {
-                service_name: service_name,
+                name: name,
                 details: details,
                 frequency_type: frequency_type,
                 biannually_type_list: biannually_type_list,
@@ -647,8 +650,6 @@ $('#save_btn').click(function(e) {
         });
     }
 });
-
-
 
 var annually_type_list = [];
 function updateAnnuallyList() {
@@ -676,7 +677,7 @@ $(document).on('change', 'input.from_day, input.to_day, select.from_month, selec
 
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
 
@@ -685,7 +686,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.updateAnnually', $service->id) }}',
             method: 'POST',
             data: {
-                service_name: service_name,
+                name: name,
                 details: details,
                 frequency_type: frequency_type,
                 annually_type_list: annually_type_list,
@@ -724,7 +725,7 @@ $(document).on('change', 'input.from_date, input.to_date', function() {
 
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
 
@@ -733,7 +734,7 @@ $('#save_btn').click(function(e) {
     url: '{{ route('services.updateOneTime', $service->id) }}',
     method: 'POST',
     data: JSON.stringify({
-        service_name: service_name,
+        name: name,
         details: details,
         frequency_type: frequency_type,
         onetime_type_list: onetime_type_list,
