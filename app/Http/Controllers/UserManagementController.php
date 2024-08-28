@@ -99,22 +99,29 @@ class UserManagementController extends Controller
         return view('masters.user_management.edit_user', compact('user'));
     }
 
-    public function update_user(UserRequest $request, $id)
+    public function update_user(Request $request, $id)
     {
-        dd($request->all());
-        $validatedData = $request->validated();
+
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username,' . $id,
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+
+        $user = Users::findOrFail($id);
 
         if (!empty($validatedData['password'])) {
             $validatedData['password'] = bcrypt($validatedData['password']);
         } else {
+
             unset($validatedData['password']);
         }
 
-        $user = Users::findOrFail($id);
         $user->update($validatedData);
-
         return redirect()->route('user_management.manage_user')->with('success', 'User updated successfully.');
     }
+
 
     public function password($id)
     {

@@ -26,9 +26,9 @@
             <div class="tab-content" id="tabcontent">
                 <div class="row mb-4 mt-3">
                     <div class="form-group col-md-4">
-                        <label for="service_name"><b>Service Name*</b></label>
-                        <input type="text" class="form-control" id="service_name" name="service_name"
-                            value="{{ $service->name }}" disabled>
+                        <label for="name"><b>Service Name*</b></label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ $service->name }}"
+                            disabled>
 
                     </div>
                     <div class="form-group col-md-4">
@@ -156,7 +156,7 @@
                                         <td>
                                             <select id="from_month_{{ $index }}" name="from_month[{{ $index }}]"
                                                 class="form-select from_month" disabled>
-                                                <option value="">Select Month</option>
+                                                <option value=""></option>
                                                 @foreach ([
                                                 'January' => 'January',
                                                 'February' => 'February',
@@ -186,7 +186,7 @@
                                         <td>
                                             <select id="to_month_{{ $index }}" name="to_month[{{ $index }}]"
                                                 class="form-select to_month" disabled>
-                                                <option value="">Select Month</option>
+                                                <option value=""></option>
                                                 @foreach ([
                                                 'January' => 'January',
                                                 'February' => 'February',
@@ -262,7 +262,7 @@
                                         <td>
                                             <select id="from_month_{{ $index }}" name="from_month[{{ $index }}]"
                                                 class="form-select from_month" disabled>
-                                                <option value="">Select Month</option>
+                                                <option value=""></option>
                                                 @foreach ([
                                                 'January' => 'January',
                                                 'February' => 'February',
@@ -292,7 +292,7 @@
                                         <td>
                                             <select id="to_month_{{ $index }}" name="to_month[{{ $index }}]"
                                                 class="form-select to_month" disabled>
-                                                <option value="">Select Month</option>
+                                                <option value=""></option>
                                                 @foreach ([
                                                 'January' => 'January',
                                                 'February' => 'February',
@@ -384,7 +384,7 @@
                                         <td>
                                             <select name="from_month[{{ $index }}]" class="form-select from_month"
                                                 data-row_id="{{ $index }}" disabled>
-                                                <option value="">Select Month</option>
+                                                <option value=""></option>
                                                 @foreach ([
                                                 'january' => 'January',
                                                 'february' => 'February',
@@ -414,7 +414,7 @@
                                         <td>
                                             <select name="to_month[{{ $index }}]" class="form-select to_month"
                                                 data-row_id="{{ $index }}" disabled>
-                                                <option value="">Select Month</option>
+                                                <option value=""></option>
                                                 @foreach ([
                                                 'january' => 'January',
                                                 'february' => 'February',
@@ -511,7 +511,7 @@
 });
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
     if (frequency_type === "monthly") {
@@ -519,7 +519,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.updateMonthly', $service->id) }}',
             method: 'PUT',
             data: {
-            service_name: service_name,
+            name: name,
             details: details,
             frequency_type: frequency_type,
             monthly_type_list: monthly_type_list,
@@ -562,7 +562,7 @@ function updateQuarterlyList() {
 });
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
     if (frequency_type === "quarterly") {
@@ -570,7 +570,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.updateQuarterly', $service->id) }}',
             method: 'PUT',
             data: {
-            service_name: service_name,
+            name: name,
             details: details,
             frequency_type: frequency_type,
             quarterly_type_list: quarterly_type_list,
@@ -615,7 +615,7 @@ $(document).on('change', 'input:checkbox, input.from_day, input.to_day', functio
 $('#save_btn').click(function(e) {
     e.preventDefault();
     console.log('Saving biannually data...');
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
     console.log('Frequency Type:', frequency_type);
@@ -625,7 +625,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.updateBiAnnually', $service->id) }}',
             method: 'PUT',
             data: {
-                service_name: service_name,
+                name: name,
                 details: details,
                 frequency_type: frequency_type,
                 biannually_type_list: biannually_type_list,
@@ -670,7 +670,7 @@ $(document).on('change', 'input.from_day, input.to_day, select.from_month, selec
 
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
 
@@ -679,7 +679,7 @@ $('#save_btn').click(function(e) {
             url: '{{ route('services.updateAnnually', $service->id) }}',
             method: 'PUT',
             data: {
-                service_name: service_name,
+                name: name,
                 details: details,
                 frequency_type: frequency_type,
                 annually_type_list: annually_type_list,
@@ -718,7 +718,7 @@ $(document).on('change', 'input.from_date, input.to_date', function() {
 
 $('#save_btn').click(function(e) {
     e.preventDefault();
-    var service_name = $('#service_name').val();
+    var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
 
@@ -727,7 +727,7 @@ $('#save_btn').click(function(e) {
     url: '{{ route('services.updateOneTime', $service->id) }}',
     method: 'PUT',
     data: JSON.stringify({
-        service_name: service_name,
+        name: name,
         details: details,
         frequency_type: frequency_type,
         onetime_type_list: onetime_type_list,

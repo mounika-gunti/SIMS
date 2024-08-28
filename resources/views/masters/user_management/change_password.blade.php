@@ -30,16 +30,22 @@
                 <div class="form-group col-md-5">
                     <label for="new_password"><b>New Password*</b></label>
                     <input type="password" class="form-control" id="new_password" name="new_password"
-                        placeholder="Enter New Password" required>
+                        placeholder="Enter New Password">
                 </div>
+                @error('new_password')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="row mb-4">
                 <div class="form-group col-md-5">
                     <label for="new_password_confirmation"><b>Confirm Password*</b></label>
                     <input type="password" class="form-control" id="new_password_confirmation"
-                        name="new_password_confirmation" placeholder="Confirm New Password" required>
+                        name="new_password_confirmation" placeholder="Confirm New Password">
                 </div>
+                @error('new_password_confirmation')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
 
             <div class="form-row mb-4">

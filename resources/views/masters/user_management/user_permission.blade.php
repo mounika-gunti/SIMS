@@ -151,7 +151,7 @@ User Management
 
         $.ajax({
             type: 'POST',
-            url: '{{ route('user_management.update_user', ':id') }}'.replace(':id', user_id),
+            url: '{{ route('user_management.update_menus', ':id') }}'.replace(':id', user_id),
             data: requestData,
             success: function(response) {
                 if (response.success) {
@@ -177,7 +177,5 @@ User Management
         });
     });
 });
-
-
 </script>
 @endsection
