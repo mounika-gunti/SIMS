@@ -59,7 +59,7 @@ Customer
                                     {{ $service->name }}{{ !$loop->last ? ', ' : '' }}
                                     @endforeach
                                     @else
-                                    N/A
+                                    No Services Selected
                                     @endif
                                 </td>
 

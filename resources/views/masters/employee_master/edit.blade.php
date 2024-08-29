@@ -51,10 +51,10 @@ Employee
                                 value="{{ $employee->whatsapp_number }}" placeholder="Enter Whatsapp Number">
                         </div>
                         <div class="col-lg-6">
-                            <label for="attach" class="form-label">Attach Profile Picture*</label>
-                            <input type="file" class="form-control" name="attach" id="attach">
+                            <label for="image_path" class="form-label">Attach Profile Picture*</label>
+                            <input type="file" class="form-control" name="image_path" id="image_path"
+                                value="{{ $user->image_path ?? '' }}">
                         </div>
-
                         <div class="row gy-3">
                             <div class="form-row mb-4">
                                 <div class="col-md-12 d-flex justify-content-end">
