@@ -54,6 +54,21 @@ $user_menus = DB::table('user_menus as um')
                                 class="material-icons-outlined">arrow_right</i>Manage User</a></li>
                 </ul>
             </li>
+            @elseif ($menu->menu_name == 'Reports')
+            <li>
+                <a href="{{ url($menu->address) }}" class="{{ Request::is($menu->address) ? 'active' : '' }}">
+                    <div class="parent-icon">
+                        <i class="fa fa-file-alt" aria-hidden="true"></i>
+                    </div>
+                    <div class="menu-title">{{ $menu->menu_name }}</div>
+                </a>
+                <ul>
+                    <li><a href="{{ route('reports.completed') }}"><i
+                                class="material-icons-outlined">arrow_right</i>Completed Reports</a></li>
+                    <li><a href="{{ route('reports.non_completed') }}"><i
+                                class="material-icons-outlined">arrow_right</i>Non-Completed Reports</a></li>
+                </ul>
+            </li>
             @else
             <li>
                 <a href="{{ url($menu->address) }}" class="{{ Request::is($menu->address) ? 'active' : '' }}">
@@ -64,8 +79,6 @@ $user_menus = DB::table('user_menus as um')
                         <i class="fa fa-users" aria-hidden="true"></i>
                         @elseif ($menu->menu_name == 'Service Master')
                         <i class="fa fa-cogs" aria-hidden="true"></i>
-                        @elseif ($menu->menu_name == 'Reports')
-                        <i class="fa fa-file-alt" aria-hidden="true"></i>
                         @endif
                     </div>
                     <div class="menu-title">{{ $menu->menu_name }}</div>

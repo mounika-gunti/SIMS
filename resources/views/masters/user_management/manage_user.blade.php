@@ -23,7 +23,7 @@ Manage User
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0"><b>Manage User</b></h3>
-            <a href="{{ route('user_management.export_users') }}" class="btn btn-primary btn-add-checklist">
+            <a href="{{ route('user_management.export_users') }}" class="btn btn-primary btn-add">
                 Export to Excel
             </a>
         </div>

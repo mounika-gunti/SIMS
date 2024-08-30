@@ -59,7 +59,6 @@
                 </div>
             </div>
         </form>
-
     </div>
 </div>
 
@@ -68,6 +67,29 @@
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('changePasswordForm').addEventListener('submit', function(event) {
             event.preventDefault();
+
+            var newPassword = document.getElementById('new_password').value.trim();
+            var confirmPassword = document.getElementById('new_password_confirmation').value.trim();
+
+            if (newPassword === '' || confirmPassword === '') {
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'Please fill out all required fields.',
+                    icon: 'warning',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Passwords do not match.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
 
             var form = this;
             var formData = new FormData(form);
