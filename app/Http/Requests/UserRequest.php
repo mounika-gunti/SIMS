@@ -30,6 +30,7 @@ class UserRequest extends FormRequest
             'last_logged_in_at' => 'nullable|date',
             'force_reset_password' => 'nullable',
             'role_id' => 'nullable|exists:roles,id',
+            'image_path' => 'required',
             'active_from' => 'nullable|date',
         ];
     }

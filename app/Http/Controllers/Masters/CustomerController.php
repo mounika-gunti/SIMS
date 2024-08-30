@@ -44,6 +44,8 @@ class CustomerController extends Controller
 
     public function store(CustomerRequest $request)
     {
+
+        // dd($request->all());
         $validatedData = $request->validated();
 
         $customer = new Customer();

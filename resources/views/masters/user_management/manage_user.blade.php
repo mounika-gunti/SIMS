@@ -55,7 +55,15 @@ Manage User
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $user->first_name }}</td>
                                 <td>{{ $user->username }}</td>
-                                <td>Picture</td>
+                                <td>
+                                    @if($user->image_path)
+                                    <img src="{{ asset($user->image_path) }}" alt="Profile Picture"
+                                        style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
+                                    @else
+                                    <img src="{{ asset('default-image.png') }}" alt="Default Picture"
+                                        style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
+                                    @endif
+                                </td>
                                 <td>
                                     <div class="d-inline">
                                         <a href="{{ route('user_management.edit_user', $user->id) }}"
@@ -67,7 +75,6 @@ Manage User
                                             action="{{ route('user.deactivate', $user->id) }}" style="display: inline;">
                                             @csrf
                                             @method('PUT')
-                                            <!-- Adjust if needed -->
                                             <button type="button"
                                                 class="btn btn-deactivate btn-sm rounded deactivate-btn"
                                                 data-id="{{ $user->id }}">Deactivate</button>
@@ -77,7 +84,6 @@ Manage User
                                             action="{{ route('user.activate', $user->id) }}" style="display: inline;">
                                             @csrf
                                             @method('PUT')
-                                            <!-- Adjust if needed -->
                                             <button type="button" class="btn btn-activate btn-sm rounded activate-btn"
                                                 data-id="{{ $user->id }}">Activate</button>
                                         </form>

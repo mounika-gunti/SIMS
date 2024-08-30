@@ -19,6 +19,7 @@
             <h3 class="mb-0"><b>View User</b></h3>
         </div>
         <hr>
+
         <div class="row mb-4">
             <div class="form-group col-md-5">
                 <label for="display_name"><b>Display Name*</b></label>
@@ -33,14 +34,24 @@
             </div>
         </div>
 
+        <div class="col-md-6 d-flex align-items-center justify-content-center"
+            style="margin-left:400px; margin-top:-150px;">
+            @if($user->image_path)
+            <img src="{{ asset($user->image_path) }}" alt="Profile Picture"
+                style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
+            @else
+            <img src="{{ asset('default-image.png') }}" alt="Default Picture"
+                style="width: 150px; height: 150px; object-fit: cover; border-radius: 50%;">
+            @endif
+        </div>
+
         <div class="form-row mb-4">
             <div class="col-md-12 d-flex justify-content-end">
-                <div class="form-group mb-2 mr-3">
+                <div class="form-group mb-3 mr-3">
                     <a href="{{ route('user_management.index') }}" class="btn btn-cancel btn-block">Cancel</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 @endsection
