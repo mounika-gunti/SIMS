@@ -679,7 +679,7 @@ $('#save_btn').click(function(e) {
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                window.location.href = response.redirect_url;
+                window.location.href = '{{ route('services.index') }}';
             },
             error: function(xhr) {
                 console.log(xhr.responseText);

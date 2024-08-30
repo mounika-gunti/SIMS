@@ -254,8 +254,6 @@ class ServiceController extends Controller
 
     public function updateMonthly(Request $request, $id)
     {
-
-        // dd($request->all());
         $service = Service::findOrFail($id);
         $service->update([
             'name' => $request->name,
@@ -265,7 +263,9 @@ class ServiceController extends Controller
 
         ServiceOccurence::where('service_id', $id)->delete();
 
-        foreach ($request->monthly_type_list as $row) {
+        $monthlyTypeList = $request->monthly_type_list ?? [];
+
+        foreach ($monthlyTypeList as $row) {
             ServiceOccurence::create([
                 'service_id' => $service->id,
                 'frequency_type' => $request->frequency_type,
@@ -277,6 +277,7 @@ class ServiceController extends Controller
 
         return redirect()->route('services.index')->with('success', 'Monthly services updated successfully.');
     }
+
 
     public function updateQuarterly(Request $request, $id)
     {
@@ -311,7 +312,7 @@ class ServiceController extends Controller
     public function updateBiannually(Request $request, $id)
     {
 
-        // dd($request->all());
+        dd($request->all());
 
         $service = Service::findOrFail($id);
 

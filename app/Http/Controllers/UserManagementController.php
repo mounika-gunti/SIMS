@@ -29,9 +29,30 @@ class UserManagementController extends Controller
     {
         // dd($request->all());
         $validatedData = $request->validated();
+
         $validatedData['password'] = bcrypt($validatedData['password']);
 
-        $user = Users::create($validatedData);
+        $user = new Users($validatedData);
+
+
+        if ($request->hasFile('image_path')) {
+            $file = $request->file('image_path');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $path = '';
+
+
+            if (!is_dir(public_path($path))) {
+                mkdir(public_path($path), 0755, true);
+            }
+
+
+            $file->move(public_path($path), $fileName);
+            $user->image_path = $path . '' . $fileName;
+        } else {
+            $user->image_path = '';
+        }
+
+        $user->save();
         $menus = Menus::all();
 
         foreach ($menus as $menu) {
@@ -50,6 +71,7 @@ class UserManagementController extends Controller
         return redirect()->route('user_management.index')->with('success', 'User added successfully!');
     }
 
+
     public function view($id)
     {
         $user = Users::findOrFail($id);
@@ -64,7 +86,8 @@ class UserManagementController extends Controller
 
     public function update(UserRequest $request, $id)
     {
-        dd($request->all());
+
+        // dd($request->all());
         $validatedData = $request->validated();
 
         if (!empty($validatedData['password'])) {
@@ -72,9 +95,24 @@ class UserManagementController extends Controller
         } else {
             unset($validatedData['password']);
         }
+
         $user = Users::findOrFail($id);
 
+        if ($request->hasFile('image_path')) {
+            $file = $request->file('image_path');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $path = '';
+            $file->move(public_path($path), $fileName);
+            $validatedData['image_path'] = $fileName;
+
+
+            if ($user->image_path && file_exists(public_path($user->image_path))) {
+                unlink(public_path($user->image_path));
+            }
+        }
+
         $user->update($validatedData);
+
         return redirect()->route('user_management.manage_user')->with('success', 'User updated successfully.');
     }
 
@@ -85,8 +123,6 @@ class UserManagementController extends Controller
 
         return redirect()->route('user_management.manage_user')->with('success', 'User deleted successfully.');
     }
-
-
     public function manage()
     {
         $users = Users::all();
@@ -121,7 +157,6 @@ class UserManagementController extends Controller
         $user->update($validatedData);
         return redirect()->route('user_management.manage_user')->with('success', 'User updated successfully.');
     }
-
 
     public function password($id)
     {

@@ -20,6 +20,7 @@ class Users extends Model
         'last_logged_in_at',
         'force_reset_password',
         'role_id',
+        'image_path',
         'active_from',
     ];
 

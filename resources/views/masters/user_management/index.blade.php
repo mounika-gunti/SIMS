@@ -58,7 +58,15 @@ User Management
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $user->first_name }}</td>
                                 <td>{{ $user->username }}</td>
-                                <td>profile picture</td>
+                                <td>
+                                    @if($user->image_path)
+                                    <img src="{{ asset($user->image_path) }}" alt="Profile Picture"
+                                        style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
+                                    @else
+                                    <img src="{{ asset('default-image.png') }}" alt="Default Picture"
+                                        style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
+                                    @endif
+                                </td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('user_management.view', $user->id) }}"
