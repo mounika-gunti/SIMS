@@ -494,8 +494,11 @@
         }
         setInitialFieldValues();
     });
+
+
     var monthly_type_list = [];
-    function updateMonthlyList() {
+
+   function updateMonthlyList() {
     monthly_type_list = [];
     $('#monthly_table .select_month:checked').each(function() {
         var row_id = $(this).data('row_id');
@@ -503,13 +506,15 @@
         var from_day = $(`.from_day[data-row_id="${row_id}"]`).val();
         var to_day = $(`.to_day[data-row_id="${row_id}"]`).val();
 
-        monthly_type_list.push({
-            month_name: month_name,
-            from_day: from_day,
-            to_day: to_day
-        });
-        console.log("monthly:", monthly_type_list)
+        if (from_day && to_day) { // Add a check to ensure valid day values
+            monthly_type_list.push({
+                month_name: month_name,
+                from_day: from_day,
+                to_day: to_day
+            });
+        }
     });
+    console.log("monthly:", monthly_type_list);
 }
 
  $(document).on('change', 'input:checkbox, input.from_day, input.to_day', function() {
@@ -520,26 +525,37 @@ $('#save_btn').click(function(e) {
     var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
+
     if (frequency_type === "monthly") {
-        $.ajax({
-            url: '{{ route('services.updateMonthly', $service->id) }}',
-            method: 'POST',
-            data: {
+        console.log("Sending data:", {
             name: name,
             details: details,
             frequency_type: frequency_type,
             monthly_type_list: monthly_type_list,
             _token: '{{ csrf_token() }}'
+        });
+
+        $.ajax({
+            url: '{{ route('services.updateMonthly', $service->id) }}',
+            method: 'POST',
+            data: {
+                name: name,
+                details: details,
+                frequency_type: frequency_type,
+                monthly_type_list: monthly_type_list,
+                _token: '{{ csrf_token() }}'
             },
             success: function(response) {
+                console.log("Success:", response);
                 window.location.href = '{{ route('services.index') }}';
             },
             error: function(xhr) {
-                console.log(xhr.responseText);
+                console.log("Error:", xhr.responseText);
             }
         });
     }
 });
+
 
 var quarterly_type_list = [];
 function updateQuarterlyList() {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\Menus;
 use App\Models\UserMenus;
 use App\Http\Requests\UserRequest;
@@ -16,23 +16,45 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-        $users = Users::all();
+        $users = User::all();
         $menus = Menus::all();
         return view('masters.user_management.index', compact('users', 'menus'));
     }
     public function create()
     {
-        $users = Users::all();
+        $users = User::all();
         return view('masters.user_management.create', compact('users'));
     }
     public function store(UserRequest $request)
     {
         // dd($request->all());
         $validatedData = $request->validated();
+
         $validatedData['password'] = bcrypt($validatedData['password']);
 
-        $user = Users::create($validatedData);
+        $user = new User($validatedData);
+
+
+        if ($request->hasFile('image_path')) {
+            $file = $request->file('image_path');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $path = '';
+
+
+            if (!is_dir(public_path($path))) {
+                mkdir(public_path($path), 0755, true);
+            }
+
+
+            $file->move(public_path($path), $fileName);
+            $user->image_path = $path . '' . $fileName;
+        } else {
+            $user->image_path = '';
+        }
+
+        $user->save();
         $menus = Menus::all();
+        // dd($menus);
 
         foreach ($menus as $menu) {
             UserMenus::create([
@@ -50,9 +72,10 @@ class UserManagementController extends Controller
         return redirect()->route('user_management.index')->with('success', 'User added successfully!');
     }
 
+
     public function view($id)
     {
-        $user = Users::findOrFail($id);
+        $user = User::findOrFail($id);
         return view('masters.user_management.view', compact('user'));
     }
 
@@ -64,7 +87,8 @@ class UserManagementController extends Controller
 
     public function update(UserRequest $request, $id)
     {
-        dd($request->all());
+
+        // dd($request->all());
         $validatedData = $request->validated();
 
         if (!empty($validatedData['password'])) {
@@ -72,30 +96,43 @@ class UserManagementController extends Controller
         } else {
             unset($validatedData['password']);
         }
-        $user = Users::findOrFail($id);
+
+        $user = User::findOrFail($id);
+
+        if ($request->hasFile('image_path')) {
+            $file = $request->file('image_path');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $path = '';
+            $file->move(public_path($path), $fileName);
+            $validatedData['image_path'] = $fileName;
+
+
+            if ($user->image_path && file_exists(public_path($user->image_path))) {
+                unlink(public_path($user->image_path));
+            }
+        }
 
         $user->update($validatedData);
+
         return redirect()->route('user_management.manage_user')->with('success', 'User updated successfully.');
     }
 
     public function delete($id)
     {
-        $user = Users::findOrFail($id);
+        $user = User::findOrFail($id);
         $user->delete();
 
         return redirect()->route('user_management.manage_user')->with('success', 'User deleted successfully.');
     }
-
-
     public function manage()
     {
-        $users = Users::all();
+        $users = User::all();
         return view('masters.user_management.manage_user', compact('users'));
     }
 
     public function edit_user($id)
     {
-        $user = Users::find($id);
+        $user = User::find($id);
         return view('masters.user_management.edit_user', compact('user'));
     }
 
@@ -109,7 +146,7 @@ class UserManagementController extends Controller
         ]);
 
 
-        $user = Users::findOrFail($id);
+        $user = User::findOrFail($id);
 
         if (!empty($validatedData['password'])) {
             $validatedData['password'] = bcrypt($validatedData['password']);
@@ -122,7 +159,6 @@ class UserManagementController extends Controller
         return redirect()->route('user_management.manage_user')->with('success', 'User updated successfully.');
     }
 
-
     public function password($id)
     {
         return view('masters.user_management.change_password', compact('id'));
@@ -134,7 +170,7 @@ class UserManagementController extends Controller
             'new_password' => 'required|min:6|confirmed',
         ]);
 
-        $user = Users::findOrFail($id);
+        $user = User::findOrFail($id);
 
         $user->password = bcrypt($validatedData['new_password']);
         $user->save();
@@ -145,8 +181,8 @@ class UserManagementController extends Controller
     public function permission($id)
     {
         $menus = Menus::select('name')->distinct()->get();
-        $username = Users::where('id', $id)->pluck('username')->first();
-        $first_name = Users::where('id', $id)->pluck('first_name')->first();
+        $username = User::where('id', $id)->pluck('username')->first();
+        $first_name = User::where('id', $id)->pluck('first_name')->first();
         $userMenus = DB::table('user_menus')
             ->where('user_id', $id)
             ->pluck('menu_id')
@@ -193,7 +229,7 @@ class UserManagementController extends Controller
 
     public function deactivate($id)
     {
-        $users = Users::find($id);
+        $users = User::find($id);
         $users->deleted_at = Carbon::now();
         $users->save();
         return redirect()->back()->with('success', 'Service deactivated.');
@@ -201,7 +237,7 @@ class UserManagementController extends Controller
 
     public function active($id)
     {
-        $users = Users::find($id);
+        $users = User::find($id);
         $users->deleted_at = null;
         $users->save();
         return redirect()->back()->with('success', 'Service activated.');

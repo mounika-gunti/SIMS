@@ -21,11 +21,11 @@ User Management
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0"><b>User Management</b></h3>
             <div>
-                <button type="button" class="btn btn-primary btn-add-checklist me-2"
+                <button type="button" class="btn btn-primary btn-add me-2"
                     onclick="window.location.href='{{ route('user_management.create') }}'">
                     Add User
                 </button>
-                <a href="{{ route('user_management.export_users') }}" class="btn btn-primary btn-add-checklist">
+                <a href="{{ route('user_management.export_users') }}" class="btn btn-primary btn-add">
                     Export to Excel
                 </a>
             </div>
@@ -58,7 +58,15 @@ User Management
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $user->first_name }}</td>
                                 <td>{{ $user->username }}</td>
-                                <td>profile picture</td>
+                                <td>
+                                    @if($user->image_path)
+                                    <img src="{{ asset($user->image_path) }}" alt="Profile Picture"
+                                        style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
+                                    @else
+                                    <img src="{{ asset('default-image.png') }}" alt="Default Picture"
+                                        style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;">
+                                    @endif
+                                </td>
                                 <td>
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('user_management.view', $user->id) }}"

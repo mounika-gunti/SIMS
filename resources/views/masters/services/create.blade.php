@@ -461,6 +461,11 @@ $('#save_btn').click(function(e) {
     var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
+
+      if (!name || !frequency_type) {
+            alert("Please enter both the service name and select frequency type.");
+            return;
+        }
     if (frequency_type === "monthly") {
         $.ajax({
             url: '{{ route('services.storeMonthly') }}',
@@ -679,7 +684,7 @@ $('#save_btn').click(function(e) {
                 _token: '{{ csrf_token() }}'
             },
             success: function(response) {
-                window.location.href = response.redirect_url;
+                window.location.href = '{{ route('services.index') }}';
             },
             error: function(xhr) {
                 console.log(xhr.responseText);

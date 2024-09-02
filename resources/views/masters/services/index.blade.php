@@ -21,7 +21,7 @@ Services
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0"><b>Service Master</b></h3>
-            <button type="button" class="btn btn-primary btn-add-checklist me-2"
+            <button type="button" class="btn btn-primary btn-add me-2"
                 onclick="window.location.href='{{ route('services.create') }}'">
                 Add Service
             </button>
@@ -68,7 +68,6 @@ Services
                                             action="{{ route('service.deactivate', $service->id) }}">
                                             @csrf
                                             @method('PUT')
-                                            <!-- Ensure method matches your route's expected method -->
                                             <button type="button"
                                                 class="btn btn-deactivate btn-sm rounded deactivate-btn"
                                                 data-id="{{ $service->id }}">Deactivate</button>
@@ -78,7 +77,6 @@ Services
                                             action="{{ route('service.activate', $service->id) }}">
                                             @csrf
                                             @method('PUT')
-                                            <!-- Ensure method matches your route's expected method -->
                                             <button type="button" class="btn btn-activate btn-sm rounded activate-btn"
                                                 data-id="{{ $service->id }}">Activate</button>
                                         </form>
