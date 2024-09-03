@@ -26,28 +26,28 @@ My Dashboard
             <div class="card d-flex mx-auto " style="width: 20rem; height: 8rem">
                 <div class="card-body card-assign text-center ">
                     <h4>Assigned Customer</h4>
-                    <h5>2</h5>
+                    <h5>{{ $assignedCustomerCount }}</h5>
                 </div>
             </div>
         </div>
         <div class="row ">
-            <div class="col-lg-6 mt-3 ">
-                <div class="card d-flex mx-auto" style="width: 20rem;">
-                    <div class="card-body card-gst text-center  ">
-                        <h4>GST</h4>
-                        <h5>30</h5>
-                    </div>
-                </div>
-            </div>
             <div class="col-lg-6 mt-3">
                 <div class="card d-flex mx-auto" style="width: 20rem;">
-                    <div class="card-body card-pt text-center ">
-                        <h4>PT</h4>
-                        <h5>40</h5>
+                    <div class="card-body card-gst text-center">
+                        <h4>GST</h4>
+                        <h5>{{ $gstCount }}</h5>
                     </div>
                 </div>
             </div>
 
+            <div class="col-lg-6 mt-3">
+                <div class="card d-flex mx-auto" style="width: 20rem;">
+                    <div class="card-body card-pt text-center ">
+                        <h4>PT</h4>
+                        <h5>{{ $ptCount }}</h5>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

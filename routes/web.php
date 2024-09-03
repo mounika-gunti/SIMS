@@ -20,4 +20,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/gst_tasks', [DashboardController::class, 'gst_tasks'])->name('dashboard.gst_tasks');
 });
 
-Route::prefix('/master')->group(__DIR__ . '/masters.php');
+Route::prefix('/master')->middleware('auth')->group(__DIR__ . '/masters.php');
