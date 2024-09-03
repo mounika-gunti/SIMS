@@ -22,8 +22,8 @@ class UserMenus extends Model
         'delete',
     ];
 
-    public function menu()
-    {
-        return $this->belongsTo(Menus::class, 'menu_id');
-    }
+    // public function menu()
+    // {
+    //     return $this->belongsTo(Menus::class, 'menu_id');
+    // }
 }

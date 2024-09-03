@@ -18,8 +18,8 @@ class Employee extends Model
         'last_name',
         'phone_number',
         'whatsapp_number',
+        'user_id'
     ];
-
 
     public function customers()
     {

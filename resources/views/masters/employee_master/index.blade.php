@@ -21,7 +21,7 @@ Employee
     <div class="card-body">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0"><b>Employee Master</b></h3>
-            <a class="btn btn-primary btn-add-checklist" href='{{ route('employee_master.create') }}'>
+            <a class="btn btn-primary btn-add" href='{{ route('employee_master.create') }}'>
                 Add Employee
             </a>
         </div>

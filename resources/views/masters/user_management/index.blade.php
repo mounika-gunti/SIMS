@@ -21,11 +21,11 @@ User Management
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0"><b>User Management</b></h3>
             <div>
-                <button type="button" class="btn btn-primary btn-add-checklist me-2"
+                <button type="button" class="btn btn-primary btn-add me-2"
                     onclick="window.location.href='{{ route('user_management.create') }}'">
                     Add User
                 </button>
-                <a href="{{ route('user_management.export_users') }}" class="btn btn-primary btn-add-checklist">
+                <a href="{{ route('user_management.export_users') }}" class="btn btn-primary btn-add">
                     Export to Excel
                 </a>
             </div>

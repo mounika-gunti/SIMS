@@ -5,6 +5,7 @@ use App\Http\Controllers\Masters\ProductTypeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Masters\CustomerController;
 use App\Http\Controllers\Masters\EmployeeMasterController;
+use App\Http\Controllers\masters\ReportController;
 use App\Http\Controllers\UserManagementController;
 
 /*
@@ -69,3 +70,7 @@ Route::post('/service/update-onetime/{id}', [ServiceController::class, 'updateOn
 
 Route::put('/service/deactivate/{id}', [ServiceController::class, 'deactivate'])->name('service.deactivate');
 Route::put('/service/activate/{id}', [ServiceController::class, 'active'])->name('service.activate');
+
+Route::get('/reports/completed', [ReportController::class, 'completed'])->name('reports.completed');
+Route::get('/reports/non_completed', [ReportController::class, 'non_completed'])->name('reports.non_completed');
+Route::get('/reports', [ReportController::class, 'export'])->name('reports.export');

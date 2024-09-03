@@ -461,6 +461,11 @@ $('#save_btn').click(function(e) {
     var name = $('#name').val();
     var details = $('#details').val();
     var frequency_type = $('#frequency_type').val();
+
+      if (!name || !frequency_type) {
+            alert("Please enter both the service name and select frequency type.");
+            return;
+        }
     if (frequency_type === "monthly") {
         $.ajax({
             url: '{{ route('services.storeMonthly') }}',

@@ -1,9 +1,8 @@
 @extends('layouts.app')
 @extends('layouts.common-scripts')
 <link rel="stylesheet" href="{{ asset('build/css/my_dashboard.css') }}">
-@section('title')
-My Dashboard
-@endsection
+@section('title', 'My Dashboard')
+
 @section('content')
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
     <div class="breadcrumb-title pe-3">My Dashboard</div>
@@ -26,28 +25,24 @@ My Dashboard
             <div class="card d-flex mx-auto " style="width: 20rem; height: 8rem">
                 <div class="card-body card-assign text-center ">
                     <h4>Assigned Customer</h4>
-                    <h5>2</h5>
+                    <h5>{{ $assignedCustomerCount }}</h5>
                 </div>
             </div>
         </div>
-        <div class="row ">
-            <div class="col-lg-6 mt-3 ">
-                <div class="card d-flex mx-auto" style="width: 20rem;">
-                    <div class="card-body card-gst text-center  ">
-                        <h4>GST</h4>
-                        <h5>30</h5>
-                    </div>
-                </div>
-            </div>
+        <div class="row mt-3">
+            @foreach($serviceCounts as $serviceName => $count)
             <div class="col-lg-6 mt-3">
                 <div class="card d-flex mx-auto" style="width: 20rem;">
-                    <div class="card-body card-pt text-center ">
-                        <h4>PT</h4>
-                        <h5>40</h5>
+                    <div class="card-body text-center" style="background: linear-gradient(to right, #ff7e5f, #feb47b);">
+                        <h4>{{ $serviceName }}</h4>
+                        <a href="{{ route('dashboard.tasks', ['type' => $serviceName]) }}" class="btn btn-link"
+                            style="font-size:22px;color:black;">
+                            {{ $count }}
+                        </a>
                     </div>
                 </div>
             </div>
-
+            @endforeach
         </div>
     </div>
 </div>

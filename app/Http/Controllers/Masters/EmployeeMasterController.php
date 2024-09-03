@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Masters;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EmployeeMasterRequest;
 use App\Models\Employee;
-use App\Models\Users;
+use App\Models\User;
 use App\Models\UserMenus;
 use App\Models\Menus;
 use Illuminate\Http\Request;
@@ -50,7 +50,7 @@ class EmployeeMasterController extends Controller
         $employee->whatsapp_number = $request->whatsapp_number;
         $employee->save();
 
-        $user = Users::create([
+        $user = User::create([
             'first_name' => $request->first_name,
             'username' => $request->first_name,
             'password' => Hash::make('123456'),
