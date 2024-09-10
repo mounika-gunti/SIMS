@@ -17,7 +17,8 @@ Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/gst_tasks', [DashboardController::class, 'gst_tasks'])->name('dashboard.gst_tasks');
+    Route::get('/dashboard/tasks/{type}', [DashboardController::class, 'tasks'])->name('dashboard.tasks');
+    Route::post('/update-task-status', [DashboardController::class, 'updateStatus'])->name('update.task.status');
 });
 
 Route::prefix('/master')->middleware('auth')->group(__DIR__ . '/masters.php');

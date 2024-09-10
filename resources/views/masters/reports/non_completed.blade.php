@@ -110,7 +110,7 @@ Reports
                                 <td>{{ $report->from_date->format('Y') }}</td>
                                 <td>{{ $report->service->name }}</td>
                                 <td>{{ $report->customer->name }}</td>
-                                <td>{{ $report->employee->first_name }}</td>
+                                <td>{{ optional($report->employee)->first_name ?? 'N/A' }}
                                 <td>{{ $report->action_on ? $report->action_on->format('d M Y') : 'N/A' }}</td>
                                 <td>{{ $report->status_remarks ?? 'N/A' }}</td>
                             </tr>
