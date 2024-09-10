@@ -27,8 +27,8 @@
             <form action="{{ route('dashboard.tasks', ['type' => $type]) }}" method="GET">
                 @csrf
                 <div class="row mb-3">
-                    <div class="form-group col-md-4">
-                        <select id="customer" name="customer" class="form-select" onchange="this.form.submit()">
+                    <div class="form-group col-md-3">
+                        <select id="customer" name="customer" class="form-select">
                             <option value="">Select Customer Name</option>
                             @foreach($customers as $customer)
                             <option value="{{ $customer->id }}"
@@ -42,15 +42,16 @@
                         @enderror
                     </div>
 
-                    <div class="form-group col-md-4">
-                        <select id="month" name="month" class="form-select" onchange="this.form.submit()">
+                    <div class="form-group col-md-3">
+                        <select id="month" name="month" class="form-select">
                             <option value="">Select by Month</option>
                             @php
                             $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
                             'September', 'October', 'November', 'December'];
                             @endphp
                             @foreach($months as $month)
-                            <option value="{{ $month }}" {{ $month === request('month') ? 'selected' : '' }}>
+                            <option value="{{ $month }}"
+                                {{ $month === request('month', $currentMonth) ? 'selected' : '' }}>
                                 {{ $month }}
                             </option>
                             @endforeach
@@ -60,11 +61,11 @@
                         @enderror
                     </div>
 
-                    <div class="form-group col-md-4">
-                        <select id="year" name="year" class="form-select" onchange="this.form.submit()">
+                    <div class="form-group col-md-3">
+                        <select id="year" name="year" class="form-select">
                             <option value="">Select by Year</option>
                             @foreach($years as $year)
-                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                            <option value="{{ $year }}" {{ $year == request('year', now()->year) ? 'selected' : '' }}>
                                 {{ $year }}
                             </option>
                             @endforeach
@@ -73,8 +74,13 @@
                         <p class="text-danger">{{ $message }}</p>
                         @enderror
                     </div>
+
+                    <div class="form-group col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-save btn-block" id="save_btn">Search</button>
+                    </div>
                 </div>
             </form>
+            <hr>
 
             <form action="{{ route('update.task.status', ['type' => $type]) }}" method="POST">
                 @csrf
@@ -93,12 +99,14 @@
                             <td>{{ $task->customer ? $task->customer->name : 'N/A' }}</td>
                             <td>
                                 <select name="tasks[{{ $task->id }}][status]" class="form-select">
+                                    <option value="">Select Status</option>
                                     <option value="done" {{ $task->status == 'done' ? 'selected' : '' }}>Done</option>
-                                    <option value="not_done" {{ $task->status == 'not_done' ? 'selected' : '' }}>Not
-                                        Done</option>
+                                    <option value="not_done"
+                                        {{ $task->status == 'not_done' || !$task->status ? 'selected' : '' }}>Not Done
+                                    </option>
                                 </select>
                             </td>
-                            <td>{{ $task->status_remarks }}</td>
+                            <td><textarea name="remarks" class="form-control" rows="1"></textarea></td>
                             <td>
                                 <button type="submit" class="btn btn-save btn-block" id="save_btn">Save</button>
                             </td>
