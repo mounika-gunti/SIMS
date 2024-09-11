@@ -47,8 +47,9 @@ Route::put('/user/activate/{id}', [UserManagementController::class, 'active'])->
 
 
 Route::resource('/customer', CustomerController::class);
-Route::get('/get_states/{country_id}', [CustomerController::class, 'state'])->name('get_states');
-Route::get('/get_cities/{state_id}', [CustomerController::class, 'city'])->name('get_cities');
+Route::get('/states/{id}', [CustomerController::class, 'getStates'])->name('get_states');
+Route::get('/cities/{id}', [CustomerController::class, 'getCities'])->name('get_cities');
+
 Route::post('/customer/deactivate/{id}', [CustomerController::class, 'deactivate'])->name('customer.deactivate');
 Route::post('/customer/activate/{id}', [CustomerController::class, 'activate'])->name('customer.activate');
 

@@ -5,7 +5,7 @@
 
 @section('content')
 <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-    <div class="breadcrumb-title pe-3">Tasks</div>
+    <div class="breadcrumb-title pe-3">{{ strtoupper($type) }} Tasks</div>
     <div class="ps-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb mb-0 p-0">
@@ -13,6 +13,24 @@
                 <li class="breadcrumb-item active" aria-current="page">{{ strtoupper($type) }} Tasks</li>
             </ol>
         </nav>
+    </div>
+    <div class="ms-auto">
+        <div class="ms-auto">
+            <div class="form-group">
+                <label for="goToService">Go To:</label>
+                <select id="goToService" class="form-select" onchange="location = this.value;">
+                    <option value="">Select Service</option>
+                    @foreach($services as $service)
+                    @if($service->name !== $type)
+                    <option value="{{ route('dashboard.tasks', ['type' => $service->name]) }}">
+                        {{ $service->name }}
+                    </option>
+                    @endif
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -139,15 +157,13 @@
                 </tbody>
             </table>
             @endif
-        </div>
-        @endif
-    </div>
-    <div class="form-row mb-4">
-        <div class="col-md-12 d-flex justify-content-end">
-            <div class="form-group mb-2 mr-3">
-                <a href="{{ route('dashboard') }}" class="btn btn-cancel btn-block">Cancel</a>
+            <div class="col-md-12 d-flex justify-content-end">
+                <div class="form-group mb-2 mr-3">
+                    <a href="{{ route('dashboard') }}" class="btn btn-cancel btn-block">Cancel</a>
+                </div>
             </div>
         </div>
+        @endif
     </div>
 </div>
 @endsection

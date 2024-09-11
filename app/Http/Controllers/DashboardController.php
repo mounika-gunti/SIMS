@@ -41,8 +41,20 @@ class DashboardController extends Controller
         $years = range($currentYear - 5, $currentYear + 5);
         $customers = \App\Models\Customer::all();
 
+
+        $employee = Auth::user()->employee;
+
+
+        $services = collect();
+        if ($employee) {
+            $services = $employee->customers->flatMap(function ($customer) {
+                return $customer->services;
+            })->unique('id');
+        }
+
         $service_id = Service::where('name', $type)->value('id');
         $customer_ids = CustomerService::where('service_id', $service_id)->pluck('customer_id');
+
         $selectedCustomerId = $request->input('customer');
         $selectedMonth = $request->input('month');
         $selectedYear = $request->input('year');
@@ -73,10 +85,12 @@ class DashboardController extends Controller
             'tasks' => $tasks,
             'completedTasks' => $completedTasks,
             'customers' => $customers,
+            'services' => $services,
             'currentMonth' => $currentMonth,
             'years' => $years,
         ]);
     }
+
 
     public function updateStatus(Request $request)
     {
