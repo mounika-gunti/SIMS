@@ -27,20 +27,15 @@ class CustomerController extends Controller
         $services = Service::all();
         return view('masters.customer.index', compact('customers', 'services'));
     }
-
-
     public function create()
     {
         $customers = Customer::with('country', 'state', 'city')->get();
         $employees = Employee::select('id', 'first_name')->get();
         $countries = Country::all();
-        $states = State::all();
-        $cities = City::all();
         $services = Service::all();
 
-        return view('masters.customer.create', compact('customers', 'countries', 'states', 'cities', 'employees', 'services'));
+        return view('masters.customer.create', compact('customers', 'countries',   'employees', 'services'));
     }
-
 
     public function store(CustomerRequest $request)
     {
@@ -88,8 +83,6 @@ class CustomerController extends Controller
         return redirect()->route('customer.index')->with('success', 'Customer created successfully.');
     }
 
-
-
     public function update(CustomerRequest $request, $id)
     {
         $validatedData = $request->validated();
@@ -124,39 +117,29 @@ class CustomerController extends Controller
         $customer->save();
         $customer->services()->sync($validatedData['services'] ?? []);
 
-
-
         return redirect()->route('customer.index')->with('status', 'Customer Updated Successfully');
     }
 
-
     public function show($id)
     {
-        $customers = Customer::with('billingCountry', 'billingState', 'billingCity', 'shippingCountry', 'shippingState', 'shippingState')->find($id);
+        $customers = Customer::with('assignedUser')->findOrFail($id);
         $countries = Country::all();
-        $states = State::all();
-        $cities = City::all();
-        $employees = Employee::select('id', 'first_name')->get();
+        $employees = Employee::select('id', 'first_name', 'last_name')->get();
         $services = Service::select('id', 'name')->get();
 
-
-        return view('masters.customer.view', compact('customers', 'countries', 'states', 'cities', 'employees', 'services'));
+        return view('masters.customer.view', compact('customers', 'countries',  'employees', 'services'));
     }
+
 
     public function edit($id)
     {
         $customers = Customer::findOrFail($id);
-
         $countries = Country::all();
-        $states = State::all();
-        $cities = City::all();
         $employees = Employee::select('id', 'first_name')->get();
         $services = Service::select('id', 'name')->get();
 
-
-        return view('masters.customer.edit', compact('customers', 'countries', 'states', 'cities', 'employees', 'services'));
+        return view('masters.customer.edit', compact('customers', 'countries', 'employees', 'services'));
     }
-
 
     public function deactivate($id)
     {
@@ -174,13 +157,13 @@ class CustomerController extends Controller
         return redirect()->back()->with('success', 'Customer activated Successfully .');
     }
 
-    public function state($country_id)
+    public function getStates($country_id)
     {
         $states = State::where('country_id', $country_id)->get();
         return response()->json($states);
     }
 
-    public function city($state_id)
+    public function getCities($state_id)
     {
         $cities = City::where('state_id', $state_id)->get();
         return response()->json($cities);

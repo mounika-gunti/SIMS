@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomerService;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\WorkStatus;
@@ -31,21 +33,49 @@ class DashboardController extends Controller
         ]);
     }
 
-
     public function tasks(Request $request, $type)
     {
-
         $type = $request->query('type', $type);
         $currentMonth = now()->format('F');
+        $currentYear = now()->year;
+        $years = range($currentYear - 5, $currentYear + 5);
         $customers = \App\Models\Customer::all();
 
-        $tasks = WorkStatus::with('customer', 'service')
-            ->whereHas('service', function ($query) use ($type) {
-                $query->where('name', $type);
-            })
-            ->where('customer_id', Auth::user()->id)
-            ->get();
 
+        $employee = Auth::user()->employee;
+
+
+        $services = collect();
+        if ($employee) {
+            $services = $employee->customers->flatMap(function ($customer) {
+                return $customer->services;
+            })->unique('id');
+        }
+
+        $service_id = Service::where('name', $type)->value('id');
+        $customer_ids = CustomerService::where('service_id', $service_id)->pluck('customer_id');
+
+        $selectedCustomerId = $request->input('customer');
+        $selectedMonth = $request->input('month');
+        $selectedYear = $request->input('year');
+
+        $tasksQuery = WorkStatus::whereIn('customer_id', $customer_ids)
+            ->where('service_id', $service_id);
+
+        if ($selectedCustomerId) {
+            $tasksQuery->where('customer_id', $selectedCustomerId);
+        }
+
+        if ($selectedMonth && $selectedYear) {
+            $startDate = \Carbon\Carbon::createFromFormat('F Y', $selectedMonth . ' ' . $selectedYear)->startOfMonth();
+            $endDate = \Carbon\Carbon::createFromFormat('F Y', $selectedMonth . ' ' . $selectedYear)->endOfMonth();
+            $tasksQuery->where(function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('from_date', [$startDate, $endDate])
+                    ->orWhereBetween('to_date', [$startDate, $endDate]);
+            });
+        }
+
+        $tasks = $tasksQuery->get();
         $completedTasks = $tasks->filter(function ($task) {
             return $task->status === 'done';
         });
@@ -55,16 +85,26 @@ class DashboardController extends Controller
             'tasks' => $tasks,
             'completedTasks' => $completedTasks,
             'customers' => $customers,
+            'services' => $services,
             'currentMonth' => $currentMonth,
+            'years' => $years,
         ]);
     }
 
+
     public function updateStatus(Request $request)
     {
-        $task = WorkStatus::find($request->task_id);
-        $task->status = $request->status;
-        $task->save();
+        $tasks = $request->input('tasks', []);
 
-        return redirect()->back()->with('success', 'Task status updated successfully.');
+        foreach ($tasks as $taskId => $taskData) {
+            $task = WorkStatus::find($taskId);
+            if ($task) {
+                $task->status = $taskData['status'];
+                $task->status_remarks = $taskData['remarks'] ?? '';
+                $task->save();
+            }
+        }
+
+        return redirect()->route('dashboard.tasks', ['type' => $request->query('type')])->with('success', 'Tasks updated successfully!');
     }
 }

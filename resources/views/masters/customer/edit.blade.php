@@ -59,13 +59,12 @@
                             rows="3">{{ old('description', $customers->description) }}</textarea>
                     </div>
                 </div>
-
-
             </div>
+
             <div class="row mb-3">
                 <div class="form-group col-md-4">
                     <label for="billing_country_id"><b>Country*</b></label>
-                    <select class="form-select" name="billing_country_id" id="billing_country_id" required>
+                    <select class="form-select select2" name="billing_country_id" id="billing_country_id" required>
                         <option disabled>Select Country</option>
                         @foreach ($countries as $con)
                         <option value="{{ $con->id }}" @if (old('billing_country_id', $customers->billing_country_id) ==
@@ -78,27 +77,15 @@
 
                 <div class="form-group col-md-4">
                     <label for="billing_state_id"><b>State/Region*</b></label>
-                    <select class="form-select" name="billing_state_id" id="billing_state_id" required>
+                    <select class="form-select select2" name="billing_state_id" id="billing_state_id" required>
                         <option disabled>Select State</option>
-                        @foreach ($states as $state)
-                        <option value="{{ $state->id }}" @if (old('billing_state_id', $customers->billing_state_id) ==
-                            $state->id) selected @endif>
-                            {{ $state->name }}
-                        </option>
-                        @endforeach
                     </select>
                 </div>
 
                 <div class="form-group col-md-4">
                     <label for="billing_city_id"><b>City*</b></label>
-                    <select class="form-select" name="billing_city_id" id="billing_city_id">
+                    <select class="form-select select2" name="billing_city_id" id="billing_city_id">
                         <option disabled>Select City</option>
-                        @foreach ($cities as $city)
-                        <option value="{{ $city->id }}" @if (old('billing_city_id', $customers->billing_city_id) ==
-                            $city->id) selected @endif>
-                            {{ $city->name }}
-                        </option>
-                        @endforeach
                     </select>
                 </div>
             </div>
@@ -110,6 +97,7 @@
                         placeholder="Enter Address" rows="3">{{ $customers->billing_address }}</textarea>
                 </div>
             </div>
+
             <div class="row mb-2">
                 <div class="col-md-12 d-flex align-items-center">
                     <h5 class="mb-0 me-2">Shipping Address*</h5>
@@ -124,7 +112,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div class="row mb-3">
                 <div class="form-group col-md-4">
@@ -144,12 +131,6 @@
                     <label for="shipping_state_id"><b>State/Region*</b></label>
                     <select class="form-select" name="shipping_state_id" id="shipping_state_id" required>
                         <option disabled>Select State</option>
-                        @foreach ($states as $state)
-                        <option value="{{ $state->id }}" @if (old('shipping_state_id', $customers->shipping_state_id) ==
-                            $state->id) selected @endif>
-                            {{ $state->name }}
-                        </option>
-                        @endforeach
                     </select>
                 </div>
 
@@ -157,12 +138,6 @@
                     <label for="shipping_city_id"><b>City*</b></label>
                     <select class="form-select" name="shipping_city_id" id="shipping_city_id">
                         <option disabled>Select City</option>
-                        @foreach ($cities as $city)
-                        <option value="{{ $city->id }}" @if (old('shipping_city_id', $customers->shipping_city_id) ==
-                            $city->id) selected @endif>
-                            {{ $city->name }}
-                        </option>
-                        @endforeach
                     </select>
                 </div>
             </div>
@@ -185,8 +160,8 @@
                     <div>
                         @foreach ($services as $service)
                         <div class="form-check">
-                            <input class="form-check-input service-checkbox" type="checkbox" value="{{ $service->id }}"
-                                name="services[]" id="service_{{ $service->id }}"
+                            <input class="form-check-input" type="checkbox" value="{{ $service->id }}" name="services[]"
+                                id="service_{{ $service->id }}"
                                 {{ $customers->services->contains($service->id) ? 'checked' : '' }}>
                             <label class="form-check-label" for="service_{{ $service->id }}">
                                 {{ $service->name }}
@@ -199,7 +174,7 @@
                 <div class="form-group col-md-6">
                     <label for="assigned_to"><b>Assigned To*</b></label>
                     <select class="form-select" name="assigned_to" id="assigned_to" required>
-                        <option selected disabled>Select Assigned To</option>
+                        <option value="" disabled selected>Select Assigned To</option>
                         @foreach ($employees as $employee)
                         <option value="{{ $employee->id }}"
                             {{ $employee->id == $customers->assigned_to ? 'selected' : '' }}>
@@ -225,141 +200,139 @@
 </form>
 </div>
 </div>
-
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-            $('#billing_country_id').change(function() {
-                var countryId = $(this).val();
-                if (countryId) {
-                    $.ajax({
-                        url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
-                        type: 'GET',
-                        success: function(states) {
-                            $('#billing_state_id').empty().append(
-                                '<option value="">Select State</option>');
-                            $.each(states, function(key, state) {
-                                $('#billing_state_id').append('<option value="' + state
-                                    .id + '">' + state.name + '</option>');
-                            });
-                            $('#billing_city_id').empty().append(
-                                '<option value="">Select City</option>');
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error loading states: ", error);
-                        }
-                    });
-                }
-            });
+    $('#billing_country_id').select2({
+        placeholder: "Select Country",
+        allowClear: true
+    }).val('{{ old('billing_country_id', $customers->billing_country_id) }}').trigger('change');
 
-            $('#billing_state_id').change(function() {
-                var stateId = $(this).val();
+    $('#billing_state_id').select2({
+        placeholder: "Select State",
+        allowClear: true
+    }).val('{{ old('billing_state_id', $customers->billing_state_id) }}').trigger('change');
+
+    $('#billing_city_id').select2({
+        placeholder: "Select City",
+        allowClear: true
+    }).val('{{ old('billing_city_id', $customers->billing_city_id) }}').trigger('change');
+
+    $('#assigned_to').select2({
+        placeholder: "Select Assigned To",
+        allowClear: true
+    }).val('{{ old('assigned_to', $customers->assigned_to) }}').trigger('change');
+
+    var countryId = $('#billing_country_id').val();
+    if (countryId) {
+        $.ajax({
+            url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
+            type: 'GET',
+            success: function(states) {
+                $('#billing_state_id').empty().append('<option value="">Select State</option>');
+                $.each(states, function(key, state) {
+                    $('#billing_state_id').append('<option value="' + state.id + '">' + state.name + '</option>');
+                });
+                $('#billing_state_id').val('{{ old('billing_state_id', $customers->billing_state_id) }}').trigger('change');
+
+                var stateId = $('#billing_state_id').val();
                 if (stateId) {
                     $.ajax({
                         url: "{{ route('get_cities', ':id') }}".replace(':id', stateId),
                         type: 'GET',
                         success: function(cities) {
-                            $('#billing_city_id').empty().append(
-                                '<option value="">Select City</option>');
+                            $('#billing_city_id').empty().append('<option value="">Select City</option>');
                             $.each(cities, function(key, city) {
-                                $('#billing_city_id').append('<option value="' + city
-                                    .id + '">' + city.name + '</option>');
+                                $('#billing_city_id').append('<option value="' + city.id + '">' + city.name + '</option>');
                             });
+                            $('#billing_city_id').val('{{ old('billing_city_id', $customers->billing_city_id) }}').trigger('change');
                         },
                         error: function(xhr, status, error) {
                             console.error("Error loading cities: ", error);
                         }
                     });
                 }
-            });
-
-            $('#shipping_address').change(function() {
-                if ($(this).is(':checked')) {
-                    var billingCountry = $('#billing_country_id').val();
-                    $('#shipping_country_id').val(billingCountry).change();
-
-                    var billingState = $('#billing_state_id').val();
-                    $('#shipping_state_id').val(billingState).change();
-
-                    var billingCity = $('#billing_city_id').val();
-                    $('#shipping_city_id').val(billingCity);
-
-                    var billingAddress = $('#billing_address').val();
-                    $('#shipping_address').val(billingAddress);
-                } else {
-                    $('#shipping_country_id').val('').change();
-                    $('#shipping_state_id').val('').change();
-                    $('#shipping_city_id').val('');
-                    $('#shipping_address').val('');
-                }
-            });
-
-            $('#shipping_country_id').change(function() {
-                var countryId = $(this).val();
-                if (countryId) {
-                    $.ajax({
-                        url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
-                        type: 'GET',
-                        success: function(states) {
-                            $('#shipping_state_id').empty().append(
-                                '<option value="">Select State</option>');
-                            $.each(states, function(key, state) {
-                                $('#shipping_state_id').append('<option value="' + state
-                                    .id + '">' + state.name + '</option>');
-                            });
-                            $('#shipping_city_id').empty().append(
-                                '<option value="">Select City</option>');
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error loading states: ", error);
-                        }
-                    });
-                }
-            });
-
-            $('#shipping_state_id').change(function() {
-                var stateId = $(this).val();
-                if (stateId) {
-                    $.ajax({
-                        url: "{{ route('get_cities', ':id') }}".replace(':id', stateId),
-                        type: 'GET',
-                        success: function(cities) {
-                            $('#shipping_city_id').empty().append(
-                                '<option value="">Select City</option>');
-                            $.each(cities, function(key, city) {
-                                $('#shipping_city_id').append('<option value="' + city
-                                    .id + '">' + city.name + '</option>');
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error("Error loading cities: ", error);
-                        }
-                    });
-                }
-            });
-        });
-
-        $('#same_as_billing').change(function() {
-            if ($(this).is(':checked')) {
-
-                $('#shipping_country_id').val($('#billing_country_id').val()).trigger('change');
-
-                setTimeout(function() {
-                    $('#shipping_state_id').val($('#billing_state_id').val()).trigger('change');
-
-                    setTimeout(function() {
-                        $('#shipping_city_id').val($('#billing_city_id').val());
-                    }, 300);
-                }, 300);
-
-
-                $('#shipping_address').val($('#billing_address').val());
-            } else {
-
-                $('#shipping_country_id').val('').change();
-                $('#shipping_state_id').val('').change();
-                $('#shipping_city_id').val('').change();
-                $('#shipping_address').val('');
+            },
+            error: function(xhr, status, error) {
+                console.error("Error loading states: ", error);
             }
         });
+    }
+
+
+    $('#shipping_address').change(function() {
+        if ($(this).is(':checked')) {
+            var billingCountry = $('#billing_country_id').val();
+            $('#shipping_country_id').val(billingCountry).trigger('change');
+
+            var billingState = $('#billing_state_id').val();
+            $('#shipping_state_id').val(billingState).trigger('change');
+
+            var billingCity = $('#billing_city_id').val();
+            $('#shipping_city_id').val(billingCity);
+
+            var billingAddress = $('#billing_address').val();
+            $('#shipping_address').val(billingAddress);
+        } else {
+            $('#shipping_country_id').val('').change();
+            $('#shipping_state_id').val('').change();
+            $('#shipping_city_id').val('');
+            $('#shipping_address').val('');
+        }
+    });
+
+    $('#shipping_country_id').change(function() {
+        var countryId = $(this).val();
+        if (countryId) {
+            $.ajax({
+                url: "{{ route('get_states', ':id') }}".replace(':id', countryId),
+                type: 'GET',
+                success: function(states) {
+                    $('#shipping_state_id').empty().append('<option value="">Select State</option>');
+                    $.each(states, function(key, state) {
+                        $('#shipping_state_id').append('<option value="' + state.id + '">' + state.name + '</option>');
+                    });
+                    $('#shipping_state_id').val('{{ old('shipping_state_id', $customers->shipping_state_id) }}').trigger('change');
+
+                    var stateId = $('#shipping_state_id').val();
+                    if (stateId) {
+                        $.ajax({
+                            url: "{{ route('get_cities', ':id') }}".replace(':id', stateId),
+                            type: 'GET',
+                            success: function(cities) {
+                                $('#shipping_city_id').empty().append('<option value="">Select City</option>');
+                                $.each(cities, function(key, city) {
+                                    $('#shipping_city_id').append('<option value="' + city.id + '">' + city.name + '</option>');
+                                });
+                                $('#shipping_city_id').val('{{ old('shipping_city_id', $customers->shipping_city_id) }}');
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Error loading cities: ", error);
+                            }
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading states: ", error);
+                }
+            });
+        }
+    });
+
+
+    $('#same_as_billing').change(function() {
+        if ($(this).is(':checked')) {
+            $('#shipping_country_id').val($('#billing_country_id').val()).trigger('change');
+
+            $('#shipping_address').val($('#billing_address').val());
+        } else {
+            $('#shipping_country_id').val('').change();
+            $('#shipping_state_id').val('').change();
+            $('#shipping_city_id').val('').change();
+            $('#shipping_address').val('');
+        }
+    });
+});
 </script>
 @endsection

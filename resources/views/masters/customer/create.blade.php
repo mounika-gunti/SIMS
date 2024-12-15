@@ -72,52 +72,38 @@
                 <div class="row mb-3">
                     <div class="form-group col-md-4">
                         <label for="billing_country_id"><b>Country*</b></label>
-                        <select class="form-select" name="billing_country_id" id="billing_country_id">
+                        <select class="form-select select2" name="billing_country_id" id="billing_country_id">
                             <option selected disabled>Select Country</option>
                             @foreach ($countries as $con)
-                            <option value="{{ $con->id }}"
-                                {{ old('billing_country_id') == $con->id ? 'selected' : '' }}>
-                                {{ $con->name }}
-                            </option>
+                            <option value="{{ $con->id }}">{{ $con->name }}</option>
                             @endforeach
                         </select>
-
                         @error('billing_country_id')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+
                     <div class="form-group col-md-4">
                         <label for="billing_state_id"><b>State/Region*</b></label>
-                        <select class="form-select" name="billing_state_id" id="billing_state_id">
+                        <select class="form-select select2" name="billing_state_id" id="billing_state_id">
                             <option selected disabled>Select State</option>
-                            @foreach ($states as $state)
-                            <option value="{{ $state->id }}"
-                                {{ old('billing_state_id') == $state->id ? 'selected' : '' }}>
-                                {{ $state->name }}
-                            </option>
-                            @endforeach
                         </select>
-
                         @error('billing_state_id')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
+
                     <div class="form-group col-md-4">
                         <label for="billing_city_id"><b>City*</b></label>
-                        <select class="form-select" name="billing_city_id" id="billing_city_id">
+                        <select class="form-select select2" name="billing_city_id" id="billing_city_id">
                             <option selected disabled>Select City</option>
-                            @foreach ($cities as $city)
-                            <option value="{{ $city->id }}" {{ old('billing_city_id') == $city->id ? 'selected' : '' }}>
-                                {{ $city->name }}
-                            </option>
-                            @endforeach
                         </select>
-
+                        @error('billing_city_id')
+                        <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
-                    @error('billing_city_id')
-                    <span class="text-danger">{{ $message }}</span>
-                    @enderror
                 </div>
+
                 <div class="row mb-3">
                     <div class="form-group col-md-6">
                         <label for="address"><b>Address*</b></label>
@@ -202,7 +188,7 @@
                     <div class="form-group col-md-6 justify-content-end">
                         <label for="assigned_to"><b>Assigned To*</b></label>
                         <select class="form-select" name="assigned_to" id="assigned_to">
-                            <option selected disabled>Select Assigned To</option>
+                            <option value="" disabled selected>Select Assigned To</option>
                             @foreach ($employees as $employee)
                             <option value="{{ $employee->id }}">{{ $employee->first_name }}</option>
                             @endforeach
@@ -210,7 +196,6 @@
                         @error('assigned_to')
                         <span class="text-danger">{{ $message }}</span>
                         @enderror
-
                     </div>
                 </div>
                 <div class="form-row mb-4">
@@ -228,7 +213,31 @@
     </div>
 </div>
 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
+    $(document).ready(function() {
+     $('#billing_country_id').select2({
+        placeholder: "Select Country",
+        allowClear: true
+    });
+
+    $('#billing_state_id').select2({
+        placeholder: "Select State",
+        allowClear: true
+    });
+
+    $('#billing_city_id').select2({
+        placeholder: "Select City",
+        allowClear: true
+    });
+
+    $('#assigned_to').select2({
+        placeholder: "Select Assigned To",
+        allowClear: true
+    });
+});
     $(document).ready(function() {
             $('#billing_country_id').change(function() {
                 var countryId = $(this).val();
